@@ -1,19 +1,9 @@
-// start of external imports
-
-@import "~normalize-scss/sass/normalize/import-now"; // import normalize-scss
-@import "~skeleton-sass-official/src/core/config"; // Skeleton Sass core loader
-
-// import default theme variables
-@import "~skeleton-sass-official/src/themes/fresh/vars"; // theme variable overrides
-
-// import default theme styles
-@import "~skeleton-sass-official/src/themes/fresh/include_components"; // theme base styles
-@import "~skeleton-sass-official/src/themes/fresh/grid"; // theme grid styles
-
 @import '~react-drop-zone/dist/styles.css';
 
-// end of external imports
+@import './normalize.css';
+@import './skeleton.css';
 
+@import '../components/App.scss';
 
 @import './_variables.scss';
 
@@ -24,6 +14,15 @@ body {
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+body.platform-mac {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+body.platform-linux {
+  font-family: 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+}
+body.platform-windows {
+  font-family: 'Segoe UI', 'Roboto', 'Oxygen', sans-serif;
 }
 
 code {

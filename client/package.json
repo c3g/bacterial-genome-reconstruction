@@ -7,14 +7,14 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "bowser": "^2.9.0",
+    "classname": "^0.0.0",
     "node-sass": "^4.14.0",
-    "normalize-scss": "^7.0.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-drop-zone": "^3.0.7",
     "react-redux": "^7.1.3",
-    "react-scripts": "3.4.1",
-    "skeleton-sass-official": "^4.0.0"
+    "react-scripts": "3.4.1"
   },
   "scripts": {
     "start": "react-scripts start",
