@@ -1,0 +1,46 @@
+@import '../styles/_variables.scss';
+
+.App {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.App__steps {
+  counter-reset: step-number;
+  border-right: 1px solid $border-color;
+}
+
+.App__step {
+  cursor: not-allowed;
+  color: $text-muted;
+  font-weight: bold;
+  margin-bottom: 2em;
+}
+
+.App__step::before {
+  counter-increment: step-number;
+  content: counter(step-number);
+
+  width: 1.5em;
+  height: 1.5em;
+  text-align: center;
+  display: inline-block;
+  border: 2px solid lighten($text-muted, 15%);
+  border-radius: 50%;
+  margin-right: 0.5em;
+}
+
+.App__step.--enabled {
+  cursor: pointer;
+  color: $text-normal;
+  &::before {
+    border-color: lighten($text-normal, 15%);
+  }
+}
+
+.App__step.--active {
+  color: $link-color;
+  &::before {
+    border-color: lighten($link-color, 10%);
+  }
+}
