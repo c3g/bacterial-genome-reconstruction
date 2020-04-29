@@ -37,3 +37,9 @@ code {
   border-color: $border-color;
   margin-bottom: 1rem;
 }
+.DropZone__filename {
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

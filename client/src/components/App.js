@@ -1,39 +1,60 @@
 import React from 'react';
-import { StyledDropZone } from 'react-drop-zone'
 import cx from 'classname';
 // import { Counter } from '../features/counter/Counter';
 
+import IdentifySpecies from './IdentifySpecies'
+import IdentifyReference from './IdentifyReference'
+
 class App extends React.Component {
   state = {
-    activeStep: 1,
-    enabledStep: 1,
+    activeStep: 0,
+    enabledStep: 2,
+  }
+
+  setStep = (activeStep) => {
+    this.setState({ activeStep })
   }
 
   render() {
     const { activeStep, enabledStep } = this.state
 
+    const tabs = [
+      {
+        title: 'Identify species in sequence data',
+        content: <IdentifySpecies/>,
+      },
+      {
+        title: 'Identify closest reference',
+        content: <IdentifyReference/>,
+      },
+      {
+        title: 'Determine optimal read trim length',
+        content: null,
+      },
+      {
+        title: 'Create guided assembly',
+        content: null,
+      },
+    ]
+
     return (
       <div className='App container'>
         <div className='App__steps six columns'>
-          <div className={cxStep(0, activeStep, enabledStep)} role='button'>
-            Identify species in sequence data
-          </div>
-          <div className={cxStep(1, activeStep, enabledStep)} role='button'>
-            Find closest finished reference
-          </div>
-          <div className={cxStep(2, activeStep, enabledStep)} role='button'>
-            Determine optimal read trim length
-          </div>
-          <div className={cxStep(3, activeStep, enabledStep)} role='button'>
-            Create guided assembly
-          </div>
+          {
+            tabs.map((tab, i) =>
+              <div
+                key={i}
+                className={cxStep(i, activeStep, enabledStep)}
+                role='button'
+                onClick={i <= enabledStep ? () => this.setStep(i) : undefined}
+              >
+                {tab.title}
+              </div>
+            )
+          }
         </div>
         <div className='App__content six columns'>
-          <StyledDropZone
-            label='Select or drop your file here'
-          />
-          <button>Identify species</button>
-          <button>Download results</button>
+          {tabs[activeStep].content}
         </div>
       </div>
     );
