@@ -37,7 +37,7 @@ class IdentifySpecies extends React.Component {
           label={label}
           onDrop={this.onDropFile}
         />
-        <button enabled={Boolean(filename)}>Identify species</button>
+        <button disabled={!Boolean(filename)}>Identify species</button>
       </div>
     );
   }
