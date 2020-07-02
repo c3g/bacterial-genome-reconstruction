@@ -1,0 +1,26 @@
+
+.IdentifySpecies__dropzone {
+  padding: 1em;
+  padding-bottom: 0.5em;
+  margin-bottom: 1em;
+}
+
+.IdentifySpecies__dropzone .container {
+  margin: 0;
+  width: 100%;
+}
+
+.IdentifySpecies__innerDropzone {
+  display: inline-flex;
+  justify-content: center;
+  padding: 1em;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.IdentifySpecies__filename {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+}
