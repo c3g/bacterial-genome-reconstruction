@@ -28,7 +28,7 @@ blast_table_m1 <-
     `colnames<-`(c(
         "qseqid", "sseqid", "length",
         "pident", "mismatch",
-        "gapopen", "slen", "qlen", "bitscore")) %>%
+        "gapopen", "slen", "qlen", "bitscore", "stitle")) %>%
     mutate(npid = round((length*0.01*pident*100)/qlen)) %>%
     filter(npid >= 95)
 
@@ -55,14 +55,15 @@ out_table_hits <-
             round(
                 ((total_count * stats_table$avg_len)*(reads/1000))/
                     unique(slen), 2
-            )
+            ),
+        name = first(stitle)
     ) %>%
     arrange(desc(total_count)) %>%
     `colnames<-`(
         c(
             "accession", "total_count",
             "total_bitscore", "genome_length", "total_reads",
-            "expected_coverage"
+            "expected_coverage", "name"
 
         )
     ) %>%

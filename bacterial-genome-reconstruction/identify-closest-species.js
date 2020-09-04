@@ -28,7 +28,7 @@ async function identifyClosestSpecies(inputFastqPath) {
     blastPath
   )
 
-  await cleanup()
+  // await cleanup()
 
   return {
     outputFolder,
@@ -64,7 +64,7 @@ function blast(outputFolder, inputFastaPath) {
         '-max_target_seqs', 3000,
         '-perc_identity', 95,
         '-query', inputFastaPath,
-        '-outfmt', '10 qseqid sseqid length pident mismatch gapopen slen qlen bitscore',
+        '-outfmt', '6 qseqid sseqid length pident mismatch gapopen slen qlen bitscore stitle',
         '-out', outputPath,
         // '-num_threads' 8,
   ])
