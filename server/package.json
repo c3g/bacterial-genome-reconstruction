@@ -1,0 +1,41 @@
+{
+  "name": "grants",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "postinstall": "npm run setup",
+    "setup": "if [ ! -f ./data/db.sqlite ]; then mkdir -p data/images && sqlite3 ./data/db.sqlite < ./schema.sql; fi",
+    "start": "node ./bin/www",
+    "start:dev": "NODE_ENV=development nodemon --ignore 'client/*' ./bin/www",
+    "start:client": "cd client && npm start",
+    "build": "rm -rf ./public && mkdir public && cd client && npm run build && cp -r ./build/* ../public"
+  },
+  "dependencies": {
+    "bcrypt": "^5.0.0",
+    "bluebird": "^3.5.1",
+    "body-parser": "~1.17.1",
+    "compression": "^1.7.4",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.3",
+    "deep-diff": "^0.3.8",
+    "ejs": "^2.5.7",
+    "express": "~4.15.2",
+    "express-form-data": "^2.0.14",
+    "express-session": "^1.15.6",
+    "formidable": "^1.1.1",
+    "jade": "~1.11.0",
+    "morgan": "~1.8.1",
+    "nodemailer": "^4.4.0",
+    "passport": "^0.4.0",
+    "passport-google-oauth": "^1.0.0",
+    "passport-local": "^1.0.0",
+    "react-drop-zone": "^4.1.0",
+    "serve-favicon": "~2.4.2",
+    "sqlite3": "^5.0.0"
+  },
+  "devDependencies": {
+    "eslint-config-prettier": "^3.0.1",
+    "nodemon": "^1.12.1"
+  }
+}

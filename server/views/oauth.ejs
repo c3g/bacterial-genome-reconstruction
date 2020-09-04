@@ -1,0 +1,10 @@
+<!doctype html>
+<html>
+<body>
+  <% if (locals.user) { %>
+    <script>window.opener.oauthDone(true)</script>
+  <% } else { %>
+    <script>window.opener.oauthDone(false)</script>
+  <% } %>
+</body>
+</html>

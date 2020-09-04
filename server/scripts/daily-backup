@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -eoxu pipefail
+
+APPLICATION_DIRECTORY=$HOME
+FILE="./data/db.sqlite"
+BACKUP_FILE="db-$(date +%Y-%m-%d).sqlite"
+
+cd $APPLICATION_DIRECTORY
+cp "$FILE" "$BACKUP_FILE"
+./gdrive upload "$BACKUP_FILE"
+rm $BACKUP_FILE

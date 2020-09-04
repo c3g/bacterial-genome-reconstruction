@@ -1,0 +1,22 @@
+extends layout
+
+block head
+  title Node Authentication
+  link(rel='stylesheet', href='//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css')
+  // load bootstrap css
+  link(rel='stylesheet', href='//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css')
+  // load fontawesome
+  style.
+    body        { padding-top:80px; }
+
+block content
+  body
+    .container
+      .jumbotron.text-center
+        h1
+          span.fa.fa-lock
+          |  Node Authentication
+        p Login or Register with:
+        a.btn.btn-danger(href='/auth/google')
+          span.fa.fa-google-plus
+          |  Google
