@@ -18,15 +18,10 @@ module.exports = identifyClosestSpecies
 
 async function identifyClosestSpecies(inputFastqPath) {
   const { path: outputFolder, cleanup } = await tmp.dir()
-  console.log({ inputFastqPath })
   const statsPath = await generateStats(outputFolder, inputFastqPath)
-  console.log({ statsPath })
   const subsampledFastaPath = `${outputFolder}/subsample.fasta`
-  console.log({ subsampledFastaPath })
   await generateRandomReads(inputFastqPath, subsampledFastaPath)
-  console.log('generate done')
   const blastPath = await blast(outputFolder, subsampledFastaPath)
-  console.log({ blastPath })
   const [summaryPath, readLengthPath] = await generateSummary(
     outputFolder,
     statsPath,
