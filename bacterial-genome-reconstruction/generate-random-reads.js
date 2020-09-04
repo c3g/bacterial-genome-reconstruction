@@ -15,7 +15,6 @@ module.exports = generateRandomReads
 
 
 async function generateRandomReads(inputFile, outputFile) {
-  console.log({ inputFile, outputFile })
   const content = (await fs.readFile(inputFile)).toString()
   const lines = content.trim().split('\n')
   const groups = groupBy(lines, 4)
