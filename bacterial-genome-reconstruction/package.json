@@ -1,0 +1,16 @@
+{
+  "name": "reconstruction_template",
+  "version": "1.0.0",
+  "description": "",
+  "main": "generate-random-reads.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "shell-escape": "^0.2.0",
+    "tmp-promise": "^3.0.2"
+  }
+}
