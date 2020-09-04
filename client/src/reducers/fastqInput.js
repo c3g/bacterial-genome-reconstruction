@@ -2,13 +2,11 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   r1: {
-    filename: undefined,
-    reads: undefined,
+    file: undefined,
     message: undefined,
   },
   r2: {
-    filename: undefined,
-    reads: undefined,
+    file: undefined,
     message: undefined,
   },
 }
@@ -17,13 +15,9 @@ export const fastqInput = createSlice({
   name: 'fastqInput',
   initialState: initialState,
   reducers: {
-    setFilenames: (state, action) => {
-      state.r1.filename = action.payload.r1 === null ? state.r1.filename : action.payload.r1
-      state.r2.filename = action.payload.r2 === null ? state.r2.filename : action.payload.r2
-    },
-    setReads: (state, action) => {
-      state.r1.reads = action.payload.r1 === null ? state.r1.reads : action.payload.r1
-      state.r2.reads = action.payload.r2 === null ? state.r2.reads : action.payload.r2
+    setFiles: (state, action) => {
+      state.r1.file = action.payload.r1 === null ? state.r1.file : action.payload.r1
+      state.r2.file = action.payload.r2 === null ? state.r2.file : action.payload.r2
     },
     setMessages: (state, action) => {
       state.r1.message = action.payload.r1 === null ? state.r1.message : action.payload.r1
@@ -36,6 +30,6 @@ export const fastqInput = createSlice({
   },
 });
 
-export const { setFilenames, setReads, setMessages, clear } = fastqInput.actions;
+export const { setFiles, setMessages, clear } = fastqInput.actions;
 
 export default fastqInput.reducer;
