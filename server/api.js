@@ -2,6 +2,7 @@
  * api.js
  */
 
+const tmp = require('tmp-promise')
 const express = require('express')
 const router = express.Router()
 
@@ -13,7 +14,8 @@ const {
 
 /* POST identify species */
 router.use('/identify-closest-species', (req, res, next) => {
-  identifyClosestSpecies(req.files.file.path)
+  tmp.dir()
+  .then(outputFolder => identifyClosestSpecies(req.files.file.path, outputFolder))
   .then(dataHandler(res))
   .catch(errorHandler(res))
 })

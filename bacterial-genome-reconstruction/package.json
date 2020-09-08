@@ -10,7 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "shell-escape": "^0.2.0",
-    "tmp-promise": "^3.0.2"
+    "shell-escape": "^0.2.0"
   }
 }

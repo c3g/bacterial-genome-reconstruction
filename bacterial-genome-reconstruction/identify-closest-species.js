@@ -7,7 +7,6 @@ const cp = require('child_process')
 const util = require('util')
 const exec = util.promisify(cp.exec)
 const shellEscape = require('shell-escape')
-const tmp = require('tmp-promise')
 const generateRandomReads = require('./generate-random-reads')
 
 
