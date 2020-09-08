@@ -12,12 +12,11 @@ const generateRandomReads = require('./generate-random-reads')
 
 
 const BLAST_DB_PATH = `${__dirname}/db/blast_db/representative_db`
-const SUMMARY_SCRIPT_PATH = `${__dirname}/module_1.R`
+const SUMMARY_SCRIPT_PATH = `${__dirname}/blast_summaries.R`
 
 module.exports = identifyClosestSpecies
 
-async function identifyClosestSpecies(inputFastqPath) {
-  const { path: outputFolder, cleanup } = await tmp.dir()
+async function identifyClosestSpecies(inputFastqPath, outputFolder) {
   const statsPath = await generateStats(outputFolder, inputFastqPath)
   const subsampledFastaPath = `${outputFolder}/subsample.fasta`
   await generateRandomReads(inputFastqPath, subsampledFastaPath)
@@ -27,8 +26,6 @@ async function identifyClosestSpecies(inputFastqPath) {
     statsPath,
     blastPath
   )
-
-  // await cleanup()
 
   return {
     outputFolder,
