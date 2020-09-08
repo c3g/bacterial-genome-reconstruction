@@ -85,7 +85,7 @@ blastn \
     -max_target_seqs 3000 \
     -perc_identity 95 \
     -query data/r1_subsampled.fasta \
-    -outfmt '10 qseqid sseqid length pident mismatch gapopen slen qlen bitscore' \
+    -outfmt '6 qseqid sseqid length pident mismatch gapopen slen qlen bitscore stitle' \
     -out output/module_1/module_1_blast.csv \
     -num_threads 8
 
