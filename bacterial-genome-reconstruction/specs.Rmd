@@ -1,0 +1,232 @@
+---
+title: "Reconstruction specs"
+output: html_document
+---
+
+
+## Setting up
+
+Create these directories if needed
+```{bash}
+# Create directories for the WGS input and BLAST database
+mkdir data
+mkdir db
+mkdir db/fna
+mkdir db/blast_db
+
+# Create directories for outputs for each module
+mkdir output
+mkdir output/module_1
+mkdir output/module_2
+mkdir output/module_3
+```
+
+
+Download and create a reference database to BLAST against
+```{bash}
+## get a text file of ftp paths
+Rscript ncbi_refseq_bacteria_ftps.R \
+    representative \
+    db/ftp_paths.txt
+
+## then download each file
+## I used gnu parallel https://www.gnu.org/software/parallel/
+## Should take ~20 minutes
+parallel --progress --bar -j 8 --gnu wget -q -P db/fna < db/ftp_paths.txt
+
+# Put all of the sequences into 1 file (a few minutes)
+gunzip -c db/fna/*.gz | cat > db/fna/representative_seqs.txt
+
+# (optional) delete the gzipped files
+rm db/fna/*.gz
+
+## Generate a BLAST database from the downloaded files (~2 minutes)
+# Make sure BLAST utilities are downloaded #https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/
+makeblastdb \
+ -in db/fna/representative_seqs.txt \
+ -out db/blast_db/representative_db \
+ -dbtype nucl -parse_seqids
+```
+
+
+
+### Module 1: Subsample the WGS data, then BLAST it to the BLAST database
+
+Input:
+ - R1 fastq
+Temporary:
+ - stats csv
+ - R1 subsampled fasta
+Output:
+ - summary csv
+ - read length csv
+ - blast csv
+
+```{bash}
+## get the basic statistics using seqkit
+## https://bioinf.shenwei.me/seqkit/
+seqkit stats data/r1.fq -T > output/module_1/basic_stats.txt
+
+## bbmap is used to subsample
+#https://jgi.doe.gov/data-and-tools/bbtools/bb-tools-user-guide/bbmap-guide/
+
+## subsample 1000 random reads
+
+reformat.sh \
+    in="data/r1.fq"  \
+    out="data/r1_subsampled.fasta"  \
+    samplereadstarget=1000 sampleseed=1234 overwrite=true
+
+## Blast The subsample
+blastn \
+    -task 'megablast' \
+    -db db/blast_db/representative_db \
+    -max_hsps 3 \
+    -max_target_seqs 3000 \
+    -perc_identity 95 \
+    -query data/r1_subsampled.fasta \
+    -outfmt '10 qseqid sseqid length pident mismatch gapopen slen qlen bitscore' \
+    -out output/module_1/module_1_blast.csv \
+    -num_threads 8
+
+## get summary files from the blast results
+Rscript blast_summaries.R \
+    output/module_1/basic_stats.txt \
+    output/module_1/module_1_blast.csv \
+    output/module_1/summary.csv \
+    output/module_1/read_length.csv
+
+```
+
+We can view the summary results and check what the best hit was
+```{r}
+library(data.table)
+library(tidyverse)
+top_hit <-
+    (fread("output/module_1/summary.csv") %>%
+    pull(accession))[1]
+
+top_hit
+```
+
+# get the sequence information from the top hit header
+```{bash}
+blastdbcmd -db db/blast_db/representative_db -entry NZ_CP053336.1 -outfmt "%t"
+```
+
+
+### Module 2: Align the subsample to the database of one genus
+
+Now get a database of all complete sequences of a single genus from NCBI
+```{bash}
+## download the ftp directories
+Rscript ncbi_genus_download.R \
+    salmonella \
+    db/salmonella_ftp_paths.txt
+
+## generate a database in the same way as in module 1
+# download ftps
+mkdir db/fna/salmonella
+parallel --progress --bar -j 8 --gnu wget -q -P db/fna/salmonella \
+    < db/salmonella_ftp_paths.txt
+# unzip into a file
+gunzip -c db/fna/salmonella/*.gz | cat > db/fna/salmonella_seqs.txt
+# (optional) delete the gzipped files
+rm db/fna/salmonella/*.gz
+## Generate a BLAST database from the downloaded files
+makeblastdb \
+ -in db/fna/salmonella_seqs.txt \
+ -out db/blast_db/salmonella_db \
+ -dbtype nucl -parse_seqids
+```
+
+Then Blast the subsample against the genus database
+```{bash}
+# Blast against the genus database
+blastn \
+    -task 'megablast' \
+    -db db/blast_db/salmonella_db \
+    -max_hsps 3 \
+    -max_target_seqs 3000 \
+    -perc_identity 95 \
+    -query data/r1_subsampled.fasta \
+    -outfmt '10 qseqid sseqid length pident mismatch gapopen slen qlen bitscore' \
+    -out output/module_2/module_2_blast.csv \
+    -num_threads 8
+
+## get the summaries
+Rscript blast_summaries.R \
+    output/module_1/basic_stats.txt \
+    output/module_2/module_2_blast.csv \
+    output/module_2/summary.csv \
+    output/module_2/read_length.csv
+```
+
+We have the best hit again, but now from the genus database
+```{r}
+library(data.table)
+library(tidyverse)
+top_hit <-
+    (fread("output/module_2/summary_table.csv") %>%
+    pull(accession))[1]
+
+top_hit
+```
+
+# get the sequence information from the top hit header
+This Sequence will be used for reconstruction in module 4
+```{bash}
+blastdbcmd -db db/blast_db/salmonella_db -entry NZ_CP022489.1 -outfmt "%t"
+## extract and save the Fasta file
+blastdbcmd -db db/blast_db/salmonella_db -entry NZ_CP022489.1 -outfmt "%f" > \
+    data/NZ_CP022489.1.txt
+```
+
+### Module 3: Read length optimization
+
+For this step, let's say we give the option to define three read length cutoffs
+at 230, 240, and 250.
+
+For the subusample dataset, we'll trim all reads greater than 230 nt to 230 nt,
+all greater than 240 nt to 240 nt, and all greater than 250 nt to 250 nt. We won't
+look at anything shorter than the lowest cutoff
+```{bash}
+# generate read sets at each cutoff
+Rscript rlo.R \
+    "230, 240, 250" \
+    data/r1_subsampled.fasta \
+    output/module_3
+
+# make a directory for cutoff databases
+mkdir db/cutoffs
+mkdir output/module_3/blast_results
+
+## create the databases and BLAST
+
+for CUTOFF in 230 240 250
+    do
+	makeblastdb \
+        -in output/module_3/cutoff_$CUTOFF.txt \
+        -out db/cutoffs/cutoff_$CUTOFF -dbtype nucl -parse_seqids
+    blastn \
+        -task 'megablast' \
+        -db db/cutoffs/cutoff_$CUTOFF \
+        -max_hsps 1 \
+        -max_target_seqs 5000 \
+        -perc_identity 100 \
+        -query data/NZ_CP022489.1.txt \
+        -outfmt '10 qseqid sseqid length pident mismatch gapopen slen qlen bitscore' \
+        -out output/module_3/blast_results/cutoff_$CUTOFF.csv \
+        -num_threads 8
+
+done
+
+# summarise the blast results here
+Rscript module_3.R \
+    "230, 240, 250" \
+    output/module_3/blast_results
+
+```
+
+
+

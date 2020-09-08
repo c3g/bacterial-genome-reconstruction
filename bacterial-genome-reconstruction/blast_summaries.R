@@ -1,4 +1,4 @@
-#!/usr/bin/env Rscript
+#!/usr/bin/env Rscript --vanilla
 
 # options(repos="https://cran.rstudio.com" )
 list.of.packages <-
@@ -21,7 +21,7 @@ stats_table <-
     fread(stats_path)
 
 ## add a column for true percent identity, and filter
-blast_table_m1 <-
+blast_table <-
     fread(
         blast_path
     ) %>%
@@ -35,7 +35,7 @@ blast_table_m1 <-
 
 ## Report a summary of each database hit
 out_table_hits <-
-    blast_table_m1 %>%
+    blast_table %>%
     mutate(
         sseqid =
             unlist(
@@ -76,7 +76,7 @@ write.csv(
 
 ## then get the count of each read length
 out_table_read_length <-
-    blast_table_m1 %>%
+    blast_table %>%
     dplyr::count(qlen) %>%
     as.data.frame()
 
