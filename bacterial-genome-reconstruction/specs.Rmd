@@ -26,26 +26,22 @@ Download and create a reference database to BLAST against
 ```{bash}
 ## get a text file of ftp paths
 Rscript ncbi_refseq_bacteria_ftps.R \
-    representative \
     db/ftp_paths.txt
 
 ## then download each file
 ## I used gnu parallel https://www.gnu.org/software/parallel/
-## Should take ~20 minutes
+## Should take ~1 hour
 parallel --progress --bar -j 8 --gnu wget -q -P db/fna < db/ftp_paths.txt
 
-# Put all of the sequences into 1 file (a few minutes)
-gunzip -c db/fna/*.gz | cat > db/fna/representative_seqs.txt
-
+# Unzip the sequences and generate the blast database
+# Make sure BLAST utilities are downloaded #https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/
+find db/fna/ -type f -name "*.gz" -print0 | xargs -0 gunzip -c | \
+  makeblastdb -in - -out db/blast_db/all_seqs_db -title all_seqs \
+  -dbtype nucl -parse_seqids
+  
 # (optional) delete the gzipped files
 rm db/fna/*.gz
 
-## Generate a BLAST database from the downloaded files (~2 minutes)
-# Make sure BLAST utilities are downloaded #https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/
-makeblastdb \
- -in db/fna/representative_seqs.txt \
- -out db/blast_db/representative_db \
- -dbtype nucl -parse_seqids
 ```
 
 
