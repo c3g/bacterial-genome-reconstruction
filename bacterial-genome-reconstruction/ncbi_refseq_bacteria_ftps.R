@@ -12,38 +12,42 @@ suppressMessages(require(data.table))
 
 #arguments
 args <- commandArgs(trailingOnly=TRUE)
-db_name <- as.character(args[1])
-outfile <- as.character(args[2])
+outfile <- as.character(args[1])
 
-if (db_name=="representative"){
-    ftp_paths <- 
-        fread(
-            "https://ftp.ncbi.nlm.nih.gov/genomes/refseq/bacteria/assembly_summary.txt", 
-            stringsAsFactors = F, quote = ""
-        ) %>% 
-        filter(
-            assembly_level =="Complete Genome" & 
-                version_status =="latest" &
-                refseq_category=="representative genome") %>%
-        pull(ftp_path) %>%
-        sprintf(
-            "%s/%s_genomic.fna.gz",
-            ., gsub(".*/", "", .)
-        )
+## Access the refseq genomes
+refseq <- 
+  fread(
+    "https://ftp.ncbi.nlm.nih.gov/genomes/refseq/bacteria/assembly_summary.txt", 
+    stringsAsFactors = F, quote = "", select = c(1,11,12,16,18,19,20)
+  ) %>% 
+  filter(
+    assembly_level =="Complete Genome" & 
+      version_status =="latest"
+  ) %>%
+  `colnames<-`(c("assembly", colnames(.)[-1])) %>%
+  as_tibble
+## Access the Genbank genomes that are not in refseq
+genbank <- 
+  fread(
+    "https://ftp.ncbi.nlm.nih.gov/genomes/genbank/bacteria/assembly_summary.txt", 
+    stringsAsFactors = F, quote = "", select = c(1,11,12,16,18,19,20)
+  ) %>% 
+  filter(
+    assembly_level =="Complete Genome" & 
+      version_status =="latest"
+  ) %>%
+  `colnames<-`(c("assembly", colnames(.)[-1])) %>%
+  as_tibble %>%
+  filter(paired_asm_comp != "identical")
 
-} else {
-    ftp_paths <- 
-        fread(
-            "https://ftp.ncbi.nlm.nih.gov/genomes/refseq/bacteria/assembly_summary.txt", 
-            stringsAsFactors = F, quote = ""
-        ) %>% 
-        filter(assembly_level =="Complete Genome" & version_status =="latest") %>%
-        pull(ftp_path) %>%
-        sprintf(
-            "%s/%s_genomic.fna.gz",
-            ., gsub(".*/", "", .)
-        )
-}
+## Combine the rows and extract the ftp links
+ftp_paths <- 
+  bind_rows(refseq, genbank) %>%
+  pull(ftp_path) %>%
+  sprintf(
+    "%s/%s_genomic.fna.gz",
+    ., gsub(".*/", "", .)
+  )
 
 fileConn <- 
     file(outfile)
