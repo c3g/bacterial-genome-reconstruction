@@ -3,11 +3,12 @@ import cx from 'classname';
 // import { Counter } from '../features/counter/Counter';
 
 import IdentifySpecies from './IdentifySpecies'
+import IdentifyReference from './IdentifyReference'
 
 class App extends React.Component {
   state = {
     activeStep: 0,
-    enabledStep: 1,
+    enabledStep: 2,
   }
 
   setStep = (activeStep) => {
@@ -21,6 +22,10 @@ class App extends React.Component {
       {
         title: 'Identify species in sequence data',
         content: <IdentifySpecies/>,
+      },
+      {
+        title: 'Identify closest reference',
+        content: <IdentifyReference/>,
       },
       {
         title: 'Determine optimal read trim length',
