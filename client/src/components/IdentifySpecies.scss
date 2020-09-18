@@ -5,22 +5,29 @@
   font-weight: bold;
 }
 
-.IdentifySpecies__results td:first-child {
-  padding-left: 1em;
+.IdentifySpecies__results {
+  height: 500px;
 }
-.IdentifySpecies__results td:last-child {
-  padding-right: 1em;
+.IdentifySpecies__results .sticky-table-table {
+  width: 100%;
+  white-space: initial;
 }
+.IdentifySpecies__results .sticky-table-cell {
+  background: transparent;
+}
+.IdentifySpecies__results__head  .sticky-table-cell {
+  background: white;
+  font-weight: bold;
+}
+
 
 .IdentifySpecies__row {
   cursor: pointer;
 }
 .IdentifySpecies__row:hover {
-  background-color: rgba(#000000, 0.05);
+  background-color: rgba(#599eff, 0.2) !important;
 }
-.IdentifySpecies__row--active {
-  background-color: rgba(#599eff, 0.5) !important;
-}
-.IdentifySpecies__row > td:nth-child(2) {
+.IdentifySpecies__row--active {}
+.IdentifySpecies__row > *:nth-child(2) {
   font-family: monospace;
 }

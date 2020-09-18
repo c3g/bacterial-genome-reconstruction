@@ -45,9 +45,9 @@ export const identifyClosestSpecies = createAsyncThunk(
     _(setIsLoading(true))
     try {
       const response = await api.identifyClosestSpecies(file)
-      _(setIsLoaded(true))
       _(setRequestId(response.id))
       _(setData(response.results))
+      _(setIsLoaded(true))
     } catch (e) {
       _(setMessage(e.message))
     }

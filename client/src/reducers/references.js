@@ -45,8 +45,8 @@ export const identifyClosestReferences = createAsyncThunk(
     _(setIsLoading(true))
     try {
       const response = await api.identifyClosestReferences(params)
-      _(setIsLoaded(true))
       _(setData(response.results))
+      _(setIsLoaded(true))
     } catch (e) {
       _(setMessage(e.message))
     }

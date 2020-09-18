@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import cx from 'classname'
-import TableScrollbar from 'react-table-scrollbar'
+import { StickyTable as Table, Row, Cell } from 'react-sticky-table'
 import { setValue } from '../reducers/species'
 import { identifyClosestReferences } from '../reducers/references'
 import './IdentifySpecies.scss'
@@ -30,32 +30,28 @@ class IdentifySpecies extends React.Component {
     const { data, value } = this.props
 
     return (
-      <TableScrollbar height='500px'>
-        <table className='IdentifySpecies__results'>
-          <thead>
-            <tr>
-              <td>Name</td>
-              <td>Bitscore</td>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map(s =>
-              <tr
-                key={s.accession}
-                role='button'
-                className={cx(
-                  'IdentifySpecies__row',
-                  s.accession === value ? 'IdentifySpecies__row--active' : undefined
-                )}
-                onClick={() => this.onSelectValue(s)}
-              >
-                <td>{s.name}</td>
-                <td>{s.total_bitscore}</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </TableScrollbar>
+      <div className='IdentifySpecies__results'>
+        <Table leftStickyColumnCount={0}>
+          <Row className='IdentifySpecies__results__head'>
+            <Cell>Name</Cell>
+            <Cell>Bitscore</Cell>
+          </Row>
+          {data.map(s =>
+            <Row
+              key={s.accession}
+              role='button'
+              className={cx(
+                'IdentifySpecies__row',
+                s.accession === value ? 'IdentifySpecies__row--active' : undefined
+              )}
+              onClick={() => this.onSelectValue(s)}
+            >
+              <Cell>{s.name}</Cell>
+              <Cell>{s.total_bitscore}</Cell>
+            </Row>
+          )}
+        </Table>
+      </div>
     )
   }
 

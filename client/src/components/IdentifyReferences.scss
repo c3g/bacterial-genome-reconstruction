@@ -1,27 +1,33 @@
 
-
 .IdentifyReferences thead {
   width: 100%;
   background-color: white;
   font-weight: bold;
 }
 
-.IdentifyReferences__results td:first-child {
-  padding-left: 1em;
+.IdentifyReferences__results {
+  height: 500px;
 }
-.IdentifyReferences__results td:last-child {
-  padding-right: 1em;
+.IdentifyReferences__results .sticky-table-table {
+  width: 100%;
+  white-space: initial;
 }
+.IdentifyReferences__results .sticky-table-cell {
+  background: transparent;
+}
+.IdentifyReferences__results__head  .sticky-table-cell {
+  background: white;
+  font-weight: bold;
+}
+
 
 .IdentifyReferences__row {
   cursor: pointer;
 }
 .IdentifyReferences__row:hover {
-  background-color: rgba(#000000, 0.05);
+  background-color: rgba(#599eff, 0.2) !important;
 }
-.IdentifyReferences__row--active {
-  background-color: rgba(#599eff, 0.5) !important;
-}
-.IdentifyReferences__row > td:nth-child(2) {
+.IdentifyReferences__row--active {}
+.IdentifyReferences__row > *:nth-child(2) {
   font-family: monospace;
 }

@@ -4,7 +4,7 @@ import cx from 'classname';
 
 import InputFiles from './InputFiles'
 import IdentifySpecies from './IdentifySpecies'
-import IdentifyReference from './IdentifyReference'
+import IdentifyReferences from './IdentifyReferences'
 
 class App extends React.Component {
   state = {
@@ -35,7 +35,7 @@ class App extends React.Component {
       },
       {
         title: 'Identify reference',
-        component: IdentifyReference,
+        component: IdentifyReferences,
       },
       {
         title: 'Optimize read trim length',
@@ -49,7 +49,7 @@ class App extends React.Component {
 
     return (
       <div className='App container'>
-        <div className='App__steps six columns'>
+        <div className='App__steps four columns'>
           {
             tabs.map((tab, i) =>
               <div
@@ -63,7 +63,7 @@ class App extends React.Component {
             )
           }
         </div>
-        <div className='App__content six columns'>
+        <div className='App__content eight columns'>
           {React.createElement(tabs[activeStep].component, { nextStep })}
           <div>
             <button onClick={nextStep}>Next</button>
