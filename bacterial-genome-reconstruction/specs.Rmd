@@ -111,7 +111,7 @@ all greater than 240 nt to 240 nt, and all greater than 250 nt to 250 nt. We won
 look at anything shorter than the lowest cutoff
 ```{bash}
 # generate read sets at each cutoff
-Rscript rlo.R \
+Rscript read_length_optimization.R \
     "230, 240, 250" \
     data/r1_subsampled.fasta \
     output/module_2
@@ -142,7 +142,7 @@ for CUTOFF in 230 240 250
 done
 
 # summarise the blast results here
-Rscript rlp.R \
+Rscript read_length_product.R \
     "230, 240, 250" \
     output/module_2/blast_results
 
