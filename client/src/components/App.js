@@ -2,6 +2,7 @@ import React from 'react';
 import cx from 'classname';
 // import { Counter } from '../features/counter/Counter';
 
+import InputFiles from './InputFiles'
 import IdentifySpecies from './IdentifySpecies'
 import IdentifyReference from './IdentifyReference'
 
@@ -15,25 +16,34 @@ class App extends React.Component {
     this.setState({ activeStep })
   }
 
+  nextStep = () => {
+    this.setStep(this.state.activeStep + 1)
+  }
+
   render() {
     const { activeStep, enabledStep } = this.state
+    const { nextStep } = this
 
     const tabs = [
       {
-        title: 'Identify species in sequence data',
-        content: <IdentifySpecies/>,
+        title: 'Input files',
+        component: InputFiles,
       },
       {
-        title: 'Identify closest reference',
-        content: <IdentifyReference/>,
+        title: 'Identify species',
+        component: IdentifySpecies,
       },
       {
-        title: 'Determine optimal read trim length',
-        content: null,
+        title: 'Identify reference',
+        component: IdentifyReference,
+      },
+      {
+        title: 'Optimize read trim length',
+        component: null,
       },
       {
         title: 'Create guided assembly',
-        content: null,
+        component: null,
       },
     ]
 
@@ -54,7 +64,10 @@ class App extends React.Component {
           }
         </div>
         <div className='App__content six columns'>
-          {tabs[activeStep].content}
+          {React.createElement(tabs[activeStep].component, { nextStep })}
+          <div>
+            <button onClick={nextStep}>Next</button>
+          </div>
         </div>
       </div>
     );
