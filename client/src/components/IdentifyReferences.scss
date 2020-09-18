@@ -1,26 +1,27 @@
 
-.IdentifySpecies thead {
+
+.IdentifyReferences thead {
   width: 100%;
   background-color: white;
   font-weight: bold;
 }
 
-.IdentifySpecies__results td:first-child {
+.IdentifyReferences__results td:first-child {
   padding-left: 1em;
 }
-.IdentifySpecies__results td:last-child {
+.IdentifyReferences__results td:last-child {
   padding-right: 1em;
 }
 
-.IdentifySpecies__row {
+.IdentifyReferences__row {
   cursor: pointer;
 }
-.IdentifySpecies__row:hover {
+.IdentifyReferences__row:hover {
   background-color: rgba(#000000, 0.05);
 }
-.IdentifySpecies__row--active {
+.IdentifyReferences__row--active {
   background-color: rgba(#599eff, 0.5) !important;
 }
-.IdentifySpecies__row > td:nth-child(2) {
+.IdentifyReferences__row > td:nth-child(2) {
   font-family: monospace;
 }

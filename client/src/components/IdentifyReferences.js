@@ -2,28 +2,28 @@ import React from 'react'
 import { connect } from 'react-redux'
 import cx from 'classname'
 import TableScrollbar from 'react-table-scrollbar'
-import { setValue } from '../reducers/species'
+import { setValue } from '../reducers/references'
 import { identifyClosestReferences } from '../reducers/references'
-import './IdentifySpecies.scss'
+import './IdentifyReferences.scss'
 
 const mapStateToProps = state => ({
-  isLoading: state.species.isLoading,
-  isLoaded: state.species.isLoaded,
-  value: state.species.value,
-  data: state.species.data,
+  isLoading: state.references.isLoading,
+  isLoaded: state.references.isLoaded,
+  value: state.references.value,
+  data: state.references.data,
 })
 
 const mapDispatchToProps = { setValue, identifyClosestReferences }
 
-class IdentifySpecies extends React.Component {
+class IdentifyReferences extends React.Component {
 
   onSelectValue = (s) => {
     this.props.nextStep()
     this.props.setValue(s)
 
-    const species = s.name.split(' ')[0].toLowerCase()
+    const references = s.name.split(' ')[0].toLowerCase()
 
-    this.props.identifyClosestReferences(species)
+    this.props.identifyClosestReferences(references)
   }
 
   renderTable() {
@@ -31,7 +31,7 @@ class IdentifySpecies extends React.Component {
 
     return (
       <TableScrollbar height='500px'>
-        <table className='IdentifySpecies__results'>
+        <table className='IdentifyReferences__results'>
           <thead>
             <tr>
               <td>Name</td>
@@ -44,8 +44,8 @@ class IdentifySpecies extends React.Component {
                 key={s.accession}
                 role='button'
                 className={cx(
-                  'IdentifySpecies__row',
-                  s.accession === value ? 'IdentifySpecies__row--active' : undefined
+                  'IdentifyReferences__row',
+                  s.accession === value ? 'IdentifyReferences__row--active' : undefined
                 )}
                 onClick={() => this.onSelectValue(s)}
               >
@@ -63,7 +63,7 @@ class IdentifySpecies extends React.Component {
     const { isLoading, isLoaded } = this.props
 
     return (
-      <div className='IdentifySpecies'>
+      <div className='IdentifyReferences'>
         <div>
           Loading: {String(isLoading)}
         </div>
@@ -74,4 +74,4 @@ class IdentifySpecies extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(IdentifySpecies);
+export default connect(mapStateToProps, mapDispatchToProps)(IdentifyReferences);

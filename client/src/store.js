@@ -4,6 +4,7 @@ import thunk from 'redux-thunk'
 
 import fastqInputReducer from './reducers/fastqInput.js'
 import speciesReducer from './reducers/species.js'
+import referencesReducer from './reducers/references.js'
 // import counterReducer from './features/counter/counterSlice'
 
 const middleware = [thunk, logger]
@@ -14,5 +15,6 @@ export default configureStore({
     // counter: counterReducer,
     fastqInput: fastqInputReducer,
     species: speciesReducer,
+    references: referencesReducer,
   },
 });

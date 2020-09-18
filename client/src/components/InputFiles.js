@@ -35,12 +35,8 @@ class InputFiles extends React.Component {
 
   onClickIdentify = () => {
     const r1 = window.files.get(this.props.r1.file)
-    console.log(r1.lastModifiedDate)
     this.props.nextStep()
     this.props.identifyClosestSpecies(r1)
-    .then(result => {
-      console.log(result)
-    })
   }
 
   render() {
