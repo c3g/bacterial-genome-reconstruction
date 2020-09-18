@@ -1,0 +1,26 @@
+
+.InputFiles__dropzone {
+  padding: 1em;
+  padding-bottom: 0.5em;
+  margin-bottom: 1em;
+}
+
+.InputFiles__dropzone .container {
+  margin: 0;
+  width: 100%;
+}
+
+.InputFiles__innerDropzone {
+  display: inline-flex;
+  justify-content: center;
+  padding: 1em;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.InputFiles__filename {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+}
