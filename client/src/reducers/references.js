@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { setRequestId } from './general'
 import * as api from '../requests'
 
 const initialState = {

@@ -40,8 +40,10 @@ function fetchAPI(url, params, options = {}) {
   })
 }
 
+/* eslint-disable no-unused-vars */
 function GET(url, params, options = {})  { return fetchAPI(url, params, { method: 'get', ...options }) }
 function POST(url, params, options = {}) { return fetchAPI(url, params, { method: 'post', ...options }) }
+/* eslint-enable no-unused-vars */
 
 function createError(data) {
   const e = new Error(data.message)

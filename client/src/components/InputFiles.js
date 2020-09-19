@@ -1,7 +1,7 @@
 import React from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { StyledDropZone, readFileAsText } from 'react-drop-zone'
+import { StyledDropZone } from 'react-drop-zone'
 import {
   setFiles,
   setMessages,
