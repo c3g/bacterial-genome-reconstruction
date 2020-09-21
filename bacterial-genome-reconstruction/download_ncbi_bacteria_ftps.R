@@ -12,13 +12,13 @@ suppressMessages(require(data.table))
 
 #arguments
 args <- commandArgs(trailingOnly=TRUE)
-outfile <- as.character(args[1])
+outdir <- as.character(args[1])
 
 ## Access the refseq genomes
 refseq <- 
   fread(
     "https://ftp.ncbi.nlm.nih.gov/genomes/refseq/bacteria/assembly_summary.txt", 
-    stringsAsFactors = F, quote = "", select = c(1,11,12,16,18,19,20)
+    stringsAsFactors = F, quote = "", select = c(1,5,11,12,16,18,19,20)
   ) %>% 
   filter(
     assembly_level =="Complete Genome" & 
@@ -30,7 +30,7 @@ refseq <-
 genbank <- 
   fread(
     "https://ftp.ncbi.nlm.nih.gov/genomes/genbank/bacteria/assembly_summary.txt", 
-    stringsAsFactors = F, quote = "", select = c(1,11,12,16,18,19,20)
+    stringsAsFactors = F, quote = "", select = c(1,5,11,12,16,18,19,20)
   ) %>% 
   filter(
     assembly_level =="Complete Genome" & 
@@ -41,7 +41,7 @@ genbank <-
   filter(paired_asm_comp != "identical")
 
 ## Combine the rows and extract the ftp links
-ftp_paths <- 
+all_ftp_paths <- 
   bind_rows(refseq, genbank) %>%
   pull(ftp_path) %>%
   sprintf(
@@ -49,11 +49,29 @@ ftp_paths <-
     ., gsub(".*/", "", .)
   )
 
+# just the representative paths
+representative_ftp_paths <- 
+  bind_rows(refseq, genbank) %>%
+  filter(refseq_category=="representative genome") %>%
+  pull(ftp_path) %>%
+  sprintf(
+    "%s/%s_genomic.fna.gz",
+    ., gsub(".*/", "", .)
+  )
+## write out all of the ftp paths to one file
 fileConn <- 
-    file(outfile)
+  file(sprintf("%s/all_seqs.txt",outdir))
 writeLines(
-    ftp_paths, 
-    fileConn
+  ftp_paths, 
+  fileConn
 )
 close(fileConn)
 
+## write out only the representative of the ftp paths to one file
+fileConn <- 
+  file(sprintf("%s/representative_seqs.txt",outdir))
+writeLines(
+  ftp_paths, 
+  fileConn
+)
+close(fileConn)
