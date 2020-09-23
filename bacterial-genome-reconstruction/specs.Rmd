@@ -11,40 +11,54 @@ Create these directories if needed
 # Create directories for the WGS input and BLAST database
 mkdir data
 mkdir db
-mkdir db/fna
+mkdir db/
+mkdir db/representative/
+mkdir db/all/
 mkdir db/blast_db
 
 # Create directories for outputs for each module
 mkdir output
 mkdir output/module_1
 mkdir output/module_2
+mkdir output/module_3
 ```
 
 
 Download and create a reference database to BLAST against
 ```{bash}
-## get a text file of ftp paths
-Rscript ncbi_refseq_bacteria_ftps.R \
-    db/ftp_paths.txt
+## get text files of ftp paths
+## output files will be db/all_seqs.txt and db/representative_seqs.txt
+Rscript download_ncbi_bacteria_ftps.R \
+    db
 
 ## then download each file
 ## I used gnu parallel https://www.gnu.org/software/parallel/
-## Should take ~1 hour
-parallel --progress --bar -j 8 --gnu wget -q -P db/fna < db/ftp_paths.txt
+## Should take ~1 hour for all seqs
+parallel --progress --bar -j 8 --gnu wget -q -P db/all < db/all_seqs.txt
+## and <20 mins for representative seqs
+parallel --progress --bar -j 8 --gnu wget -q -P db/representative < db/representative_seqs.txt
 
-# Unzip the sequences and generate the blast database
-# Make sure BLAST utilities are downloaded #https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/
-find db/fna/ -type f -name "*.gz" -print0 | xargs -0 gunzip -c | \
+## Unzip the sequences and generate the blast database
+## Make sure BLAST utilities are downloaded 
+## https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/
+
+## Database for all seqs
+find db/all/ -type f -name "*.gz" -print0 | xargs -0 gunzip -c | \
   makeblastdb -in - -out db/blast_db/all_seqs_db -title all_seqs \
   -dbtype nucl -parse_seqids
   
+## Database for representative seqs
+find db/representative/ -type f -name "*.gz" -print0 | xargs -0 gunzip -c | \
+  makeblastdb -in - -out db/blast_db/representative_seqs_db -title all_seqs \
+  -dbtype nucl -parse_seqids
+  
 # (optional) delete the gzipped files
-rm db/fna/*.gz
-
+rm db/all/*.gz
+rm db/representative/*.gz
 ```
 
 
-### Module 1: Subsample the WGS data, then BLAST it to the BLAST database
+### Module 1: Subsample the WGS data, then BLAST it to the representative BLAST database
 
 Input:
  - R1 fastq
@@ -74,7 +88,7 @@ reformat.sh \
 ## Blast The subsample
 blastn \
     -task 'megablast' \
-    -db db/blast_db/all_seqs_db \
+    -db db/blast_db/representative_seqs_db \
     -max_hsps 3 \
     -max_target_seqs 3000 \
     -perc_identity 95 \
@@ -92,16 +106,70 @@ Rscript blast_summaries.R \
 
 ```
 
-# Extract the sequence from the Blast database
+### Module 2: Blast against a specified database
+```{bash}
+Input:
+ - R1 fastq
+Temporary:
+ - stats csv
+ - R1 subsampled fasta
+ - titles.txt
+ - accessions.txt
+ - genus_accessions.txt 
+Output:
+ - summary csv
+ - read length csv
+ - blast csv
+ 
+## The top output from Module 1 will indicate which genus should be used as a candidate genome
+## We will subset the complete Blast database to extract all sequences corresponding to that sequence
+
+## First, create text files containing the accessions and titles of all genomes in the database
+blastdbcmd -db db/blast_db/all_seqs_db -outfmt "%t" -entry 'all' > db/titles.txt
+blastdbcmd -db db/blast_db/all_seqs_db -outfmt "%a" -entry 'all' > db/accessions.txt
+
+## Then we choose a genus, which for this example will be salmonella (not case sensitive)
+## This script depends on the files db/titles.txt and db/accessions.txt 
+genus="salmonella"
+Rscript generate_genus_accessions.R $genus
+## the output will be in db/salmonella/genus_accessions.txt 
+## These accessions are used to query the full database, extract those sequences, and pipe them into their own blast database
+blastdbcmd -db db/blast_db/all_seqs_db -outfmt "%f" \
+  -entry_batch db/"$genus"/genus_accessions.txt | 
+  makeblastdb -in - -out db/blast_db/"$genus"_seqs_db -title all_seqs \
+  -dbtype nucl -parse_seqids
+
+## With the database of a single genus, we blast the R1 reads against them, this time only allowing 100% identity but otherwise the same as Module 1
+## Blast The subsample
+blastn \
+    -task 'megablast' \
+    -db db/blast_db/"$genus"_seqs_db \
+    -max_hsps 3 \
+    -max_target_seqs 3000 \
+    -perc_identity 100 \
+    -query data/r1_subsampled.fasta \
+    -outfmt '6 qseqid sseqid length pident mismatch gapopen slen qlen bitscore stitle' \
+    -out output/module_2/module_2_blast.csv \
+    -num_threads 8
+
+## get summary files from the blast results
+Rscript blast_summaries.R \
+    output/module_2/basic_stats.txt \
+    output/module_2/module_2_blast.csv \
+    output/module_2/summary.csv \
+    output/module_2/read_length.csv
+```
+
+# Extract the best hit sequence from the Blast database
 ```{bash}
 # get the top accession from the summary file
-acc=$(cut -f2 -d ',' output/module_1/summary_table.csv | sed -n 2p)
+acc=$(cut -f2 -d ',' output/module_2/summary_table.csv | sed -n 2p)
 ## extract and save the Fasta file
-blastdbcmd -db db/blast_db/all_seqs_db -entry $acc -outfmt "%f" > \
+blastdbcmd -db db/blast_db/"$genus"_seqs_db -entry $acc -outfmt "%f" > \
     data/"$acc".txt
 ```
 
-### Module 2: Read length optimization
+### Module 3: Read length optimization
 
 For this step, let's say we give the option to define three read length cutoffs
 at 230, 240, and 250.
@@ -114,7 +182,7 @@ look at anything shorter than the lowest cutoff
 Rscript read_length_optimization.R \
     "230, 240, 250" \
     data/r1_subsampled.fasta \
-    output/module_2
+    output/module_3
 
 # make a directory for cutoff databases
 mkdir db/cutoffs
@@ -126,7 +194,7 @@ acc=$(cut -f2 -d ',' output/module_1/summary_table.csv | sed -n 2p)
 for CUTOFF in 230 240 250
     do
 	makeblastdb \
-        -in output/module_2/cutoff_$CUTOFF.txt \
+        -in output/module_3/cutoff_$CUTOFF.txt \
         -out db/cutoffs/cutoff_$CUTOFF -dbtype nucl -parse_seqids
     blastn \
         -task 'megablast' \
@@ -144,7 +212,7 @@ done
 # summarise the blast results here
 Rscript read_length_product.R \
     "230, 240, 250" \
-    output/module_2/blast_results
+    output/module_3/blast_results
 
 ```
 
