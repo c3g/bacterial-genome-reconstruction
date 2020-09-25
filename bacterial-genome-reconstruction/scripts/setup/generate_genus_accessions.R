@@ -15,22 +15,20 @@ suppressMessages(require(data.table))
 args <- commandArgs(trailingOnly=TRUE)
 genus <- as.character(args[1])
 
-out_dir <- sprintf("db/%s", genus)
+out_dir <- sprintf("db/by_genus/%s", sub(" ", "_", genus))
 
 if (!dir.exists(out_dir)) {dir.create(out_dir, recursive = TRUE)}
 #extracts only the accessions corresponding to title files with the genus string
-genus_accessions <- 
+genus_accessions <-
   tibble(
     accessions = readLines("db/accessions.txt"),
     titles = readLines("db/titles.txt")
   ) %>%
   filter(grepl(pattern = genus, x = titles, ignore.case = TRUE)) %>%
   pull(accessions)
+
 # Then writes those accessions to db/genus/accessions.txt
-fileConn <- 
+fileConn <-
   file(sprintf("%s/genus_accessions.txt", out_dir))
-writeLines(
-  genus_accessions, 
-  fileConn
-)
+writeLines(genus_accessions, fileConn)
 close(fileConn)
