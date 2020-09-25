@@ -11,6 +11,7 @@ All scripts are expected to be run from the directory where this file is located
 Requirements:
  - BLAST utilities: https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/
  - GNU parallel
+ - seqkit: https://bioinf.shenwei.me/seqkit/
 
 ## Create directories
 
@@ -50,21 +51,16 @@ Output:
  - blast csv
 
 ```{bash}
-# get the basic statistics using seqkit
-# https://bioinf.shenwei.me/seqkit/
-seqkit stats data/r1.fq -T > output/module_1/basic_stats.txt
 
-# bbmap is used to subsample
-#https://jgi.doe.gov/data-and-tools/bbtools/bb-tools-user-guide/bbmap-guide/
+INPUT_FILE=data/r1.fq
 
-# subsample 1000 random reads
+# Create basic statistics
+seqkit stats $INPUT_FILE -T > output/module_1/basic_stats.txt
 
-reformat.sh \
-    in="data/r1.fq"  \
-    out="data/r1_subsampled.fasta"  \
-    samplereadstarget=1000 sampleseed=1234 overwrite=true
+# Create a subsample of 1000 random reads
+node ./generate-random-reads.js "$INPUT_FILE" "data/r1_subsampled.fasta"
 
-# Blast The subsample
+# Blast the subsample
 blastn \
     -task 'megablast' \
     -db db/blast_db/representative/db \
@@ -76,13 +72,12 @@ blastn \
     -out output/module_1/module_1_blast.csv \
     -num_threads 8
 
-# get summary files from the blast results
+# Create summary files from the blast results
 Rscript blast_summaries.R \
     output/module_1/basic_stats.txt \
     output/module_1/module_1_blast.csv \
     output/module_1/summary.csv \
     output/module_1/read_length.csv
-
 ```
 
 ## Module 2: Blast against a specified database
@@ -159,7 +154,7 @@ mkdir db/cutoffs
 mkdir output/module_2/blast_results
 
 # create the databases and BLAST
-acc=$(cut -f2 -d ',' output/module_1/summary_table.csv | sed -n 2p)
+acc=$(cut -f2 -d ',' output/module_2/summary.csv | sed -n 2p | sed 's/"//g')
 
 for CUTOFF in 230 240 250
     do
