@@ -7,10 +7,11 @@ const cp = require('child_process')
 const util = require('util')
 const exec = util.promisify(cp.exec)
 const shellEscape = require('shell-escape')
+const parseCSV = require('csv-parse/lib/sync')
 const generateRandomReads = require('./generate-random-reads')
 
 
-const BLAST_DB_PATH = `${__dirname}/db/blast_db/representative_db`
+const BLAST_DB_PATH = `${__dirname}/db/blast_db/representative/db`
 const SUMMARY_SCRIPT_PATH = `${__dirname}/blast_summaries.R`
 
 module.exports = identifyClosestSpecies
@@ -26,12 +27,16 @@ async function identifyClosestSpecies(inputFastqPath, outputFolder) {
     blastPath
   )
 
+  const summaryContent = (await fs.readFile(summaryPath)).toString()
+  const results = parseCSV(summaryContent, { columns: true, skip_empty_lines: true })
+
   return {
     outputFolder,
     statsPath,
     blastPath,
     summaryPath,
     readLengthPath,
+    results,
   }
 }
 
