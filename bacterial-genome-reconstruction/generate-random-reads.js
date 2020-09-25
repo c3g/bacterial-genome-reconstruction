@@ -6,12 +6,12 @@ const fs = require('fs').promises
 
 module.exports = generateRandomReads
 
-/* if (require.main === module) {
- *   const inputFile = process.argv[2]
- *   const outputFile = process.argv[3]
- * 
- *   generateRandomReads(inputFile, outputFile)
- * } */
+if (require.main === module) {
+  const inputFile = process.argv[2]
+  const outputFile = process.argv[3]
+
+  generateRandomReads(inputFile, outputFile)
+}
 
 
 async function generateRandomReads(inputFile, outputFile) {
