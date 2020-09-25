@@ -24,16 +24,16 @@ Create the base directories
 ./scripts/setup/create_directories.sh
 ```
 
-## Download and create reference databases to BLAST against
+## Download required data
+
+```{bash}
+./scripts/setup/download_data.sh
+```
+
+## Create reference databases to BLAST against
 
 ```{bash}
 ./scripts/setup/create_blast_databases.sh
-```
-
-## Create subset BLAST databases for each genus
-
-```{bash}
-./scripts/setup/create_blast_databases_by_genus.sh
 ```
 
 # Modules
