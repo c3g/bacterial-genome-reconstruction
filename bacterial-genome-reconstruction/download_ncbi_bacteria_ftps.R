@@ -62,7 +62,7 @@ representative_ftp_paths <-
 fileConn <- 
   file(sprintf("%s/all_seqs.txt",outdir))
 writeLines(
-  ftp_paths, 
+  all_ftp_paths, 
   fileConn
 )
 close(fileConn)
@@ -71,7 +71,7 @@ close(fileConn)
 fileConn <- 
   file(sprintf("%s/representative_seqs.txt",outdir))
 writeLines(
-  ftp_paths, 
+  representative_ftp_paths, 
   fileConn
 )
 close(fileConn)
