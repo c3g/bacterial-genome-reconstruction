@@ -10,6 +10,7 @@ const shellEscape = require('shell-escape')
 const parseCSV = require('csv-parse/lib/sync')
 const generateRandomReads = require('./generate-random-reads')
 
+const NUM_CPUS = os.cpus().length
 
 const BLAST_DB_PATH = `${__dirname}/db/blast_db/representative/db`
 const SUMMARY_SCRIPT_PATH = `${__dirname}/blast_summaries.R`
@@ -67,7 +68,7 @@ function blast(outputFolder, inputFastaPath) {
         '-query', inputFastaPath,
         '-outfmt', '6 qseqid sseqid length pident mismatch gapopen slen qlen bitscore stitle',
         '-out', outputPath,
-        // '-num_threads' 8,
+        '-num_threads', NUM_CPUS,
   ])
 
   return exec(command).then(() => outputPath)

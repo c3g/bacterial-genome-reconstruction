@@ -2,6 +2,7 @@
  * identify-closest-references.js
  */
 
+const os = require('os')
 const fs = require('fs').promises
 const cp = require('child_process')
 const util = require('util')
@@ -9,6 +10,7 @@ const exec = util.promisify(cp.exec)
 const shellEscape = require('shell-escape')
 const parseCSV = require('csv-parse/lib/sync')
 
+const NUM_CPUS = os.cpus().length
 
 const getBlastDBPath = genus => `${__dirname}/db/blast_db/by_genus/${genus}/db`
 const SUMMARY_SCRIPT_PATH = `${__dirname}/blast_summaries.R`
@@ -18,9 +20,9 @@ module.exports = identifyClosestReferences
 async function identifyClosestReferences(inputFolder, genus) {
   const statsPath = `${inputFolder}/stats.txt`
   const subsampledFastaPath = `${inputFolder}/subsample.fasta`
-  const blastPath = await blast(outputFolder, subsampledFastaPath, genus)
+  const blastPath = await blast(inputFolder, subsampledFastaPath, genus)
   const [summaryPath, readLengthPath] = await generateSummary(
-    outputFolder,
+    inputFolder,
     statsPath,
     blastPath
   )
@@ -49,7 +51,7 @@ function blast(outputFolder, inputFastaPath, genus) {
         '-query', inputFastaPath,
         '-outfmt', '6 qseqid sseqid length pident mismatch gapopen slen qlen bitscore stitle',
         '-out', outputPath,
-        // '-num_threads' 8,
+        '-num_threads', NUM_CPUS,
   ])
 
   return exec(command).then(() => outputPath)
