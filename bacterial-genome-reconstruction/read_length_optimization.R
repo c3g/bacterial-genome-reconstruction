@@ -12,7 +12,9 @@ suppressMessages(require(data.table))
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 
-BiocManager::install("Biostrings")
+if (!("Biostrings" %in% installed.packages())){
+  BiocManager::install("Biostrings")
+}
 suppressMessages(require(Biostrings))
 
 #arguments
