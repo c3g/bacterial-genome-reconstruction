@@ -14,6 +14,7 @@ suppressMessages(require(data.table))
 args <- commandArgs(trailingOnly=TRUE)
 cutoffs <- as.character(args[1])
 cutoff_path <- as.character(args[2])
+output_path <- as.character(args[3])
 
 rl_cutoffs <-
     as.numeric(unlist(strsplit(cutoffs, split = ",")))
@@ -34,7 +35,7 @@ perfect_alignments <-
                 `colnames<-`(c(
                     "qseqid", "sseqid", "length",
                     "pident", "mismatch",
-                    "gapopen", "slen", "qlen", "bitscore")) %>%
+                    "gapopen", "slen", "qlen", "bitscore", "stitle")) %>%
                 mutate(npid = round((length*0.01*pident*100)/slen)) %>%
                 filter(npid == 100) %>%
                 nrow
@@ -44,15 +45,12 @@ perfect_alignments <-
 
 m3_summary_table <-
     tibble(
-        Cutoff =
-            rl_cutoffs,
-        Perfect_hits = perfect_alignments
+        cutoff = rl_cutoffs,
+        perfectHits = perfect_alignments
     ) %>%
-    mutate(product = Perfect_hits * Cutoff)
+    mutate(product = perfectHits * cutoff)
 
 write.csv(
     m3_summary_table,
-    sprintf(
-        "output/module_3/summary_table.csv"
-        )
+    output_path
 )

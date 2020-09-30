@@ -124,15 +124,6 @@ Rscript blast_summaries.R \
     output/module_2/read_length.csv
 ```
 
-### Extract the best hit sequence from the Blast database
-```{bash}
-# get the top accession from the summary file
-acc=$(cut -f2 -d ',' output/module_2/summary.csv | sed -n 2p | sed 's/"//g')
-# extract and save the Fasta file
-blastdbcmd -db "db/blast_db/by_genus/${genus}/db" -entry "$acc" -outfmt "%f" > \
-    data/"$acc".txt
-```
-
 ## Module 3: Read length optimization
 
 For this step, let's say we give the option to define three read length cutoffs
@@ -142,20 +133,32 @@ For the subusample dataset, we'll trim all reads greater than 230 nt to 230 nt,
 all greater than 240 nt to 240 nt, and all greater than 250 nt to 250 nt. We won't
 look at anything shorter than the lowest cutoff.
 
+### Extract the selected sequence from the Blast database
+
 ```{bash}
+# get the top accession from the summary file (or user-selected accession)
+acc=$(cut -f2 -d ',' output/module_2/summary.csv | sed -n 2p | sed 's/"//g')
+
+# extract and save the Fasta file
+blastdbcmd -db "db/blast_db/by_genus/${genus}/db" -entry "$acc" -outfmt "%f" > \
+    output/module_3/references_result.fasta
+```
+
+### Generate data & optimize cutoffs
+
+```{bash}
+
+# make a directory for cutoff databases
+mkdir output/module_3/cutoffs
+mkdir output/module_3/blast_results
+
 # generate read sets at each cutoff
 Rscript read_length_optimization.R \
     "230, 240, 250" \
     data/r1_subsampled.fasta \
     output/module_3
 
-# make a directory for cutoff databases
-mkdir output/module_3/cutoffs
-mkdir output/module_3/blast_results
-
 # create the databases and BLAST
-acc=$(cut -f2 -d ',' output/module_2/summary.csv | sed -n 2p | sed 's/"//g')
-
 for CUTOFF in 230 240 250
 do
     makeblastdb \
@@ -167,7 +170,7 @@ do
         -max_hsps 1 \
         -max_target_seqs 5000 \
         -perc_identity 100 \
-        -query data/"$acc".txt \
+        -query output/module_3/references_result.fasta \
         -outfmt '10 qseqid sseqid length pident mismatch gapopen slen qlen bitscore' \
         -out output/module_3/blast_results/cutoff_$CUTOFF.csv \
         -num_threads 8
@@ -177,9 +180,7 @@ done
 # summarise the blast results here
 Rscript read_length_product.R \
     "230, 240, 250" \
-    output/module_3/blast_results
+    output/module_3/blast_results \
+    output/module_3/read_length_summary.csv
 
 ```
-
-
-
