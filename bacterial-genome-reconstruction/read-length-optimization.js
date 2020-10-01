@@ -25,7 +25,7 @@ async function readLengthOptimization(inputFolder, genus, accession) {
   ])
 
   const cutoffs = range(0, ((250 - 150) / 5) + 1).map(n => 150 + n * 5)
-  console.log(cutoffs)
+  // console.log(cutoffs)
 
   const referenceResultPath = await blastDBCommand(inputFolder, genus, accession)
 
@@ -34,7 +34,7 @@ async function readLengthOptimization(inputFolder, genus, accession) {
   for (cutoff of cutoffs) {
     const blastDBPath = await makeBlastDB(inputFolder, cutoff)
     const blastResultPath = await blast(inputFolder, blastDBPath, referenceResultPath, cutoff)
-    console.log(blastDBPath, blastResultPath)
+    // console.log(blastDBPath, blastResultPath)
   }
 
   const summaryPath = await generateReadLengthSummary(inputFolder, cutoffs)
