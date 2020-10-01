@@ -55,7 +55,7 @@ Output:
 INPUT_FILE=data/r1.fq
 
 # Create basic statistics
-seqkit stats $INPUT_FILE -T > output/module_1/basic_stats.txt
+seqkit stats $INPUT_FILE -T > output/module_1/stats.txt
 
 # Create a subsample of 1000 random reads
 node ./generate-random-reads.js "$INPUT_FILE" "data/r1_subsampled.fasta"
@@ -74,7 +74,7 @@ blastn \
 
 # Create summary files from the blast results
 Rscript blast_summaries.R \
-    output/module_1/basic_stats.txt \
+    output/module_1/stats.txt \
     output/module_1/module_1_blast.csv \
     output/module_1/summary.csv \
     output/module_1/read_length.csv
@@ -118,7 +118,7 @@ blastn \
 
 # get summary files from the blast results
 Rscript blast_summaries.R \
-    output/module_1/basic_stats.txt \
+    output/module_1/stats.txt \
     output/module_2/module_2_blast.csv \
     output/module_2/summary.csv \
     output/module_2/read_length.csv
