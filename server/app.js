@@ -24,7 +24,7 @@ app.use(compression())
 app.use(logger('dev'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
-app.use(formData.parse())
+app.use(formData.parse({ uploadDir: config.paths.tmp, autoClean: true }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 

@@ -10,8 +10,8 @@ import QS from 'qs'
 export const identifyClosestSpecies = (file) =>
   POST(`/identify-closest-species`, form({ file }))
 
-export const identifyClosestReferences = ({ id, species }) =>
-  POST(`/identify-closest-references`, { id, species })
+export const identifyClosestReferences = ({ id, genus }) =>
+  POST(`/identify-closest-references`, { id, genus })
 
 
 function fetchAPI(url, params, options = {}) {

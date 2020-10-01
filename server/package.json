@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "postinstall": "npm run setup",
-    "setup": "if [ ! -f ./data/db.sqlite ]; then mkdir -p data/images && sqlite3 ./data/db.sqlite < ./schema.sql; fi",
+    "setup": "node ./scripts/setup.js",
     "start": "node ./bin/www",
     "start:dev": "NODE_ENV=development nodemon --ignore 'client/*' ./bin/www",
     "start:client": "cd client && npm start",
@@ -19,6 +19,7 @@
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.3",
     "deep-diff": "^0.3.8",
+    "del": "^6.0.0",
     "ejs": "^2.5.7",
     "express": "~4.15.2",
     "express-form-data": "^2.0.14",
@@ -32,8 +33,10 @@
     "passport-local": "^1.0.0",
     "react-drop-zone": "^4.1.0",
     "serve-favicon": "~2.4.2",
+    "shelljs": "^0.8.4",
     "sqlite3": "^5.0.0",
-    "tmp-promise": "^3.0.2"
+    "tmp-promise": "^3.0.2",
+    "uuid": "^8.3.0"
   },
   "devDependencies": {
     "eslint-config-prettier": "^3.0.1",

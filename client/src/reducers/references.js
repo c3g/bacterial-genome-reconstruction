@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import * as api from '../requests'
+import * as api from '../api'
 
 const initialState = {
   isLoading: false,
@@ -40,11 +40,13 @@ export const { setIsLoading, setIsLoaded, setMessage, setValue, setData, clear }
 
 export const identifyClosestReferences = createAsyncThunk(
   'references/identifyClosestReferences',
-  async (params, { dispatch: _ }) => {
+  async (genus, { dispatch: _, getState }) => {
+    const id = getState().general.requestId
+    debugger
     _(setIsLoading(true))
     try {
-      const response = await api.identifyClosestReferences(params)
-      _(setData(response.results))
+      const response = await api.identifyClosestReferences({ id, genus })
+      _(setData(response.references))
       _(setIsLoaded(true))
     } catch (e) {
       _(setMessage(e.message))

@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { setRequestId } from './general'
-import * as api from '../requests'
+import * as api from '../api'
 
 const initialState = {
   isLoading: false,
@@ -46,7 +46,7 @@ export const identifyClosestSpecies = createAsyncThunk(
     try {
       const response = await api.identifyClosestSpecies(file)
       _(setRequestId(response.id))
-      _(setData(response.results))
+      _(setData(response.species))
       _(setIsLoaded(true))
     } catch (e) {
       _(setMessage(e.message))

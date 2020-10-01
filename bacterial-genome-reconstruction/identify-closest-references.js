@@ -30,12 +30,7 @@ async function identifyClosestReferences(inputFolder, genus) {
   const summaryContent = (await fs.readFile(summaryPath)).toString()
   const results = parseCSV(summaryContent, { columns: true, skip_empty_lines: true })
 
-  return {
-    blastPath,
-    summaryPath,
-    readLengthPath,
-    results,
-  }
+  return results
 }
 
 function blast(outputFolder, inputFastaPath, genus) {

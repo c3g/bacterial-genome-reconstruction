@@ -4,11 +4,12 @@
 
 
 module.exports = {
-  rejectMessage,
+  rejectWith,
 }
 
-function rejectMessage(message, type) {
+function rejectWith(message, type = undefined) {
   const e = new Error(message)
-  e.type = type
+  if (type)
+    e.type = type
   return Promise.reject(e)
 }

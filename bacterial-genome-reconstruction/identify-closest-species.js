@@ -2,6 +2,7 @@
  * identify-closest-species.js
  */
 
+const os = require('os')
 const fs = require('fs').promises
 const cp = require('child_process')
 const util = require('util')
@@ -17,7 +18,7 @@ const SUMMARY_SCRIPT_PATH = `${__dirname}/blast_summaries.R`
 
 module.exports = identifyClosestSpecies
 
-async function identifyClosestSpecies(inputFastqPath, outputFolder) {
+async function identifyClosestSpecies(outputFolder, inputFastqPath) {
   const statsPath = await generateStats(outputFolder, inputFastqPath)
   const subsampledFastaPath = `${outputFolder}/subsample.fasta`
   await generateRandomReads(inputFastqPath, subsampledFastaPath)
@@ -31,14 +32,15 @@ async function identifyClosestSpecies(inputFastqPath, outputFolder) {
   const summaryContent = (await fs.readFile(summaryPath)).toString()
   const results = parseCSV(summaryContent, { columns: true, skip_empty_lines: true })
 
-  return {
-    outputFolder,
-    statsPath,
-    blastPath,
-    summaryPath,
-    readLengthPath,
-    results,
-  }
+  return results
+  /* return {
+   *   outputFolder,
+   *   statsPath,
+   *   blastPath,
+   *   summaryPath,
+   *   readLengthPath,
+   *   results,
+   * } */
 }
 
 function generateStats(outputFolder, inputFastqPath) {
@@ -56,7 +58,7 @@ function generateStats(outputFolder, inputFastqPath) {
 }
 
 function blast(outputFolder, inputFastaPath) {
-  const outputPath = `${outputFolder}/blast.csv`
+  const outputPath = `${outputFolder}/species_blast.csv`
 
   const command = shellEscape([
     'blastn',
@@ -75,8 +77,8 @@ function blast(outputFolder, inputFastaPath) {
 }
 
 function generateSummary(outputFolder, statsPath, blastPath) {
-  const summaryPath = `${outputFolder}/summary.csv`
-  const readLengthPath = `${outputFolder}/read_length.csv`
+  const summaryPath    = `${outputFolder}/species_summary.csv`
+  const readLengthPath = `${outputFolder}/species_read_length.csv`
 
   const command = shellEscape([
     'Rscript', SUMMARY_SCRIPT_PATH,
