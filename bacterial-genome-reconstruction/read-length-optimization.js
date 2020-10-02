@@ -9,6 +9,7 @@ const util = require('util')
 const exec = util.promisify(cp.exec)
 const shellEscape = require('shell-escape')
 const parseCSV = require('csv-parse/lib/sync')
+const del = require('del')
 const { range } = require('rambda')
 
 const NUM_CPUS = os.cpus().length
@@ -19,13 +20,12 @@ const SUMMARY_SCRIPT_PATH      = `${__dirname}/read_length_product.R`
 module.exports = readLengthOptimization
 
 async function readLengthOptimization(inputFolder, genus, accession) {
-  await Promise.all([
-    mkdirp(`${inputFolder}/cutoffs`),
-    mkdirp(`${inputFolder}/blast_results`),
+  await mkdirp([
+    `${inputFolder}/cutoffs`,
+    `${inputFolder}/blast_results`,
   ])
 
   const cutoffs = range(0, ((250 - 150) / 5) + 1).map(n => 150 + n * 5)
-  // console.log(cutoffs)
 
   const referenceResultPath = await blastDBCommand(inputFolder, genus, accession)
 
@@ -42,10 +42,12 @@ async function readLengthOptimization(inputFolder, genus, accession) {
   const summaryContent = (await fs.readFile(summaryPath)).toString()
   const results = normalizeResults(parseCSV(summaryContent, { columns: true, skip_empty_lines: true }))
 
-  return {
-    summaryPath,
-    results,
-  }
+  await del([
+    `${inputFolder}/cutoffs`,
+    `${inputFolder}/blast_results`,
+  ])
+
+  return results
 }
 
 function blastDBCommand(outputFolder, genus, accession) {
@@ -134,17 +136,22 @@ function normalizeResults(results) {
   return results
 }
 
-async function mkdirp(filepath) {
-  return fs.mkdir(filepath)
-  .catch(async e => {
-    if (e.code === 'EEXIST') {
-      if (!(await fs.lstat(filepath)).isDirectory()) {
+async function mkdirp(filepaths) {
+  if (typeof filepaths === 'string')
+    filepaths = [filepaths]
+
+  return Promise.all(filepaths.map(filepath =>
+    fs.mkdir(filepath)
+    .catch(async e => {
+      if (e.code === 'EEXIST') {
+        if (!(await fs.lstat(filepath)).isDirectory()) {
+          throw e
+        }
+      } else {
         throw e
       }
-    } else {
-      throw e
-    }
-    return Promise.resolve()
-  })
+      return Promise.resolve()
+    })
+  ))
 }
 
