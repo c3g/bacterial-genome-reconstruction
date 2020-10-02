@@ -29,14 +29,18 @@ app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 
 // API
-app.use('/api', require('./api'))
+app.use('/api/request', require('./routers/request'))
+app.use('/api/task',    require('./routers/task'))
+
+app.use('/api', (req, res) => {
+  res.status(404)
+  res.json({ ok: false, message: '404', url: req.originalUrl })
+  res.end()
+})
 
 
-/*
- * Redirect handler
- * We need to redirect all other routes to the app, e.g. /samples, /settings, etc.
- */
-
+// Redirect handler
+// We need to redirect all other routes to the app, e.g. /samples, /settings, etc.
 app.use((req, res, next) => {
   res.redirect('/')
 })
@@ -44,10 +48,8 @@ app.use((req, res, next) => {
 
 // Error handler
 app.use((err, req, res, next) => {
-  // set locals, only providing error in development
   res.locals.message = err.message
   res.locals.error   = req.app.get('env') === 'development' ? err : {}
-
   res.status(err.status || 500)
   res.render('error')
 })

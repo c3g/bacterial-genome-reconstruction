@@ -3,7 +3,7 @@
  */
 
 
-exports.errorHandler = res => err => {
+const errorHandler = res => err => {
   res.json({
     ok: false,
     message: err.toString(),
@@ -13,13 +13,26 @@ exports.errorHandler = res => err => {
   res.end()
 }
 
-exports.dataHandler = res => data => {
+const dataHandler = res => data => {
   res.json({ ok: true, data: data })
   res.end()
 }
 
-exports.okHandler = res => data => {
+const okHandler = res => data => {
   res.json({ ok: true })
   res.end()
 }
 
+const apiRoute = fn => {
+  return (req, res, next) =>
+    fn(req, res, next)
+    .then(dataHandler(res))
+    .catch(errorHandler(res))
+}
+
+module.exports = {
+  okHandler,
+  dataHandler,
+  errorHandler,
+  apiRoute,
+}
