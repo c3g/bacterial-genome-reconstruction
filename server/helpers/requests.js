@@ -4,7 +4,7 @@
 
 const fs = require('fs').promises
 const del = require('del')
-const uuid = require('uuid').v4
+const cuid = require('cuid')
 
 const { rejectWith } = require('./promise')
 const config = require('../config')
@@ -21,7 +21,7 @@ const requestsById = {}
 
 
 function create(filepath) {
-  const id = uuid()
+  const id = cuid()
   const folder = `${config.paths.requests}/${id}`
   const inputPath = `${folder}/input.fq`
   const request = { id, folder, inputPath }

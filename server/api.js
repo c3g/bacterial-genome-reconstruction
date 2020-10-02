@@ -2,9 +2,6 @@
  * api.js
  */
 
-// const tmp = require('tmp-promise')
-// const uuid = require('uuid').v4
-// const parseCSV = require('csv-parse/lib/sync')
 const express = require('express')
 const router = express.Router()
 
