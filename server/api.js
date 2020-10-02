@@ -13,6 +13,7 @@ const { dataHandler, errorHandler } = require('./helpers/handlers.js')
 const {
   identifyClosestSpecies,
   identifyClosestReferences,
+  readLengthOptimization,
 } = require('../bacterial-genome-reconstruction')
 
 /* POST identify species */
@@ -51,6 +52,24 @@ router.use('/identify-closest-references', (req, res, next) => {
     .then(references => {
       request.references = references
       return { references }
+    })
+  )
+  .then(dataHandler(res))
+  .catch(errorHandler(res))
+})
+
+/* POST read length optimization */
+router.use('/read-length-optimization', (req, res, next) => {
+  req.setTimeout(20 * 60 * 1000)
+
+  const { id, genus, accession } = req.body
+
+  Requests.get(id)
+  .then(request =>
+    readLengthOptimization(request.folder, genus, accession)
+    .then(readLengths => {
+      request.readLengths = readLengths
+      return { readLengths }
     })
   )
   .then(dataHandler(res))
