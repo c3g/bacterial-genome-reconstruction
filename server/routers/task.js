@@ -33,29 +33,27 @@ router.use('/create/:id/:name', apiRoute(req => {
     const runner = () =>
       tasksByName[name](request, req.body)
 
-    const task = Task.create(id, name, runner)
-    task.didComplete.then(() => {
-      request.results[name] = task.results || task.error
+    return Task.create(id, name, runner)
+    .then(task => {
+
+      task.didComplete.then(() => {
+        request.results[name] = task.results || task.error
+      })
+
+      return Task.serialize(task)
     })
   })
 }))
 
 /* POST get task status */
-router.use('/status/:id/*', apiRoute(req =>
-  Task.get(id)
-  .then(t => ({
-    name: t.name,
-    order: t.order,
-    status: t.status,
-    results: t.results,
-    error: t.error,
-  }))
+router.use('/status/:id', apiRoute(req =>
+  Task.get(req.params.id).then(Task.serialize)
 ))
 
 /* POST destroy task */
-router.use('/destroy/:id/*', apiRoute(req => {
+router.use('/destroy/:id', apiRoute(req => {
   // Task destruction may take a while if it's running
-  Task.destroy(id)
+  Task.destroy(req.params.id)
   return true
 }))
 

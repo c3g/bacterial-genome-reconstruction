@@ -17,6 +17,7 @@ module.exports = {
   create,
   get,
   destroy,
+  serialize,
 }
 
 /**
@@ -85,7 +86,7 @@ function create(requestId, name, run) {
     run,
   }
 
-  tasks.push(task)
+  tasks.push(requestId)
   tasksByID[requestId] = task
   updateOrders()
 
@@ -137,6 +138,16 @@ function destroy(requestId) {
   throw new Error('unreachable')
 }
 
+function serialize(t) {
+  return {
+    name: t.name,
+    order: t.order,
+    status: t.status,
+    results: t.results,
+    error: t.error,
+  }
+}
+
 
 // Helpers
 
@@ -162,7 +173,8 @@ function runTasks() {
 
   running = true
 
-  const nextTask = tasks[0]
+  const nextTaskId = tasks[0]
+  const nextTask = tasksByID[nextTaskId]
   nextTask.status = Status.RUNNING
 
   console.log(`runTasks: tick (${nextTask.name})`)
