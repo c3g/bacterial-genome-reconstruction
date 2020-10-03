@@ -2,44 +2,16 @@
 
 @import './normalize.css';
 @import './skeleton.css';
-
-@import '../components/App.scss';
+@import './scrollbar.scss';
+@import './typography.scss';
+@import './Button.scss';
 
 @import './_variables.scss';
 
-
-body {
+html, body, #root {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-body.platform-mac {
-  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-}
-body.platform-linux {
-  font-family: 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-}
-body.platform-windows {
-  font-family: 'Segoe UI', 'Roboto', 'Oxygen', sans-serif;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
-}
-
-/*
- * Corrections
- */
-
-.DropZone {
-  border-color: $border-color;
-  margin-bottom: 1rem;
-}
-.DropZone__filename {
-  width: 100%;
-  white-space: nowrap;
+  padding: 0;
+  width:  100%;
+  height: 100%;
   overflow: hidden;
-  text-overflow: ellipsis;
 }

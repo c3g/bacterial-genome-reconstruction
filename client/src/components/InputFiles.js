@@ -66,7 +66,7 @@ class InputFiles extends React.Component {
             >
               {
                 r1 ?
-                  <span className='InputFiles__file.name'>
+                  <span className='InputFiles__filename'>
                     {r1.name}
                   </span>
                   :

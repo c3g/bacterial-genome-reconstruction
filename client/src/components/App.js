@@ -44,30 +44,40 @@ class App extends React.Component {
         component: IdentifyReferences,
       },
       {
-        title: 'Optimize read trim length',
+        title: 'Optimize read length',
         component: ReadLengthOptimization,
       },
     ]
 
     return (
-      <div className='App container'>
-        <div className='App__steps four columns'>
-          {
-            tabs.map((tab, i) =>
-              <div
-                key={i}
-                className={cxStep(i, activeStep, enabledStep)}
-                role='button'
-                onClick={i <= enabledStep ? () => this.setStep(i) : undefined}
-              >
-                {tab.title}
-              </div>
-            )
-          }
+      <div className='App'>
+        <div className='App__content'>
+          <div className='App__wrapper'>
+            <div className='App__steps'>
+              {
+                tabs.map((tab, i) =>
+                  <div
+                    key={i}
+                    className={cxStep(i, activeStep, enabledStep)}
+                    role='button'
+                    onClick={i <= enabledStep ? () => this.setStep(i) : undefined}
+                  >
+                    <div className='App__step__icon'>{i + 1}</div>
+                    <div className='App__step__title'>{tab.title}</div>
+                  </div>
+                )
+              }
+            </div>
+            <div className='App__currentStep'>
+              {React.createElement(tabs[activeStep].component, { nextStep })}
+            </div>
+          </div>
         </div>
-        <div className='App__content eight columns'>
-          {React.createElement(tabs[activeStep].component, { nextStep })}
-        </div>
+
+        <footer className='App__footer'>
+          <span>Made with <span className='text-error'>❤️</span> in Montréal
+            — Implemented by Romain Grégoire, based on an original tool by Matthew D'Iorio & Ken Dewar</span>
+        </footer>
       </div>
     );
   }

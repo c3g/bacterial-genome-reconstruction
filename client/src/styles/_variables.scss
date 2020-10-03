@@ -1,8 +1,83 @@
 
+$font-family-text:  Ubuntu, Roboto, Arial, sans-serif;
+$font-family-title: Ubuntu, Roboto, Arial, sans-serif;
 
-$text-normal:  #343434;
-$text-muted:   #9E9E9E;
+$color:            #eeeeee;
+$bg-color-default: #4d5057;
 
-$border-color:  #DBDBDB;
+$border-color: #a0a0a0;
+$bg-color-dark: #e9e9e9;
+$border-color-dark: $bg-color-default;
+$hover-color: rgba(black, 0.8);
+$hover-bg-color: rgba(black, 0.05);
+$hover-light-bg-color: rgba(black, 0.05);
+$active-bg-color: rgba(black, 0.025);
+$border-color-light: rgba(black, 0.05);
+$border-color-medium: rgba(black, 0.15);
+$border-color-dark: rgba(black, 0.3);
+$checkbox-border-color: #888888;
 
-$link-color:  #599EFF;
+$table-color: #bdc4cd;
+$table-bg-color: $bg-color-default;
+$table-bg-alt-color: darken($bg-color-default, 5%);
+$table-border-color: $border-color;
+
+$input-color:        #333;
+$input-bg-color:     #fff;
+$input-border-color: #aaa;
+
+$dropdown-bg-color: #f3f3f3;
+
+$shadow-color: rgba(black, 0.6);
+
+$focus-color: #599eff;
+
+$accent-color:       #2297DE;
+$light-accent-color: lighten(#2297DE, 10%);
+$dark-accent-color:  darken(#2297DE, 10%);;
+$selection-color:    rgba(#a6cbff, 0.8);
+
+$link-color: #00B7FF;
+
+$text-color-default: $color;
+$text-color-normal:  $text-color-default;
+$text-color-info:    rgb(100, 148, 237);
+$text-color-success: rgb(115, 201, 144);
+$text-color-warning: rgb(243, 191, 68);
+$text-color-error:   rgb(255, 99, 71);
+$text-color-muted:   darken($text-color-normal, 40%);
+$text-color-subtle:  darken($text-color-normal, 60%);
+$text-color-highlight: $text-color-normal;
+$text-color-selected:  #fff;
+$text-color-white:     #fff;
+
+$bg-color-normal:  $bg-color-default;
+$bg-color-info:    rgb(15, 130, 230);
+$bg-color-success: rgb(43, 161, 67);
+$bg-color-warning: rgb(173, 124, 11);
+$bg-color-error:   rgb(209, 59, 46);
+$bg-color-muted:   transparent;
+$bg-color-subtle:  transparent;
+$bg-color-highlight: transparent;
+$bg-color-selected: transparent;
+
+$bg-light-color-info:    #7ebef7;
+$bg-light-color-success: #72da87;
+$bg-light-color-warning: #f3bf44;
+$bg-light-color-error:   #e89d96;
+
+$colors: (
+  normal:  (text: $text-color-normal,  bg: $bg-color-normal,  bg-light: $bg-color-normal, ),
+  info:    (text: $text-color-info,    bg: $bg-color-info,    bg-light: $bg-light-color-info,   ),
+  success: (text: $text-color-success, bg: $bg-color-success, bg-light: $bg-light-color-success,),
+  warning: (text: $text-color-warning, bg: $bg-color-warning, bg-light: $bg-light-color-warning,),
+  error:   (text: $text-color-error,   bg: $bg-color-error,   bg-light: $bg-light-color-error,  ),
+);
+
+$padding: 5px;
+
+$notification-size: 45px;
+
+$vertical-step: 5px;
+$line-height: 25px;
+$timeline-height: 30px;

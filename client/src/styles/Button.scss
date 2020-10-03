@@ -1,0 +1,51 @@
+@import './_variables.scss';
+
+.Button {
+  padding: 0 30px;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 400;
+  border-radius: 3px;
+  text-decoration: none;
+  border: 0;
+  margin: 0;
+  min-width: auto;
+  vertical-align: middle;
+  font-size: inherit;
+  line-height: 1.1;
+  text-align: center;
+  cursor: pointer;
+  color: $text-color-normal;
+  background: $accent-color;
+  height: 36px;
+  transition-property: color,background,border-color;
+  transition-duration: .1s;
+  transition-timing-function: ease-in;
+  outline: none;
+
+  min-width: 160px;
+  height: 48px;
+  font-size: 16px;
+  margin: auto;
+  overflow: hidden;
+}
+.Button:not([disabled]):hover {
+  color:            darken($text-color-normal, 10%);
+  background-color: rgba($accent-color, 0.8);
+}
+.Button:not([disabled]):active {
+  color: #fff;
+  background-color: hsl(202.70000000000005,74%,40.2%);
+}
+.Button[disabled] {
+  pointer-events: none;
+  background-color: #3a3c41;
+  color: #787c7f;
+  cursor: initial;
+  opacity: 0.65;
+  filter: alpha(opacity=65);
+  box-shadow: none;
+}
+

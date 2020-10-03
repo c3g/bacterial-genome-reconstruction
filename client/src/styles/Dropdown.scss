@@ -1,0 +1,206 @@
+@import './_variables.scss';
+@import './_mixins.scss';
+
+.Dropdown {
+  position: relative;
+  width: 180px;
+}
+.Dropdown > .Button {
+  text-align: left;
+  width: 100%;
+  font-weight: normal;
+  border-color: $border-color-medium;
+  background-color: $bg-color-default;
+  &:hover {
+    background-color: darken($bg-color-default, 6%);
+  }
+  &:active {
+    background-color: darken($bg-color-default, 10%);
+  }
+}
+.Dropdown.open > .Button {
+  background-color: darken($bg-color-default, 10%);
+}
+.Dropdown.input-like > .Button {
+  color: $input-color;
+  border-color: $input-border-color;
+  background-color: $input-bg-color;
+}
+.Popup.open,
+.Tooltip.visible {
+  display: block;
+}
+.Popup,
+.Tooltip {
+  display: none;
+  z-index: 100;
+}
+.Popup,
+.Tooltip,
+.Dropdown__inner {
+  position: absolute;
+  cursor: default;
+  box-shadow: 1px 2px 6px 1px rgba(0, 0, 0, 0.3);
+}
+.Popup,
+.Dropdown__inner {
+  min-width: 180px;
+  padding: (2*$padding - 2px) 0;
+  @include popup();
+}
+.Dropdown__menu.compact > .Dropdown__inner {
+  padding: 0;
+}
+.Tooltip {
+  color: $text-color-white;
+  background-color: rgba(black, 0.6);
+  padding: 2px 5px;
+}
+.Dropdown__menu {
+  position: absolute;
+  z-index: 2;
+}
+.Dropdown__inner {
+  position: absolute;
+  opacity: 0;
+  transform: translateY(-2em);
+  transition: all 0.2s ease-in-out;
+  pointer-events: none;
+}
+.Dropdown__menu.open > .Dropdown__inner {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: unset;
+}
+.Dropdown__menu.close > .Dropdown__inner {
+  opacity: 0;
+  transform: translateY(2em);
+}
+.Dropdown__menu.right {
+  & > .Dropdown__inner {
+    transform: translateX(-10px);
+  }
+  &.open > .Dropdown__inner {
+    transform: translateX(0);
+  }
+}
+.Tooltip {
+  pointer-events: none;
+  padding: 0 $padding;
+  line-height: 30px;
+  min-width: unset;
+}
+.Dropdown__inner, .Popup {
+  & .content {
+    position: relative;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    height: 30px;
+    padding: 0 2*$padding;
+    white-space: nowrap;
+  }
+
+  & .item {
+    position: relative;
+    width: 100%;
+    text-align: left;
+    height: 30px;
+    padding: 0 2*$padding;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  & .item.disabled {
+    color: $text-color-muted;
+    opacity: 0.6;
+  }
+  & .item:not(.disabled):not(.segmented):hover {
+    color: #fff;
+    background-color: rgba($focus-color, 0.6);
+  }
+
+  & .item.segmented {
+    display: flex;
+    align-items: center;
+    padding: 0 !important;
+    border-top:    1px solid rgba($border-color-light, 0.05);
+    border-bottom: 1px solid rgba($border-color-light, 0.05);
+  }
+  & .item.segmented + .item.segmented {
+    border-top: none;
+  }
+  & .item.segmented > .main-button {
+    padding-left: 2*$padding;
+  }
+  & .item.segmented > .segment {
+    height: 100%;
+    line-height: 30px;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  & .item.segmented > .segment:not(:first-of-type) {
+    padding: 0 2*$padding;
+    border-left: 1px solid $border-color-light;
+  }
+  & .item.segmented > .segment:not([disabled]):hover {
+    color: #fff;
+    background-color: $focus-color;
+  }
+}
+.Popup.with-icons,
+.Dropdown__menu.with-icons > .Dropdown__inner {
+  & .item {
+    padding: 0 2*$padding 0 (6 * $padding);
+  }
+  & .item.segmented > .main-button {
+    padding-left: 6*$padding;
+  }
+  & .item > .Icon.menu,
+  & .item.segmented > .main-button > .Icon.menu {
+    position: absolute;
+    color: $color;
+    width: 2*$padding;
+    left: 2*$padding;
+  }
+  & .item.segmented > .main-button > .Icon.menu {
+    top: $padding + 2px;
+  }
+}
+.Popup .item[disabled] > .Icon.menu,
+.Dropdown__inner .item[disabled] > .Icon.menu {
+  color: $text-color-muted;
+}
+.Popup .group ,
+.Dropdown__inner .group {
+  position: relative;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  height: 30px;
+  padding: 0 2*$padding;
+  color: $color;
+  font-weight: bold;
+  white-space: nowrap;
+}
+.Popup .separator ,
+.Dropdown__inner .separator {
+  width: 100%;
+  height: 2*$padding;
+  margin-bottom: 2*$padding;
+  border-bottom: 1px solid $border-color-light;
+}
+
+.FilteringDropdown__items {
+  max-height: 300px;
+  overflow-y: auto;
+}
+.FilteringDropdown__items::-webkit-scrollbar {
+  width: 5px;
+}
+.FilteringDropdown__items::-webkit-scrollbar-thumb {
+  border-radius: 1px;
+}

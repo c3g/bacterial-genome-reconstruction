@@ -1,3 +1,4 @@
+@import '../styles/_variables.scss';
 
 .IdentifyReferences thead {
   width: 100%;
@@ -6,7 +7,7 @@
 }
 
 .IdentifyReferences__results {
-  height: 500px;
+  // height: 500px;
 }
 .IdentifyReferences__results .sticky-table-table {
   width: 100%;
@@ -14,10 +15,12 @@
 }
 .IdentifyReferences__results .sticky-table-cell {
   background: transparent;
+  border-bottom: 1px solid $text-color-muted !important;
 }
 .IdentifyReferences__results__head  .sticky-table-cell {
-  background: white;
   font-weight: bold;
+  background: $bg-color-default;
+  border-bottom: 1px solid $text-color-normal !important;
 }
 
 
