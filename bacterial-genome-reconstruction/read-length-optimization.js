@@ -16,6 +16,7 @@ const NUM_CPUS = os.cpus().length
 
 const OPTIMIZATION_SCRIPT_PATH = `${__dirname}/read_length_optimization.R`
 const SUMMARY_SCRIPT_PATH      = `${__dirname}/read_length_product.R`
+const DB_BY_GENUS_PATH         = `${__dirname}/db/blast_db/by_genus`
 
 module.exports = readLengthOptimization
 
@@ -55,7 +56,7 @@ function blastDBCommand(outputFolder, genus, accession) {
 
   const command = shellEscape([
     'blastdbcmd',
-        '-db', `db/blast_db/by_genus/${genus}/db`,
+        '-db', `${DB_BY_GENUS_PATH}/${genus}/db`,
         '-entry', accession,
         '-outfmt', '%f',
         '-out', outputPath
