@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import cx from 'classname'
 import { StickyTable as Table, Row, Cell } from 'react-sticky-table'
 
-import extractGenus from '../helpers/extract-genus'
 import { setValue } from '../reducers/species'
 import { identifyClosestReferences } from '../reducers/references'
 import './IdentifySpecies.scss'
@@ -20,10 +19,9 @@ const mapDispatchToProps = { setValue, identifyClosestReferences }
 class IdentifySpecies extends React.Component {
 
   onSelectValue = (s) => {
-    this.props.nextStep()
     this.props.setValue(s)
-
-    this.props.identifyClosestReferences(extractGenus(s.name))
+    this.props.identifyClosestReferences()
+    this.props.nextStep()
   }
 
   renderTable() {

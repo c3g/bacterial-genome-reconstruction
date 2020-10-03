@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import cx from 'classname'
 import { StickyTable as Table, Row, Cell } from 'react-sticky-table'
 import { setValue } from '../reducers/references'
+import { readLengthOptimization } from '../reducers/readLengths'
 import './IdentifyReferences.scss'
 
 const mapStateToProps = state => ({
@@ -12,14 +13,14 @@ const mapStateToProps = state => ({
   data: state.references.data,
 })
 
-const mapDispatchToProps = { setValue }
+const mapDispatchToProps = { setValue, readLengthOptimization }
 
 class IdentifyReferences extends React.Component {
 
   onSelectValue = (s) => {
     this.props.nextStep()
     this.props.setValue(s)
-    // TODO
+    this.props.readLengthOptimization()
   }
 
   renderTable() {

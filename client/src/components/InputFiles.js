@@ -6,7 +6,11 @@ import {
   setFiles,
   setMessages,
 } from '../reducers/fastqInput'
+import { createRequest } from '../reducers/request'
 import { identifyClosestSpecies } from '../reducers/species'
+
+import Button from './Button'
+
 import './InputFiles.scss'
 
 const mapStateToProps = state => ({
@@ -14,8 +18,12 @@ const mapStateToProps = state => ({
   r2: state.fastqInput.r2,
 })
 
-const mapDispatchToProps = dispatch =>
-  bindActionCreators({ setFiles, setMessages, identifyClosestSpecies }, dispatch)
+const mapDispatchToProps = {
+  setFiles,
+  setMessages,
+  identifyClosestSpecies,
+  createRequest,
+}
 
 class InputFiles extends React.Component {
 
@@ -35,8 +43,10 @@ class InputFiles extends React.Component {
 
   onClickIdentify = () => {
     const r1 = window.files.get(this.props.r1.file)
+    this.props.createRequest(r1)
+    .then(() =>
+      this.props.identifyClosestSpecies())
     this.props.nextStep()
-    this.props.identifyClosestSpecies(r1)
   }
 
   render() {
@@ -79,9 +89,9 @@ class InputFiles extends React.Component {
           Select both
         </StyledDropZone>
 
-        <button onClick={this.onClickIdentify} disabled={!hasR1}>
+        <Button onClick={this.onClickIdentify} disabled={!hasR1}>
           Identify species
-        </button>
+        </Button>
 
       </div>
     );
