@@ -5,6 +5,9 @@ import cx from 'classname';
 import InputFiles from './InputFiles'
 import IdentifySpecies from './IdentifySpecies'
 import IdentifyReferences from './IdentifyReferences'
+import ReadLengthOptimization from './ReadLengthOptimization'
+
+import './App.scss'
 
 class App extends React.Component {
   state = {
@@ -17,7 +20,10 @@ class App extends React.Component {
   }
 
   nextStep = () => {
-    this.setStep(this.state.activeStep + 1)
+    const nextStepIndex = this.state.activeStep + 1 
+    this.setStep(nextStepIndex)
+    if (this.state.enabledStep < nextStepIndex)
+      this.setState({ enabledStep: nextStepIndex })
   }
 
   render() {
@@ -39,7 +45,7 @@ class App extends React.Component {
       },
       {
         title: 'Optimize read trim length',
-        component: null,
+        component: ReadLengthOptimization,
       },
       {
         title: 'Create guided assembly',
@@ -65,9 +71,6 @@ class App extends React.Component {
         </div>
         <div className='App__content eight columns'>
           {React.createElement(tabs[activeStep].component, { nextStep })}
-          <div>
-            <button onClick={nextStep}>Next</button>
-          </div>
         </div>
       </div>
     );
