@@ -7,12 +7,31 @@ import axios from 'axios'
 import QS from 'qs'
 
 
-export const identifyClosestSpecies = (file) =>
-  POST(`/identify-closest-species`, form({ file }))
+export const request = {
+  create: file => POST(`/request/create`, form({ file })),
+  get: id => GET(`/request/get/${id}`),
+  destroy: id => POST(`/request/destroy/${id}`),
+}
 
-export const identifyClosestReferences = ({ id, genus }) =>
-  POST(`/identify-closest-references`, { id, genus })
+export const task = {
+  identifyClosestSpecies: requestId =>
+    POST(`/task/create/${requestId}/identify-closest-species`),
+  identifyClosestReferences: (requestId, genus) =>
+    POST(`/task/create/${requestId}/identify-closest-references`, { genus }),
+  readLengthOptimization: (requestId, genus, accession) =>
+    POST(`/task/create/${requestId}/read-length-optimization`, { genus, accession }),
+  status: requestId => POST(`/task/status/${requestId}`),
+  destroy: requestId => POST(`/task/destroy/${requestId}`),
+}
 
+
+
+// Helpers
+
+/* eslint-disable no-unused-vars */
+function GET(url, params, options = {})  { return fetchAPI(url, params, { method: 'get', ...options }) }
+function POST(url, params, options = {}) { return fetchAPI(url, params, { method: 'post', ...options }) }
+/* eslint-enable no-unused-vars */
 
 function fetchAPI(url, params, options = {}) {
   const { method = 'get', ...other } = options
@@ -39,11 +58,6 @@ function fetchAPI(url, params, options = {}) {
     return Promise.reject(createError(data))
   })
 }
-
-/* eslint-disable no-unused-vars */
-function GET(url, params, options = {})  { return fetchAPI(url, params, { method: 'get', ...options }) }
-function POST(url, params, options = {}) { return fetchAPI(url, params, { method: 'post', ...options }) }
-/* eslint-enable no-unused-vars */
 
 function createError(data) {
   const e = new Error(data.message)

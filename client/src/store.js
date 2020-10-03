@@ -3,20 +3,20 @@ import logger from 'redux-logger'
 import thunk from 'redux-thunk'
 
 import fastqInputReducer from './reducers/fastqInput.js'
-import generalReducer from './reducers/general.js'
-import speciesReducer from './reducers/species.js'
+import readLengthsReducer from './reducers/readLengths.js'
 import referencesReducer from './reducers/references.js'
-// import counterReducer from './features/counter/counterSlice'
+import requestReducer from './reducers/request.js'
+import speciesReducer from './reducers/species.js'
 
 const middleware = [thunk, logger]
 
 export default configureStore({
   middleware,
   reducer: {
-    // counter: counterReducer,
     fastqInput: fastqInputReducer,
-    general: generalReducer,
-    species: speciesReducer,
+    readLengths: readLengthsReducer,
     references: referencesReducer,
+    request: requestReducer,
+    species: speciesReducer,
   },
 });

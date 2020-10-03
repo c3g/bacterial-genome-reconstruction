@@ -1,17 +1,15 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import * as api from '../api'
-import extractGenus from '../helpers/extract-genus'
 
 const initialState = {
   isLoading: false,
   isLoaded: false,
   message: undefined,
-  value: undefined,
-  data: [],
+  data: undefined,
 }
 
-export const references = createSlice({
-  name: 'references',
+export const request = createSlice({
+  name: 'request',
   initialState: initialState,
   reducers: {
     setIsLoading: (state, action) => {
@@ -22,9 +20,6 @@ export const references = createSlice({
     },
     setMessage: (state, action) => {
       state.message = action.payload
-    },
-    setValue: (state, action) => {
-      state.value = action.payload
     },
     setData: (state, action) => {
       state.data = action.payload
@@ -37,23 +32,15 @@ export const references = createSlice({
   },
 });
 
-export const { setIsLoading, setIsLoaded, setMessage, setValue, setData, clear } = references.actions;
+export const { setIsLoading, setIsLoaded, setMessage, setData, clear } = request.actions;
 
-export const identifyClosestReferences = createAsyncThunk(
-  'references/identifyClosestReferences',
-  async (params, { dispatch: _, getState }) => {
-    const state = getState()
-
-    if (!state.general.requestId) return
-    if (!state.species.value)     return
-
-    const id = state.general.requestId
-    const genus = extractGenus(state.species.value.name)
-
+export const createRequest = createAsyncThunk(
+  'request/create',
+  async (file, { dispatch: _ }) => {
     _(setIsLoading(true))
     try {
-      const response = await api.task.identifyClosestReferences({ id, genus })
-      _(setData(response.references))
+      const data = await api.request.create(file)
+      _(setData(data))
       _(setIsLoaded(true))
     } catch (e) {
       _(setMessage(e.message))
@@ -61,4 +48,4 @@ export const identifyClosestReferences = createAsyncThunk(
     _(setIsLoading(false))
   })
 
-export default references.reducer;
+export default request.reducer;

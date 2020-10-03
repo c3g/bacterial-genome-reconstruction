@@ -10,8 +10,8 @@ const initialState = {
   data: [],
 }
 
-export const references = createSlice({
-  name: 'references',
+export const readLengths = createSlice({
+  name: 'readLengths',
   initialState: initialState,
   reducers: {
     setIsLoading: (state, action) => {
@@ -37,23 +37,25 @@ export const references = createSlice({
   },
 });
 
-export const { setIsLoading, setIsLoaded, setMessage, setValue, setData, clear } = references.actions;
+export const { setIsLoading, setIsLoaded, setMessage, setValue, setData, clear } = readLengths.actions;
 
-export const identifyClosestReferences = createAsyncThunk(
-  'references/identifyClosestReferences',
+export const readLengthOptimization = createAsyncThunk(
+  'readLengths/readLengthOptimization',
   async (params, { dispatch: _, getState }) => {
     const state = getState()
 
     if (!state.general.requestId) return
     if (!state.species.value)     return
+    if (!state.references.value)  return
 
     const id = state.general.requestId
     const genus = extractGenus(state.species.value.name)
+    const accession = state.references.value.accession
 
     _(setIsLoading(true))
     try {
-      const response = await api.task.identifyClosestReferences({ id, genus })
-      _(setData(response.references))
+      const response = await api.task.readLengthOptimization({ id, genus, accession })
+      _(setData(response.readLengths))
       _(setIsLoaded(true))
     } catch (e) {
       _(setMessage(e.message))
@@ -61,4 +63,4 @@ export const identifyClosestReferences = createAsyncThunk(
     _(setIsLoading(false))
   })
 
-export default references.reducer;
+export default readLengths.reducer;

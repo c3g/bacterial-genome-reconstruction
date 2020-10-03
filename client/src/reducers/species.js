@@ -1,10 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { setRequestId } from './general'
 import * as api from '../api'
+import { delay } from '../helpers/promise'
 
 const initialState = {
   isLoading: false,
   isLoaded: false,
+  status: undefined,
+  order: undefined,
   message: undefined,
   value: undefined,
   data: [],
@@ -19,6 +21,10 @@ export const species = createSlice({
     },
     setIsLoaded: (state, action) => {
       state.isLoaded = action.payload
+    },
+    update: (state, action) => {
+      state.status = action.payload.status
+      state.order = action.payload.order
     },
     setMessage: (state, action) => {
       state.message = action.payload
@@ -37,16 +43,30 @@ export const species = createSlice({
   },
 });
 
-export const { setIsLoading, setIsLoaded, setMessage, setValue, setData, clear } = species.actions;
+export const { setIsLoading, setIsLoaded, update, setMessage, setValue, setData, clear } = species.actions;
 
 export const identifyClosestSpecies = createAsyncThunk(
   'species/identifyClosestSpecies',
-  async (file, { dispatch: _ }) => {
+  async (params, { dispatch: _, getState }) => {
+    const requestId = getState().request.data.id
+
     _(setIsLoading(true))
+
     try {
-      const response = await api.identifyClosestSpecies(file)
-      _(setRequestId(response.id))
-      _(setData(response.species))
+      const res = await api.task.identifyClosestSpecies(requestId)
+
+      let task
+      do {
+        await delay(5000)
+        task = await api.task.status(requestId)
+        _(update(task))
+      } while (task.status !== 'COMPLETED')
+
+      if (task.results)
+        _(setData(task.results))
+      else
+        _(setMessage(task.error))
+
       _(setIsLoaded(true))
     } catch (e) {
       _(setMessage(e.message))
