@@ -7,14 +7,24 @@ import { Provider } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
 import './detect-platform';
 
-ReactDOM.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+const render = Component =>
+  ReactDOM.render(
+    <React.StrictMode>
+      <Provider store={store}>
+        <Component />
+      </Provider>
+    </React.StrictMode>,
+    document.getElementById('root')
+  );
+
+render(App)
+
+if (module.hot) {
+  module.hot.accept('./components/App', () => {
+    const NextApp = require('./components/App')
+    render(NextApp)
+  })
+}
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
