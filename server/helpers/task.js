@@ -193,5 +193,8 @@ function runTasks() {
     nextTask.status = Status.COMPLETED
     nextTask.didComplete.resolve()
   })
-  .then(runTasks) // Loop
+  .then(() => {
+    running = false
+    return runTasks() // Loop
+  })
 }
