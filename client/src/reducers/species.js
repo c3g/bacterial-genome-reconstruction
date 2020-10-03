@@ -33,6 +33,7 @@ export const species = createSlice({
       state.value = action.payload
     },
     setData: (state, action) => {
+      state.isLoaded = true
       state.data = action.payload
     },
     clear: (state) => {
@@ -51,9 +52,9 @@ export const identifyClosestSpecies = createAsyncThunk(
     const requestId = getState().request.data.id
 
     _(setIsLoading(true))
-
     try {
-      const res = await api.task.identifyClosestSpecies(requestId)
+
+      await api.task.identifyClosestSpecies(requestId)
 
       let task
       do {
@@ -67,7 +68,6 @@ export const identifyClosestSpecies = createAsyncThunk(
       else
         _(setMessage(task.error))
 
-      _(setIsLoaded(true))
     } catch (e) {
       _(setMessage(e.message))
     }
