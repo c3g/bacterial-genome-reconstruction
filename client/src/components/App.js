@@ -12,7 +12,7 @@ import './App.scss'
 class App extends React.Component {
   state = {
     activeStep: 0,
-    enabledStep: 2,
+    enabledStep: 0,
   }
 
   setStep = (activeStep) => {
@@ -46,10 +46,6 @@ class App extends React.Component {
       {
         title: 'Optimize read trim length',
         component: ReadLengthOptimization,
-      },
-      {
-        title: 'Create guided assembly',
-        component: null,
       },
     ]
 
