@@ -4,52 +4,38 @@ import cx from 'classname'
 function Icon(props) {
   const {
     name,
-    type,
+    variant,
     size,
     className,
-    small,
-    large,
-    info,
-    success,
-    warning,
-    error,
-    muted,
-    subtle,
-    highlight,
     spin,
     marginLeft,
     marginRight,
+    style = {},
     ...rest
   } = props
 
-  const iconClassName = cx(
-    'Icon fa',
-    `fa-${name}`,
-    size ? `fa-${size}` : '',
-    className,
-    {
-      [`text-${type}`] : type !== undefined,
-      'small': small,
-      'large': large,
-      'text-info': info,
-      'text-success': success,
-      'text-warning': warning,
-      'text-error': error,
-      'text-muted': muted,
-      'text-subtle': subtle,
-      'text-highlight': highlight,
-      'fa-spin': spin,
-    }
-  )
-
-  const style = {
-    marginLeft: marginLeft,
-    marginRight: marginRight,
-    ...props.style
-  }
-
   return (
-    <i className={iconClassName} {...rest} style={style} />
+    <i
+      className={iconCx(className, name, size, variant, spin)}
+      style={{
+        marginLeft,
+        marginRight,
+        ...style,
+      }}
+      {...rest}
+    />
+  )
+}
+
+function iconCx(className, name, size, variant, spin) {
+  return cx(
+    'Icon',
+    className,
+    'fa',
+    `fa-${name}`,
+    size ? `fa-${size}` : undefined,
+    variant ? `text-${variant}` : undefined,
+    spin ? 'fa-spin' : undefined,
   )
 }
 

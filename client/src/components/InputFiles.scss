@@ -1,5 +1,9 @@
 @import '../styles/_variables.scss';
 
+.InputFiles__intro {
+  margin-bottom: 1em;
+}
+
 .InputFiles__dropzone {
   padding: 1.5em 1.5em 0.5em;
   margin-bottom: 1em;
@@ -28,8 +32,14 @@
 
 .InputFiles {
   .DropZone {
+    color: $text-color-muted;
     border-color: $border-color;
     margin-bottom: 1rem;
+  }
+  .DropZone:hover {
+    color: $text-color-normal;
+    border-color: $text-color-normal;
+    background-color: transparent;
   }
   .DropZone__filename {
     width: 100%;

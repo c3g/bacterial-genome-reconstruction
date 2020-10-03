@@ -1,0 +1,43 @@
+/*
+ * spinner.css
+ * From https://github.com/atom/one-dark-ui/blob/bd51756c1605c21a380be88980736f4f20baf947/styles/progress.less
+ */
+
+@keyframes opacity-show-animation {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.Spinner {
+  text-align: center;
+  transition: all .25s;
+}
+.Spinner.--block {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+.Spinner.--hidding {
+  opacity: 0;
+}
+.Spinner__icon {
+  margin-bottom: 1rem;
+}
+.Spinner__message {
+}
+
+
+.Spinner__children {
+  opacity: 0;
+  animation-name: opacity-show-animation;
+  animation-duration: .25s;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}

@@ -33,6 +33,12 @@ code {
 
 /* Utility classes */
 
+.text-size-small { font-size: 12px; }
+.text-size-normal { font-size: 16px; }
+.text-size-large { font-size: 20px; }
+
+.text-normal { color: $text-color-normal; }
+.text-inverse { color: $text-color-inverse; }
 .text-info { color: $text-color-info; }
 .text-success { color: $text-color-success; }
 .text-warning { color: $text-color-warning; }

@@ -2,6 +2,8 @@ import React from 'react';
 import cx from 'classname';
 // import { Counter } from '../features/counter/Counter';
 
+import Icon from './Icon'
+import Steps from './Steps'
 import InputFiles from './InputFiles'
 import IdentifySpecies from './IdentifySpecies'
 import IdentifyReferences from './IdentifyReferences'
@@ -33,18 +35,22 @@ class App extends React.Component {
     const tabs = [
       {
         title: 'Input files',
+        icon: <Icon name='file' />,
         component: InputFiles,
       },
       {
         title: 'Identify species',
+        icon: <Icon name='filter' />,
         component: IdentifySpecies,
       },
       {
         title: 'Identify reference',
+        icon: <Icon name='bullseye' />,
         component: IdentifyReferences,
       },
       {
         title: 'Optimize read length',
+        icon: <Icon name='arrows-h' />,
         component: ReadLengthOptimization,
       },
     ]
@@ -53,21 +59,12 @@ class App extends React.Component {
       <div className='App'>
         <div className='App__content'>
           <div className='App__wrapper'>
-            <div className='App__steps'>
-              {
-                tabs.map((tab, i) =>
-                  <div
-                    key={i}
-                    className={cxStep(i, activeStep, enabledStep)}
-                    role='button'
-                    onClick={i <= enabledStep ? () => this.setStep(i) : undefined}
-                  >
-                    <div className='App__step__icon'>{i + 1}</div>
-                    <div className='App__step__title'>{tab.title}</div>
-                  </div>
-                )
-              }
-            </div>
+            <Steps
+              tabs={tabs}
+              enabled={enabledStep}
+              active={activeStep}
+              onChange={this.setStep}
+            />
             <div className='App__currentStep'>
               {React.createElement(tabs[activeStep].component, { nextStep })}
             </div>
@@ -81,10 +78,6 @@ class App extends React.Component {
       </div>
     );
   }
-}
-
-function cxStep(n, activeStep, enabledStep) {
-  return cx('App__step', { '--enabled': n <= enabledStep, '--active': n === activeStep })
 }
 
 export default App;

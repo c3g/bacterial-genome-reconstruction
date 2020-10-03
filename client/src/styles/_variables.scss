@@ -49,7 +49,7 @@ $text-color-muted:   darken($text-color-normal, 40%);
 $text-color-subtle:  darken($text-color-normal, 60%);
 $text-color-highlight: $text-color-normal;
 $text-color-selected:  #fff;
-$text-color-white:     #fff;
+$text-color-inverse:   #000;
 
 $bg-color-normal:  $bg-color-default;
 $bg-color-info:    rgb(15, 130, 230);
@@ -75,6 +75,8 @@ $colors: (
 );
 
 $padding: 5px;
+
+$border-radius: 3px;
 
 $notification-size: 45px;
 

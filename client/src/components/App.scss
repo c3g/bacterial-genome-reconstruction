@@ -1,7 +1,5 @@
 @import '../styles/_variables.scss';
 
-$step-icon-size: 3rem;
-
 .App {
   display: flex;
   flex-direction: column;
@@ -21,62 +19,6 @@ $step-icon-size: 3rem;
   width: 800px;
   justify-content: center;
   align-items: center;
-}
-
-.App__steps {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  margin-bottom: 2em;
-}
-.App__step {
-  position: relative;
-  cursor: not-allowed;
-  color: $text-color-muted;
-  font-weight: normal;
-  text-align: center;
-}
-.App__step.--enabled {
-  cursor: pointer;
-  color: $text-color-normal;
-  & .App__step__icon {
-    color: $bg-color-default;
-    background: $text-color-normal;
-  }
-}
-.App__step.--active {
-  color: $text-color-normal;
-  font-weight: bold;
-  & .App__step__icon {
-    color: white;
-    background-color: $focus-color;
-    border: 1px solid $focus-color;
-  }
-}
-.App__step:not(:first-child)::before {
-  content: ' ';
-  position: absolute;
-  top:  $step-icon-size / 2;
-  left: -100px;
-  width: 100px;
-  height: 2px;
-  background: rgba($text-color-muted, 0.5);
-}
-.App__step.--enabled:not(:first-child)::before {
-  background: $text-color-muted;
-}
-.App__step__icon {
-  display: inline-block;
-  width:  $step-icon-size;
-  height: $step-icon-size;
-  text-align: center;
-  line-height: $step-icon-size;
-  font-size: 1.75rem;
-  font-weight: bold;
-  color: $bg-color-default;
-  background: darken($text-color-muted, 10%);
-  border-radius: 50%;
-  margin-bottom: 0.5em;
 }
 
 .App__currentStep {

@@ -9,7 +9,9 @@ import {
 import { createRequest } from '../reducers/request'
 import { identifyClosestSpecies } from '../reducers/species'
 
+import Icon from './Icon'
 import Button from './Button'
+import Spinner from './Spinner'
 
 import './InputFiles.scss'
 
@@ -27,7 +29,8 @@ const mapDispatchToProps = {
 
 class InputFiles extends React.Component {
 
-  onSelectFiles = (files) => {
+  onSelectFiles = (fileList) => {
+    const files = Array.from(fileList)
     const r1 = files.find(f => /\br1\b/i.test(f.name)) || files[0]
     const r2 = files.find(f => /\br2\b/i.test(f.name)) || files[1]
     this.props.setFiles({ r1: r1 || null, r2: r2 || null })
@@ -54,8 +57,22 @@ class InputFiles extends React.Component {
     const r1 = window.files.get(this.props.r1.file)
     const r2 = window.files.get(this.props.r2.file)
 
+    /* return (
+     *   <div className='InputFiles'>
+     *     <Spinner
+     *       size='4x'
+     *       message='Uploading files...'
+     *     />
+     *   </div>
+     * ) */
+
     return (
       <div className='InputFiles'>
+        <div className='InputFiles__intro text-muted bold'>
+          First, select the files you want to use.
+          They must be in the <code>.fasta</code> format.
+        </div>
+
         <StyledDropZone className='InputFiles__dropzone' onDrop={this.onSelectFiles} multiple>
           <div className='container'>
             <StyledDropZone
@@ -67,7 +84,7 @@ class InputFiles extends React.Component {
               {
                 r1 ?
                   <span className='InputFiles__filename'>
-                    {r1.name}
+                    <Icon name='file' marginRight='0.5em' /> {r1.name}
                   </span>
                   :
                   'Select R1'
@@ -81,7 +98,9 @@ class InputFiles extends React.Component {
             >
               {
                 r2 ?
-                  <span className='InputFiles__file.name'>{r2.name}</span> :
+                  <span className='InputFiles__filename'>
+                    <Icon name='file' marginRight='0.5em' /> {r2.name}
+                  </span> :
                   'Select R2'
               }
             </StyledDropZone>
@@ -89,9 +108,12 @@ class InputFiles extends React.Component {
           Select both
         </StyledDropZone>
 
-        <Button onClick={this.onClickIdentify} disabled={!hasR1}>
-          Identify species
-        </Button>
+        <div className='flex-row'>
+          <div className='flex-fill' />
+          <Button onClick={this.onClickIdentify} disabled={!hasR1}>
+            Identify species
+          </Button>
+        </div>
 
       </div>
     );

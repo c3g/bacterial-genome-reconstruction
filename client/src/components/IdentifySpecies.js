@@ -7,9 +7,14 @@ import { setValue } from '../reducers/species'
 import { identifyClosestReferences } from '../reducers/references'
 import './IdentifySpecies.scss'
 
+import Spinner from './Spinner'
+
+
 const mapStateToProps = state => ({
   isLoading: state.species.isLoading,
   isLoaded: state.species.isLoaded,
+  status: state.species.status,
+  order: state.species.order,
   value: state.species.value,
   data: state.species.data,
 })
@@ -54,15 +59,29 @@ class IdentifySpecies extends React.Component {
   }
 
   render() {
-    const { isLoading, isLoaded } = this.props
+    const { isLoading, isLoaded, status, order } = this.props
 
     return (
       <div className='IdentifySpecies'>
-        <div>
-          Loading: {String(isLoading)}
-        </div>
 
-        {isLoaded && this.renderTable()}
+        <Spinner
+          block
+          size='5x'
+          message={
+            <div>
+              Identifying species...<br/>
+              {status ?
+                <>Task is {status} in position {order + 1}</> :
+                <>&nbsp;</>
+              }
+            </div>
+          }
+          loading={isLoading}
+        >
+          {isLoaded &&
+            this.renderTable()
+          }
+        </Spinner>
       </div>
     );
   }

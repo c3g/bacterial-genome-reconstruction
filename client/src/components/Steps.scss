@@ -1,0 +1,94 @@
+@import '../styles/_variables.scss';
+
+$step-icon-size: 3rem;
+
+
+@keyframes pop-out-animation {
+  0% {
+    transform: scale(1);
+    animation-timing-function: cubic-bezier(0, 0, 0.8, 0.2);
+    animation-timing-function: cubic-bezier(0, 0, 0.8, 0.2);
+  }
+  50% {
+    transform: scale(1.2);
+    animation-timing-function: cubic-bezier(0.2, 0.8, 1, 1);
+    animation-timing-function: cubic-bezier(0.2, 0.8, 1, 1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+
+.Steps {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 2em;
+}
+.Step {
+  position: relative;
+  width: 125px;
+  font-weight: normal;
+  text-align: center;
+  cursor: not-allowed;
+  color: $text-color-muted;
+}
+.Step.--enabled {
+  cursor: pointer;
+  color: $text-color-normal;
+  & .Step__icon {
+    animation-name: pop-out-animation;
+    animation-duration: 0.5s;
+    animation-delay: 0.25s;
+    animation-timing-function: linear;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+
+    color: $text-color-normal;
+    // background: $text-color-normal;
+  }
+}
+.Step.--active {
+  color: $text-color-normal;
+  font-weight: bold;
+  & .Step__icon {
+    color: white;
+    background-color: $focus-color;
+  }
+}
+.Step:not(:first-child)::before,
+.Step:not(:first-child)::after {
+  content: ' ';
+  position: absolute;
+  top:  $step-icon-size / 2;
+  left: -100px;
+  width: 100px;
+  height: 2px;
+  background: rgba($text-color-muted, 0.5);
+}
+.Step:not(:first-child)::after {
+  width: 0;
+  background: $text-color-normal;
+  transition: width 0.25s linear;
+}
+.Step.--enabled:not(:first-child)::after {
+  width: 100px;
+}
+.Step__icon {
+  display: inline-block;
+  width:  $step-icon-size;
+  height: $step-icon-size;
+  text-align: center;
+  line-height: $step-icon-size;
+  font-size: 1.75rem;
+  font-weight: bold;
+  color: $bg-color-default;
+  background: darken($text-color-muted, 10%);
+  border-radius: 50%;
+  margin-bottom: 0.5em;
+}
+.Step__title {
+  white-space: initial;
+}
+
