@@ -68,21 +68,29 @@ class InputFiles extends React.Component {
           size='5x'
           message={
             <div>
-              Uploading files...<br/>
+              <b>Uploading files...</b><br/>
+              &nbsp;
             </div>
           }
           loading={isLoading}
         >
           <Instructions>
             First, select the files you want to use.
-            They must be in the <code>.fasta</code> format.
+            They must be in the <code>.fastq</code> format.
           </Instructions>
 
-          <StyledDropZone className='InputFiles__dropzone' onDrop={this.onSelectFiles} multiple>
+          <StyledDropZone
+            multiple
+            dontRead
+            className='InputFiles__dropzone'
+            accept='.fastq,.fq'
+            onDrop={this.onSelectFiles}
+          >
             <div className='container'>
               <StyledDropZone
                 dontRead
                 className='InputFiles__innerDropzone six columns'
+                accept='.fastq,.fq'
                 title={r1?.name}
                 onDrop={this.onSelectR1}
               >
@@ -98,6 +106,7 @@ class InputFiles extends React.Component {
               <StyledDropZone
                 dontRead
                 className='InputFiles__innerDropzone six columns'
+                accept='.fastq,.fq'
                 title={r2?.name}
                 onDrop={this.onSelectR2}
               >

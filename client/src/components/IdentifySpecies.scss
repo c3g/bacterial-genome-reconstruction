@@ -1,5 +1,6 @@
 @import '../styles/_variables.scss';
 
+
 .IdentifySpecies {
   width: 100%;
   height: 100%;
@@ -15,36 +16,7 @@
 }
 
 .IdentifySpecies__results {
-  flex: 1;
-  overflow: hidden;
-  border: 1px solid $border-color;
-  border-radius: $border-radius;
-}
-.IdentifySpecies__results .sticky-table-table {
   width: 100%;
-  white-space: initial;
-}
-.IdentifySpecies__results .sticky-table-cell {
-  background: transparent;
-  border-bottom: 1px solid $text-color-muted !important;
-}
-.IdentifySpecies__results__head  .sticky-table-cell {
-  font-size: 0.6em;
-  font-weight: bold;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: $text-color-muted;
-  background: $bg-color-default;
-}
-
-.IdentifySpecies__row {
-  cursor: pointer;
-  transition: background-color .1s;
-}
-.IdentifySpecies__row:hover {
-  background-color: rgba(white, 0.06) !important;
-}
-.IdentifySpecies__row--active {}
-.IdentifySpecies__row > *:nth-child(2) {
-  font-family: monospace;
+  height: 100%;
+  overflow: hidden;
 }

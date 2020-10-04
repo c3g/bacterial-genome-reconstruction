@@ -2,12 +2,19 @@ import React from 'react'
 import { connect } from 'react-redux'
 import cx from 'classname'
 import { StickyTable as Table, Row, Cell } from 'react-sticky-table'
+
 import { setValue } from '../reducers/readLengths'
 import './ReadLengthOptimization.scss'
+
+import Instructions from './Instructions'
+import ResultsTable from './ResultsTable'
+import Spinner from './Spinner'
 
 const mapStateToProps = state => ({
   isLoading: state.readLengths.isLoading,
   isLoaded: state.readLengths.isLoaded,
+  status: state.readLengths.status,
+  order: state.readLengths.order,
   value: state.readLengths.value,
   data: state.readLengths.data,
 })
@@ -17,50 +24,59 @@ const mapDispatchToProps = { setValue }
 class ReadLengthOptimization extends React.Component {
 
   onSelectValue = (s) => {
-    // this.props.nextStep()
     this.props.setValue(s)
     // TODO
   }
 
   renderTable() {
-    const { data, value } = this.props
+    const { data } = this.props
 
     return (
       <div className='ReadLengthOptimization__results'>
-        <Table leftStickyColumnCount={0}>
-          <Row className='ReadLengthOptimization__results__head'>
-            <Cell>Name</Cell>
-            <Cell>Bitscore</Cell>
-          </Row>
+        <ResultsTable columns={['Read Length', 'Perfect Hits', 'Score']}>
           {data.map(s =>
             <Row
               key={s.accession}
               role='button'
-              className={cx(
-                'ReadLengthOptimization__row',
-                s.accession === value ? 'ReadLengthOptimization__row--active' : undefined
-              )}
               onClick={() => this.onSelectValue(s)}
             >
-              <Cell>{s.name}</Cell>
-              <Cell>{s.total_bitscore}</Cell>
+              <Cell>{s.cutoff}</Cell>
+              <Cell>{s.perfectHits}</Cell>
+              <Cell>{s.product}</Cell>
             </Row>
           )}
-        </Table>
+        </ResultsTable>
       </div>
     )
   }
 
   render() {
-    const { isLoading, isLoaded } = this.props
+    const { isLoading, status, order } = this.props
 
     return (
       <div className='ReadLengthOptimization'>
-        <div>
-          Loading: {String(isLoading)}
-        </div>
+        <Spinner
+          block
+          size='5x'
+          message={
+            <div>
+              <b>Optimizing read length...</b><br/>
+              {status ?
+                <>Task is {status} in position {order + 1}</> :
+                <>&nbsp;</>
+              }
+            </div>
+          }
+          loading={isLoading}
+        >
+          <div className='ReadLengthOptimization__content'>
+            <Instructions>
+              Finally, select which read length you prefer. Higher score is better.
+            </Instructions>
 
-        {isLoaded && this.renderTable()}
+            {this.renderTable()}
+          </div>
+        </Spinner>
       </div>
     );
   }

@@ -9,6 +9,7 @@ import { identifyClosestReferences } from '../reducers/references'
 import './IdentifySpecies.scss'
 
 import Instructions from './Instructions'
+import ResultsTable from './ResultsTable'
 import Spinner from './Spinner'
 
 
@@ -36,26 +37,18 @@ class IdentifySpecies extends React.Component {
 
     return (
       <div className='IdentifySpecies__results'>
-        <Table leftStickyColumnCount={0}>
-          <Row className='IdentifySpecies__results__head'>
-            <Cell>Name</Cell>
-            <Cell>Bitscore</Cell>
-          </Row>
+        <ResultsTable columns={['Name', 'Bitscore']}>
           {data.map(s =>
             <Row
               key={s.accession}
               role='button'
-              className={cx(
-                'IdentifySpecies__row',
-                s.accession === value ? 'IdentifySpecies__row--active' : undefined
-              )}
               onClick={() => this.onSelectValue(s)}
             >
               <Cell>{renderSpeciesName(s.name)}</Cell>
               <Cell>{s.total_bitscore}</Cell>
             </Row>
           )}
-        </Table>
+        </ResultsTable>
       </div>
     )
   }
@@ -71,7 +64,7 @@ class IdentifySpecies extends React.Component {
           size='5x'
           message={
             <div>
-              Identifying species...<br/>
+              <b>Identifying species...</b><br/>
               {status ?
                 <>Task is {status} in position {order + 1}</> :
                 <>&nbsp;</>
@@ -82,7 +75,7 @@ class IdentifySpecies extends React.Component {
         >
           <div className='IdentifySpecies__content'>
             <Instructions>
-              Next, select which <u>genus</u> is more likely to be present.
+              Next, select which <b>genus</b> is more likely to be present.
               Pick the top one if you don't know.<br />
               This will narrow the search and the specific species will be
               determined in the next step.
