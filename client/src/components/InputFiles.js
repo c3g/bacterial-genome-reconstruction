@@ -1,12 +1,13 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { StyledDropZone } from 'react-drop-zone/dist/index'
+import { StyledDropZone, readFileAsText } from 'react-drop-zone/dist/index'
 import {
   setFiles,
   setMessages,
 } from '../reducers/fastqInput'
 import { createRequest } from '../reducers/request'
 import { identifyClosestSpecies } from '../reducers/species'
+import * as Fastq from '../helpers/fastq'
 
 import Icon from './Icon'
 import Instructions from './Instructions'
@@ -35,15 +36,29 @@ class InputFiles extends React.Component {
     const files = Array.from(fileList)
     const r1 = files.find(f => /\br1\b/i.test(f.name)) || files[0]
     const r2 = files.find(f => /\br2\b/i.test(f.name)) || files[1]
+
     this.props.setFiles({ r1: r1 || null, r2: r2 || null })
+
+    validate(r1).catch(err => {
+      this.props.setMessages({ r1: err.message })
+    })
+    validate(r2).catch(err => {
+      this.props.setMessages({ r2: err.message })
+    })
   }
 
   onSelectR1 = (file) => {
     this.props.setFiles({ r1: file })
+    validate(file).catch(err => {
+      this.props.setMessages({ r1: err.message })
+    })
   }
 
   onSelectR2 = (file) => {
     this.props.setFiles({ r2: file })
+    validate(file).catch(err => {
+      this.props.setMessages({ r2: err.message })
+    })
   }
 
   onClickIdentify = () => {
@@ -56,10 +71,12 @@ class InputFiles extends React.Component {
   }
 
   render() {
-    const { isLoading } = this.props
-    const hasR1 = this.props.r1.file !== undefined
-    const r1 = window.files.get(this.props.r1.file)
-    const r2 = window.files.get(this.props.r2.file)
+    const { isLoading, r1, r2 } = this.props
+    const hasR1 = r1.file !== undefined && !r1.message
+    const r1File = window.files.get(this.props.r1.file)
+    const r2File = window.files.get(this.props.r2.file)
+
+    console.log(r1File, r1)
 
     return (
       <div className='InputFiles'>
@@ -94,14 +111,28 @@ class InputFiles extends React.Component {
                 dontRead
                 className='InputFiles__innerDropzone six columns'
                 accept='.fastq,.fq'
-                title={r1?.name}
+                title={r1.message || r1File?.name}
                 onDrop={this.onSelectR1}
               >
                 {
-                  r1 ?
-                  <span className='InputFiles__filename'>
-                    <Icon name='file' marginRight='0.5em' /> {r1.name}
-                  </span>
+                  r1File ?
+                  <div className='InputFiles__filename'>
+                    {r1.message ?
+                      <>
+                        <div className='InputFiles__filename__content'>
+                          <Icon name='exclamation-triangle' marginRight='0.5em' /> {r1File.name}
+                        </div>
+                        <div className='InputFiles__filename__message'>
+                          {r1.message}
+                        </div>
+                      </> :
+                      <>
+                        <div className='InputFiles__filename__content'>
+                          <Icon name='file' marginRight='0.5em' /> {r1File.name}
+                        </div>
+                      </>
+                    }
+                  </div>
                   :
                   'Select R1'
                 }
@@ -110,14 +141,29 @@ class InputFiles extends React.Component {
                 dontRead
                 className='InputFiles__innerDropzone six columns'
                 accept='.fastq,.fq'
-                title={r2?.name}
+                title={r2.message || r2File?.name}
                 onDrop={this.onSelectR2}
               >
                 {
-                  r2 ?
-                  <span className='InputFiles__filename'>
-                    <Icon name='file' marginRight='0.5em' /> {r2.name}
-                  </span> :
+                  r2File ?
+                  <div className='InputFiles__filename'>
+                    {r2.message ?
+                      <>
+                        <div className='InputFiles__filename__content'>
+                          <Icon name='exclamation-triangle' marginRight='0.5em' /> {r2File.name}
+                        </div>
+                        <div className='InputFiles__filename__message'>
+                          {r2.message}
+                        </div>
+                      </> :
+                      <>
+                        <div className='InputFiles__filename__content'>
+                          <Icon name='file' marginRight='0.5em' /> {r2File.name}
+                        </div>
+                      </>
+                    }
+                  </div>
+                  :
                   'Select R2'
                 }
               </StyledDropZone>
@@ -126,6 +172,11 @@ class InputFiles extends React.Component {
           </StyledDropZone>
 
           <div className='flex-row'>
+            {process.env.NODE_ENV === 'development' &&
+              <Button onClick={window.clearStore}>
+                Clear
+              </Button>
+            }
             <div className='flex-fill' />
             <Button onClick={this.onClickIdentify} disabled={!hasR1}>
               Identify Genus <Icon name='arrow-right' marginLeft={5} />
@@ -139,3 +190,14 @@ class InputFiles extends React.Component {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(InputFiles);
+
+
+// Helpers
+
+function validate(file) {
+  return readFileAsText(file).then(text => {
+    const result = Fastq.parse(text)
+    if (!result.ok)
+      return Promise.reject(result.error)
+  })
+}

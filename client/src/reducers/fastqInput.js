@@ -30,8 +30,8 @@ export const fastqInput = createSlice({
       }
     },
     setMessages: (state, action) => {
-      state.r1.message = action.payload.r1 === null ? state.r1.message : action.payload.r1
-      state.r2.message = action.payload.r2 === null ? state.r2.message : action.payload.r2
+      state.r1.message = action.payload.r1 === undefined ? state.r1.message : action.payload.r1
+      state.r2.message = action.payload.r2 === undefined ? state.r2.message : action.payload.r2
     },
     clear: (state) => {
       if (state.r1.file)

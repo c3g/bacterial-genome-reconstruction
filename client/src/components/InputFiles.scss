@@ -25,7 +25,24 @@
 }
 
 .InputFiles__filename {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+.InputFiles__filename__content {
+  position: relative;
   color: $text-color-normal;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+}
+.InputFiles__filename__message {
+  position: absolute;
+  top: 100%;
+  color: $text-color-error;
+  font-size: 12px;
   width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
