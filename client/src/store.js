@@ -38,6 +38,7 @@ if (isDevelopment) {
     delete localStorage.state
     delete localStorage.activeStep
     delete localStorage.enabledStep
+    window.location.href = window.location.href
   }
 }
 
