@@ -6,15 +6,22 @@ import './ResultsTable.scss'
 
 function ResultsTable({ className, columns, children }) {
   return (
-    <Table className={cx('ResultsTable', className)} leftStickyColumnCount={0}>
-      <Row className='ResultsTable__head'>
-        {columns.map((column, i) =>
-          <Cell key={i}>{column}</Cell>
-        )}
-      </Row>
+    <Table
+      className={cx('ResultsTable', className)}
+      leftStickyColumnCount={0}
+      topStickyColumnCount={columns ? 1 : 0}
+    >
+      {columns &&
+        <Row className='ResultsTable__head'>
+          {columns.map((column, i) =>
+            <Cell key={i}>{column}</Cell>
+          )}
+        </Row>
+      }
       {children}
     </Table>
   )
 }
 
 export default ResultsTable
+export { Row, Cell }

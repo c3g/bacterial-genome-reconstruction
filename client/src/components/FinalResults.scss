@@ -1,0 +1,18 @@
+@import '../styles/_variables.scss';
+
+
+
+.FinalResults__fields {
+  margin-bottom: 2em;
+}
+.FinalResults__fields .sticky-table-cell:first-child {
+  width: 170px;
+}
+.FinalResults__downloadButtons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.FinalResults__downloadButtons > * {
+  width: 220px;
+}

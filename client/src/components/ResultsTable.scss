@@ -16,8 +16,11 @@
   background: transparent;
   border-bottom: 1px solid $text-color-muted !important;
 }
-.ResultsTable__head  .sticky-table-cell {
-  font-size: 0.6em;
+.ResultsTable__head.sticky-table-cell,
+.ResultsTable__head .sticky-table-cell {
+  vertical-align: middle;
+
+  font-size: 0.7em;
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -31,8 +34,4 @@
 }
 .ResultsTable .sticky-table-row:hover {
   background-color: rgba(white, 0.06) !important;
-}
-.ResultsTable .sticky-table-row--active {}
-.ResultsTable .sticky-table-row > *:nth-child(2) {
-  font-family: monospace;
 }

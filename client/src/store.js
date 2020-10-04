@@ -8,9 +8,11 @@ import referencesReducer from './reducers/references.js'
 import requestReducer from './reducers/request.js'
 import speciesReducer from './reducers/species.js'
 
+const isDevelopment = process.env.NODE_ENV === 'development'
+
 const middleware = [thunk, logger]
 
-export default configureStore({
+const store = configureStore({
   middleware,
   reducer: {
     fastqInput: fastqInputReducer,
@@ -19,4 +21,21 @@ export default configureStore({
     request: requestReducer,
     species: speciesReducer,
   },
-});
+  preloadedState: isDevelopment && ('state' in localStorage) ?
+    JSON.parse(localStorage.state) :
+    undefined,
+})
+
+if (isDevelopment) {
+  window.addEventListener('unload', () => {
+    localStorage.state = JSON.stringify(store.getState())
+  })
+
+  window.clearStore = () => {
+    delete localStorage.state
+    delete localStorage.activeStep
+    delete localStorage.enabledStep
+  }
+}
+
+export default store;

@@ -1,11 +1,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import cx from 'classname'
-import { StickyTable as Table, Row, Cell } from 'react-sticky-table'
+import { Row, Cell } from 'react-sticky-table'
 
 import { setValue } from '../reducers/readLengths'
 import './ReadLengthOptimization.scss'
 
+import FinalResults from './FinalResults'
 import Instructions from './Instructions'
 import ResultsTable from './ResultsTable'
 import Spinner from './Spinner'
@@ -51,7 +52,11 @@ class ReadLengthOptimization extends React.Component {
   }
 
   render() {
-    const { isLoading, status, order } = this.props
+    const { isLoading, status, order, value } = this.props
+
+    // Hijack this step because I don't want to add another button
+    if (value)
+      return <FinalResults />
 
     return (
       <div className='ReadLengthOptimization'>

@@ -1,6 +1,4 @@
 import React from 'react';
-import cx from 'classname';
-// import { Counter } from '../features/counter/Counter';
 
 import Icon from './Icon'
 import Steps from './Steps'
@@ -13,8 +11,8 @@ import './App.scss'
 
 class App extends React.Component {
   state = {
-    activeStep: 0,
-    enabledStep: 0,
+    activeStep:  localStorage.activeStep  ? +localStorage.activeStep  : 0,
+    enabledStep: localStorage.enabledStep ? +localStorage.enabledStep : 0,
   }
 
   setStep = (activeStep) => {
