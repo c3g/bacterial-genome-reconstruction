@@ -22,11 +22,13 @@ export const fastqInput = createSlice({
         if (state.r1.file)
           window.files.delete(state.r1.file)
         state.r1.file = action.payload.r1
+        state.r1.message = undefined
       }
       if (action.payload.r2 !== undefined) {
         if (state.r2.file)
           window.files.delete(state.r2.file)
         state.r2.file = action.payload.r2
+        state.r2.message = undefined
       }
     },
     setMessages: (state, action) => {
