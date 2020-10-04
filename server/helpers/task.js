@@ -13,13 +13,6 @@ const {
 const config = require('../config')
 
 
-module.exports = {
-  create,
-  get,
-  destroy,
-  serialize,
-}
-
 /**
  * @enum {string}
  */
@@ -30,6 +23,14 @@ const Status = {
   RUNNING:   'RUNNING',
   /** Is not in `tasks` */
   COMPLETED: 'COMPLETED',
+}
+
+module.exports = {
+  create,
+  get,
+  destroy,
+  serialize,
+  Status,
 }
 
 /**
@@ -62,7 +63,7 @@ let tasks = []
  * Contains the task description
  * @type {Object.<string, Task>}
  */
-let tasksByID = {}
+let tasksById = {}
 
 /**
  * If the task runner is running
@@ -87,7 +88,7 @@ function create(requestId, name, run) {
   }
 
   tasks.push(requestId)
-  tasksByID[requestId] = task
+  tasksById[requestId] = task
   updateOrders()
 
   runTasks()
@@ -96,7 +97,7 @@ function create(requestId, name, run) {
 }
 
 function get(requestId) {
-  const task = tasksByID[requestId]
+  const task = tasksById[requestId]
 
   if (!task)
     return rejectNotFound('No task found for request ' + requestId)
@@ -105,7 +106,7 @@ function get(requestId) {
 }
 
 function destroy(requestId) {
-  const task = tasksByID[requestId]
+  const task = tasksById[requestId]
 
   if (!task)
     return Promise.resolve() // Ignore
@@ -153,7 +154,7 @@ function serialize(t) {
 
 function updateOrders() {
   tasks.forEach((requestId, order) => {
-    tasksByID[requestId].order = order
+    tasksById[requestId].order = order
   })
 }
 
@@ -174,7 +175,7 @@ function runTasks() {
   running = true
 
   const nextTaskId = tasks[0]
-  const nextTask = tasksByID[nextTaskId]
+  const nextTask = tasksById[nextTaskId]
   nextTask.status = Status.RUNNING
 
   console.log(`runTasks: tick (${nextTask.name})`)
