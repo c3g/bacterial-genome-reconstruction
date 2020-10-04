@@ -1,6 +1,5 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import cx from 'classname'
 import { Row, Cell } from 'react-sticky-table'
 
 import { setValue } from '../reducers/readLengths'

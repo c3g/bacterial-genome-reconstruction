@@ -1,14 +1,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import cx from 'classname'
-import { StickyTable as Table, Row, Cell } from 'react-sticky-table'
 
 import { setValue } from '../reducers/references'
 import { readLengthOptimization } from '../reducers/readLengths'
 import './IdentifyReferences.scss'
 
 import Instructions from './Instructions'
-import ResultsTable from './ResultsTable'
+import ResultsTable, { Row, Cell } from './ResultsTable'
 import TaskSpinner from './TaskSpinner'
 
 const mapStateToProps = state => ({
@@ -31,7 +29,7 @@ class IdentifyReferences extends React.Component {
   }
 
   renderTable() {
-    const { data, value } = this.props
+    const { data } = this.props
 
     return (
       <div className='IdentifyReferences__results'>

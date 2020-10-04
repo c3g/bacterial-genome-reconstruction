@@ -1,7 +1,5 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import cx from 'classname'
-import { StickyTable as Table, Row, Cell } from 'react-sticky-table'
 
 import { matchSpeciesName } from '../helpers/extract-genus'
 import { setValue } from '../reducers/species'
@@ -9,7 +7,7 @@ import { identifyClosestReferences } from '../reducers/references'
 import './IdentifySpecies.scss'
 
 import Instructions from './Instructions'
-import ResultsTable from './ResultsTable'
+import ResultsTable, { Row, Cell } from './ResultsTable'
 import TaskSpinner from './TaskSpinner'
 
 
@@ -33,7 +31,7 @@ class IdentifySpecies extends React.Component {
   }
 
   renderTable() {
-    const { data, value } = this.props
+    const { data } = this.props
 
     return (
       <div className='IdentifySpecies__results'>
@@ -54,7 +52,7 @@ class IdentifySpecies extends React.Component {
   }
 
   render() {
-    const { isLoading, isLoaded, status, order } = this.props
+    const { isLoading, status, order } = this.props
 
     return (
       <div className='IdentifySpecies'>
