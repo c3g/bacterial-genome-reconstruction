@@ -47,7 +47,13 @@ router.use('/create/:id/:name', apiRoute(req => {
 
 /* POST get task status */
 router.use('/status/:id', apiRoute(req =>
-  Task.get(req.params.id).then(Task.serialize)
+  Task.get(req.params.id)
+    .then(Task.serialize)
+    .then(t => {
+      if (t.status === Task.Status.COMPLETED)
+        Task.destroy(req.params.id)
+      return t
+    })
 ))
 
 /* POST destroy task */
