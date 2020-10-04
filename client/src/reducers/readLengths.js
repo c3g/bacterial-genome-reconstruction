@@ -64,12 +64,13 @@ export const readLengthOptimization = createAsyncThunk(
     try {
       await api.task.readLengthOptimization(id, genus, accession)
 
-      let task
-      do {
+      let task = await api.task.status(id)
+      _(update(task))
+      while (task.status !== 'COMPLETED') {
         await delay(5000)
         task = await api.task.status(id)
         _(update(task))
-      } while (task.status !== 'COMPLETED')
+      }
 
       if (task.results)
         _(setData(task.results))
