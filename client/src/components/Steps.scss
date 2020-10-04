@@ -89,6 +89,7 @@ $icon-animation-duration: .5s;
   background: darken($text-color-muted, 10%);
   border-radius: 50%;
   margin-bottom: 0.5em;
+  transition: all .25s;
 }
 .Step__title {
   white-space: initial;
