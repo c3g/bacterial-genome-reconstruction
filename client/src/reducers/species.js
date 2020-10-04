@@ -49,19 +49,24 @@ export const { setIsLoading, setIsLoaded, update, setMessage, setValue, setData,
 export const identifyClosestSpecies = createAsyncThunk(
   'species/identifyClosestSpecies',
   async (params, { dispatch: _, getState }) => {
-    const requestId = getState().request.data.id
+    const state = getState()
+
+    if (!state.request.data.id) return
+
+    const id = state.request.data.id
 
     _(setIsLoading(true))
     try {
 
-      await api.task.identifyClosestSpecies(requestId)
+      await api.task.identifyClosestSpecies(id)
 
-      let task
-      do {
+      let task = await api.task.status(id)
+      _(update(task))
+      while (task.status !== 'COMPLETED') {
         await delay(5000)
-        task = await api.task.status(requestId)
+        task = await api.task.status(id)
         _(update(task))
-      } while (task.status !== 'COMPLETED')
+      }
 
       if (task.results)
         _(setData(task.results))
