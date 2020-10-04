@@ -19,6 +19,8 @@ $step-icon-size: 3rem;
   }
 }
 
+$line-animation-duration: .5s;
+$icon-animation-duration: .5s;
 
 .Steps {
   display: flex;
@@ -39,8 +41,8 @@ $step-icon-size: 3rem;
   color: $text-color-normal;
   & .Step__icon {
     animation-name: pop-out-animation;
-    animation-duration: 0.5s;
-    animation-delay: 0.25s;
+    animation-duration: $icon-animation-duration;
+    animation-delay: $line-animation-duration;
     animation-timing-function: linear;
     animation-iteration-count: 1;
     animation-fill-mode: forwards;
@@ -70,7 +72,7 @@ $step-icon-size: 3rem;
 .Step:not(:first-child)::after {
   width: 0;
   background: $text-color-normal;
-  transition: width 0.25s linear;
+  transition: width $line-animation-duration linear;
 }
 .Step.--enabled:not(:first-child)::after {
   width: 100px;

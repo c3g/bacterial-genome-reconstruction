@@ -39,7 +39,7 @@ class App extends React.Component {
         component: InputFiles,
       },
       {
-        title: 'Identify species',
+        title: 'Identify genus',
         icon: <Icon name='filter' />,
         component: IdentifySpecies,
       },

@@ -1,38 +1,41 @@
 @import './_variables.scss';
 
 .Button {
-  padding: 0 30px;
-  font-family: inherit;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-weight: 400;
-  border-radius: $border-radius;
-  text-decoration: none;
-  border: 0;
   margin: 0;
-  min-width: auto;
+  padding: 0 30px;
+
   vertical-align: middle;
+
   font-size: inherit;
+  font-family: inherit;
+  font-weight: bold;
   line-height: 1.1;
   text-align: center;
+  text-decoration: none;
+  border: 0;
+  border-radius: $border-radius;
+
   cursor: pointer;
   color: $text-color-normal;
   background: $accent-color;
   height: 36px;
+
   transition-property: color,background,border-color;
   transition-duration: .1s;
   transition-timing-function: ease-in;
   outline: none;
 
-  min-width: 160px;
   height: 48px;
-  font-size: 16px;
-  margin: auto;
+  min-width: 160px;
   overflow: hidden;
 }
-.Button:not([disabled]):hover {
-  color:            darken($text-color-normal, 10%);
+.Button:not([disabled]):hover,
+.Button:not([disabled]):focus
+{
+  color:            darken($text-color-normal, 15%);
   background-color: rgba($accent-color, 0.8);
 }
 .Button:not([disabled]):active {

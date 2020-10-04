@@ -25,7 +25,7 @@ function Spinner(props) {
     return React.Children.map(children, element =>
       !element ? element :
         React.cloneElement(element, {
-          className: cx('Spinner__children', element.props.className),
+          className: cx(element.props.className, 'Spinner__children'),
         })
     )
   }

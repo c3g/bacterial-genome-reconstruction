@@ -1,0 +1,11 @@
+@import '../styles/_variables.scss';
+
+
+.Instructions {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 1em;
+}
+.Instructions__icon {
+  padding: 0 1em;
+}

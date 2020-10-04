@@ -3,10 +3,12 @@ import { connect } from 'react-redux'
 import cx from 'classname'
 import { StickyTable as Table, Row, Cell } from 'react-sticky-table'
 
+import { matchSpeciesName } from '../helpers/extract-genus'
 import { setValue } from '../reducers/species'
 import { identifyClosestReferences } from '../reducers/references'
 import './IdentifySpecies.scss'
 
+import Instructions from './Instructions'
 import Spinner from './Spinner'
 
 
@@ -49,7 +51,7 @@ class IdentifySpecies extends React.Component {
               )}
               onClick={() => this.onSelectValue(s)}
             >
-              <Cell>{s.name}</Cell>
+              <Cell>{renderSpeciesName(s.name)}</Cell>
               <Cell>{s.total_bitscore}</Cell>
             </Row>
           )}
@@ -78,13 +80,32 @@ class IdentifySpecies extends React.Component {
           }
           loading={isLoading}
         >
-          {isLoaded &&
-            this.renderTable()
-          }
+          <div className='IdentifySpecies__content'>
+            <Instructions>
+              Next, select which <u>genus</u> is more likely to be present.
+              Pick the top one if you don't know.<br />
+              This will narrow the search and the specific species will be
+              determined in the next step.
+            </Instructions>
+
+            {this.renderTable()}
+          </div>
         </Spinner>
       </div>
     );
   }
+}
+
+function renderSpeciesName(value) {
+  const { genus, species, complete } = matchSpeciesName(value)
+
+  return (
+    <>
+      <span className='bold'>{genus}</span>{' '}
+      <span className='text-normal'>{species}</span>{' '}
+      <span className='text-muted'>{complete}</span>
+    </>
+  )
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(IdentifySpecies);
