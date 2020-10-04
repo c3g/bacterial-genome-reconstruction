@@ -38,10 +38,12 @@
     border-color: $border-color;
     margin-bottom: 1rem;
   }
+  .DropZone:focus,
   .DropZone:hover {
     color: $text-color-normal;
     border-color: $text-color-normal;
     background-color: transparent;
+    outline: none;
   }
   .DropZone__filename {
     width: 100%;

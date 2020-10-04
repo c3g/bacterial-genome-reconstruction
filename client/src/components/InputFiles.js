@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { StyledDropZone } from 'react-drop-zone'
+import { StyledDropZone } from 'react-drop-zone/dist/index'
 import {
   setFiles,
   setMessages,
@@ -125,7 +125,7 @@ class InputFiles extends React.Component {
           <div className='flex-row'>
             <div className='flex-fill' />
             <Button onClick={this.onClickIdentify} disabled={!hasR1}>
-              Identify species
+              Identify Genus <Icon name='arrow-right' marginLeft={5} />
             </Button>
           </div>
 
