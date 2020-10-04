@@ -27,11 +27,14 @@ const store = configureStore({
 })
 
 if (isDevelopment) {
-  window.addEventListener('unload', () => {
+  const saveState = () => {
     localStorage.state = JSON.stringify(store.getState())
-  })
+  }
+
+  window.addEventListener('unload', saveState)
 
   window.clearStore = () => {
+    window.removeEventListener('unload', saveState)
     delete localStorage.state
     delete localStorage.activeStep
     delete localStorage.enabledStep

@@ -9,7 +9,7 @@ import './ReadLengthOptimization.scss'
 import FinalResults from './FinalResults'
 import Instructions from './Instructions'
 import ResultsTable from './ResultsTable'
-import Spinner from './Spinner'
+import TaskSpinner from './TaskSpinner'
 
 const mapStateToProps = state => ({
   isLoading: state.readLengths.isLoading,
@@ -37,7 +37,7 @@ class ReadLengthOptimization extends React.Component {
         <ResultsTable columns={['Read Length', 'Perfect Hits', 'Score']}>
           {data.map(s =>
             <Row
-              key={s.accession}
+              key={s.cutoff}
               role='button'
               onClick={() => this.onSelectValue(s)}
             >
@@ -60,18 +60,10 @@ class ReadLengthOptimization extends React.Component {
 
     return (
       <div className='ReadLengthOptimization'>
-        <Spinner
-          block
-          size='5x'
-          message={
-            <div>
-              <b>Optimizing read length...</b><br/>
-              {status ?
-                <>Task is {status} in position {order + 1}</> :
-                <>&nbsp;</>
-              }
-            </div>
-          }
+        <TaskSpinner
+          message='Optimizing read length...'
+          status={status}
+          order={order}
           loading={isLoading}
         >
           <div className='ReadLengthOptimization__content'>
@@ -81,7 +73,7 @@ class ReadLengthOptimization extends React.Component {
 
             {this.renderTable()}
           </div>
-        </Spinner>
+        </TaskSpinner>
       </div>
     );
   }

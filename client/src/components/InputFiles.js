@@ -69,7 +69,10 @@ class InputFiles extends React.Component {
           message={
             <div>
               <b>Uploading files...</b><br/>
-              &nbsp;
+              <small>&nbsp;</small><br/>
+              <br/>
+              <br/>
+              { /* ...to maintain the same dimension as TaskSpinner */ }
             </div>
           }
           loading={isLoading}

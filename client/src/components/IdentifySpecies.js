@@ -10,7 +10,7 @@ import './IdentifySpecies.scss'
 
 import Instructions from './Instructions'
 import ResultsTable from './ResultsTable'
-import Spinner from './Spinner'
+import TaskSpinner from './TaskSpinner'
 
 
 const mapStateToProps = state => ({
@@ -59,18 +59,10 @@ class IdentifySpecies extends React.Component {
     return (
       <div className='IdentifySpecies'>
 
-        <Spinner
-          block
-          size='5x'
-          message={
-            <div>
-              <b>Identifying species...</b><br/>
-              {status ?
-                <>Task is {status} in position {order + 1}</> :
-                <>&nbsp;</>
-              }
-            </div>
-          }
+        <TaskSpinner
+          message='Identifying species...'
+          status={status}
+          order={order}
           loading={isLoading}
         >
           <div className='IdentifySpecies__content'>
@@ -83,7 +75,7 @@ class IdentifySpecies extends React.Component {
 
             {this.renderTable()}
           </div>
-        </Spinner>
+        </TaskSpinner>
       </div>
     );
   }

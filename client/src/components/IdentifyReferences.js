@@ -9,7 +9,7 @@ import './IdentifyReferences.scss'
 
 import Instructions from './Instructions'
 import ResultsTable from './ResultsTable'
-import Spinner from './Spinner'
+import TaskSpinner from './TaskSpinner'
 
 const mapStateToProps = state => ({
   isLoading: state.references.isLoading,
@@ -56,18 +56,10 @@ class IdentifyReferences extends React.Component {
 
     return (
       <div className='IdentifyReferences'>
-        <Spinner
-          block
-          size='5x'
-          message={
-            <div>
-              <b>Identifying reference...</b><br/>
-              {status ?
-                <>Task is {status} in position {order + 1}</> :
-                <>&nbsp;</>
-              }
-            </div>
-          }
+        <TaskSpinner
+          message='Identifying references...'
+          status={status}
+          order={order}
           loading={isLoading}
         >
           <div className='IdentifyReferences__content'>
@@ -78,7 +70,7 @@ class IdentifyReferences extends React.Component {
 
             {this.renderTable()}
           </div>
-        </Spinner>
+        </TaskSpinner>
       </div>
     );
   }
