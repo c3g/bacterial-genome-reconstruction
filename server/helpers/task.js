@@ -6,11 +6,9 @@
 const getControllablePromise = require('./get-controllable-promise')
 
 const {
-  rejectWith,
   rejectNotFound,
   rejectAlreadyExists,
 } = require('./promise')
-const config = require('../config')
 
 
 /**
@@ -85,6 +83,8 @@ function create(requestId, name, run) {
     status: Status.WAITING,
     didComplete: getControllablePromise(),
     run,
+    results: undefined,
+    error: undefined,
   }
 
   tasks.push(requestId)
