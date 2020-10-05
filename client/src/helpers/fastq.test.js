@@ -16,7 +16,7 @@ describe('Fastq.parse()', () => {
     const result = parse(textValid)
     expect(result.ok).toEqual(true)
     expect(result.error).toEqual(undefined)
-    expect(result.entries.length).toEqual(50000)
+    expect(result.result.length).toEqual(50000)
   })
 
   /* test('works with bad fastq files', () => {
@@ -24,13 +24,13 @@ describe('Fastq.parse()', () => {
    *   console.log(result.error)
    *   expect(result.ok).toEqual(true)
    *   expect(result.error).toEqual(undefined)
-   *   expect(result.entries.length).toEqual(50000)
+   *   expect(result.result.length).toEqual(50000)
    * }) */
 
   test('works with bad files', () => {
     const result = parse(textInvalid)
     expect(result.ok).toEqual(false)
     expect(result.error).toBeInstanceOf(Error)
-    expect(result.entries).toEqual(undefined)
+    expect(result.result).toEqual(undefined)
   }) 
 })

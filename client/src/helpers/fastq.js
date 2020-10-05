@@ -43,7 +43,7 @@ function parse(text) {
   return {
     ok: true,
     error: undefined,
-    entries,
+    result: entries,
   }
 }
 
@@ -51,7 +51,7 @@ function failWith(message) {
   return {
     ok: false,
     error: new Error('Invalid fastq file: ' + message),
-    entries: undefined
+    result: undefined,
   }
 }
 

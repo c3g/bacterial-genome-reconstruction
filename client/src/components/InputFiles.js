@@ -8,6 +8,7 @@ import {
 import { createRequest } from '../reducers/request'
 import { identifyClosestSpecies } from '../reducers/species'
 import * as Fastq from '../helpers/fastq'
+import * as Fasta from '../helpers/fasta'
 
 import Icon from './Icon'
 import Instructions from './Instructions'
@@ -198,7 +199,11 @@ export default connect(mapStateToProps, mapDispatchToProps)(InputFiles);
 
 function validate(file) {
   return readFileAsText(file).then(text => {
-    const result = Fastq.parse(text)
+    const result =
+      text.startsWith('@') ? Fastq.parse(text) :
+      text.startsWith('>') ? Fasta.parse(text) :
+        { ok: false, error: new Error('Unrecognized input format') }
+
     if (!result.ok)
       return Promise.reject(result.error)
   })
