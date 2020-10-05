@@ -6,6 +6,13 @@
 import axios from 'axios'
 import QS from 'qs'
 
+const BASE_ENDPOINT =
+  process.env.NODE_ENV === 'production' ?
+    process.env.PUBLIC_URL + '/api' :
+    /* Normally we'd let webpack-dev-server set this and handle
+     * request re-routing, however it doesn't handle file downloads
+     * correctly */
+    'http://localhost:3001/api'
 
 export const request = {
   create: file => POST(`/request/create`, form({ file })),
@@ -24,6 +31,17 @@ export const task = {
   destroy: requestId => POST(`/task/destroy/${requestId}`),
 }
 
+export const urlFor = {
+  download: {
+    identifyClosestSpecies: requestId =>
+      `${BASE_ENDPOINT}/task/download/${requestId}/identify-closest-species`,
+    identifyClosestReferences: (requestId) =>
+      `${BASE_ENDPOINT}/task/download/${requestId}/identify-closest-references`,
+    readLengthOptimization: (requestId) =>
+      `${BASE_ENDPOINT}/task/download/${requestId}/read-length-optimization`,
+  },
+}
+
 
 
 // Helpers
@@ -36,7 +54,7 @@ function POST(url, params, options = {}) { return fetchAPI(url, params, { method
 function fetchAPI(url, params, options = {}) {
   const { method = 'get', ...other } = options
 
-  let finalURL = process.env.PUBLIC_URL + '/api' + url
+  let finalURL = BASE_ENDPOINT + url
   let data
 
   if (method === 'post' && params)

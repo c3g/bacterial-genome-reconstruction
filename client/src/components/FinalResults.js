@@ -3,12 +3,15 @@ import { connect } from 'react-redux'
 
 import './FinalResults.scss'
 
+import * as api from '../api'
+import { downloadFromURL } from '../helpers/download'
 import Button from './Button'
 import Icon from './Icon'
 import Instructions from './Instructions'
 import ResultsTable, { Row, Cell } from './ResultsTable'
 
 const mapStateToProps = state => ({
+  requestId: state.request.data.id,
   reference: state.references.value,
   readLength: state.readLengths.value,
 })
@@ -18,7 +21,7 @@ const mapDispatchToProps = {}
 class FinalResults extends React.Component {
 
   render() {
-    const { reference, readLength } = this.props
+    const { requestId, reference, readLength } = this.props
 
     return (
       <div className='FinalResults'>
@@ -50,13 +53,13 @@ class FinalResults extends React.Component {
           </Instructions>
 
           <div className='FinalResults__downloadButtons'>
-            <Button icon='download'>
+            <Button icon='download' onClick={() => downloadFromURL(api.urlFor.download.identifyClosestSpecies(requestId))}>
               Genus (2)
             </Button>
-            <Button icon='download'>
+            <Button icon='download' onClick={() => downloadFromURL(api.urlFor.download.identifyClosestReferences(requestId))}>
               References (2)
             </Button>
-            <Button icon='download'>
+            <Button icon='download' onClick={() => downloadFromURL(api.urlFor.download.readLengthOptimization(requestId))}>
               Optimization (1)
             </Button>
           </div>

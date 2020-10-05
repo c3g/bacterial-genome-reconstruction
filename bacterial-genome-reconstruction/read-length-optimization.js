@@ -48,7 +48,7 @@ async function readLengthOptimization(inputFolder, genus, accession) {
     `${inputFolder}/blast_results`,
   ])
 
-  return results
+  return { summaryPath, results }
 }
 
 function blastDBCommand(outputFolder, genus, accession) {

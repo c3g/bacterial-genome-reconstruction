@@ -140,11 +140,15 @@ function destroy(requestId) {
 }
 
 function serialize(t) {
+  // t.results: { summaryPath, readLengthPath, ..., results: [] }
+  const results = t.results ?
+    t.results.results : undefined
+
   return {
     name: t.name,
     order: t.order,
     status: t.status,
-    results: t.results,
+    results: results,
     error: t.error,
   }
 }

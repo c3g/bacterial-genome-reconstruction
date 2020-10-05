@@ -3,10 +3,11 @@ const path = require('path')
 const express = require('express')
 const favicon = require('serve-favicon')
 const logger = require('morgan')
+const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
-const formData = require('express-form-data');
-const compression = require('compression');
+const formData = require('express-form-data')
+const compression = require('compression')
 
 const config = require('./config')
 
@@ -28,6 +29,10 @@ app.use(formData.parse({ uploadDir: config.paths.tmp, autoClean: true }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 
+if (process.env.NODE_ENV === 'development')
+  app.use(cors())
+
+
 // API
 app.use('/api/request', require('./routers/request'))
 app.use('/api/task',    require('./routers/task'))
@@ -44,7 +49,6 @@ app.use('/api', (req, res) => {
 app.use((req, res, next) => {
   res.redirect('/')
 })
-
 
 // Error handler
 app.use((err, req, res, next) => {

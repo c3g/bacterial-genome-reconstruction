@@ -2,8 +2,10 @@
  * api.js
  */
 
+const stream = require('stream')
 const express = require('express')
 const router = express.Router()
+const Zip = require('adm-zip')
 
 const Request = require('../helpers/request')
 const Task = require('../helpers/task')
@@ -15,14 +17,29 @@ const {
 } = require('../../bacterial-genome-reconstruction')
 
 
-const tasksByName = {
+const taskRunnerByName = {
   'identify-closest-species': (request, params) =>
     identifyClosestSpecies(request.folder, request.inputPath),
   'identify-closest-references': (request, params) =>
     identifyClosestReferences(request.folder, params.genus),
   'read-length-optimization': (request, params) =>
     readLengthOptimization(request.folder, params.genus, params.accession),
-};
+}
+
+const taskDownloadsByName = {
+  'identify-closest-species': (request) => {
+      const { summaryPath, readLengthPath } = request.results['identify-closest-species']
+      return [summaryPath, readLengthPath]
+  },
+  'identify-closest-references': (request) => {
+      const { summaryPath, readLengthPath } = request.results['identify-closest-references']
+      return [summaryPath, readLengthPath]
+  },
+  'read-length-optimization': (request) => {
+      const { summaryPath } = request.results['read-length-optimization']
+      return [summaryPath]
+  },
+}
 
 /* POST create (queue) task */
 router.use('/create/:id/:name', apiRoute(req => {
@@ -31,7 +48,7 @@ router.use('/create/:id/:name', apiRoute(req => {
   return Request.get(id)
   .then(request => {
     const runner = () =>
-      tasksByName[name](request, req.body)
+      taskRunnerByName[name](request, req.body)
 
     return Task.create(id, name, runner)
     .then(task => {
@@ -44,6 +61,21 @@ router.use('/create/:id/:name', apiRoute(req => {
     })
   })
 }))
+
+/* POST download task results */
+router.use('/download/:id/:name', (req, res) => {
+  const { id, name } = req.params
+
+  Request.get(id).then(request => {
+    const downloads = taskDownloadsByName[name](request)
+
+    streamZippedFiles(
+      downloads,
+      `${name}.zip`,
+      res
+    )
+  })
+})
 
 /* POST get task status */
 router.use('/status/:id', apiRoute(req =>
@@ -64,3 +96,18 @@ router.use('/destroy/:id', apiRoute(req => {
 }))
 
 module.exports = router
+
+// Helpers
+
+function streamZippedFiles(filepaths, name, res) {
+  const zip = new Zip()
+  filepaths.forEach(filepath => { zip.addLocalFile(filepath) })
+
+  const zipStream = new stream.PassThrough()
+  zipStream.end(zip.toBuffer())
+
+  res.set('content-disposition', `attachment; filename=${name}`);
+  res.set('content-type', 'application/zip');
+
+  zipStream.pipe(res)
+}

@@ -32,15 +32,7 @@ async function identifyClosestSpecies(outputFolder, inputFastqPath) {
   const summaryContent = (await fs.readFile(summaryPath)).toString()
   const results = parseCSV(summaryContent, { columns: true, skip_empty_lines: true })
 
-  return results
-  /* return {
-   *   outputFolder,
-   *   statsPath,
-   *   blastPath,
-   *   summaryPath,
-   *   readLengthPath,
-   *   results,
-   * } */
+  return { statsPath, summaryPath, readLengthPath, blastPath, results }
 }
 
 function generateStats(outputFolder, inputFastqPath) {
