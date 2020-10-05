@@ -5,6 +5,7 @@ import { setValue } from '../reducers/references'
 import { readLengthOptimization } from '../reducers/readLengths'
 import './IdentifyReferences.scss'
 
+import ErrorMessage from './ErrorMessage'
 import Instructions from './Instructions'
 import ResultsTable, { Row, Cell } from './ResultsTable'
 import TaskSpinner from './TaskSpinner'
@@ -12,6 +13,7 @@ import TaskSpinner from './TaskSpinner'
 const mapStateToProps = state => ({
   isLoading: state.references.isLoading,
   isLoaded: state.references.isLoaded,
+  message: state.references.message,
   status: state.references.status,
   order: state.references.order,
   value: state.references.value,
@@ -50,7 +52,7 @@ class IdentifyReferences extends React.Component {
   }
 
   render() {
-    const { isLoading, status, order } = this.props
+    const { isLoading, message, status, order } = this.props
 
     return (
       <div className='IdentifyReferences'>
@@ -61,12 +63,21 @@ class IdentifyReferences extends React.Component {
           loading={isLoading}
         >
           <div className='IdentifyReferences__content'>
-            <Instructions>
-              Now, select which <b>species</b> is more likely to be present.
-              Pick the top one if you don't know.
-            </Instructions>
+            {message ?
+              <ErrorMessage
+                message={message}
+                previousStep={this.props.previousStep}
+              />
+              :
+              <>
+                <Instructions>
+                  Now, select which <b>species</b> is more likely to be present.
+                  Pick the top one if you don't know.
+                </Instructions>
 
-            {this.renderTable()}
+                {this.renderTable()}
+              </>
+            }
           </div>
         </TaskSpinner>
       </div>

@@ -57,9 +57,14 @@ class App extends React.Component {
       this.setState({ enabledStep: nextStepIndex })
   }
 
+  previousStep = () => {
+    const previousStepIndex = this.state.activeStep - 1
+    this.setState({ activeStep: previousStepIndex, enabledStep: previousStepIndex })
+  }
+
   render() {
     const { showHelp, activeStep, enabledStep } = this.state
-    const { nextStep } = this
+    const { nextStep, previousStep } = this
 
     return (
       <div className='App'>
@@ -80,7 +85,7 @@ class App extends React.Component {
               onChange={this.setStep}
             />
             <div className='App__currentStep'>
-              {React.createElement(tabs[activeStep].component, { nextStep })}
+              {React.createElement(tabs[activeStep].component, { nextStep, previousStep })}
             </div>
           </div>
         </div>

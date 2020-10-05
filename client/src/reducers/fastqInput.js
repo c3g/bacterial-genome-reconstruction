@@ -11,6 +11,10 @@ const initialState = {
   },
 }
 
+/*
+ * HTMLFile objects aren't stored in redux state because they aren't serializable
+ * and redux complains about it.
+ */
 window.files = new Map()
 
 export const fastqInput = createSlice({

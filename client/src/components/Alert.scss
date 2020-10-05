@@ -1,0 +1,38 @@
+@import '../styles/_variables.scss';
+
+
+.Alert {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 1em;
+  padding: 1rem 0;
+  border: 1px solid currentColor;
+  border-left: 5px solid currentColor;
+  border-radius: $border-radius;
+}
+.Alert__icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 1em;
+  border-radius: $border-radius;
+}
+.Alert__content > *:last-child {
+  margin-bottom: 0;
+}
+
+
+@each $level, $values in $colors {
+  .Alert.--#{$level} {
+    // color: #fff;
+    // background-color: map-get($values, bg);
+    // border-color: darken(map-get($values, bg), 10%);
+    border-color:      rgba(map-get($values, text), 0.5);
+    border-left-color: map-get($values, text);
+
+    a {
+      color: map-get($values, text);
+      font-weight: bold;
+    }
+  }
+}

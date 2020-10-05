@@ -73,10 +73,12 @@ export const identifyClosestSpecies = createAsyncThunk(
       else
         _(setMessage(task.error))
 
+      _(setIsLoading(false))
     } catch (e) {
       _(setMessage(e.message))
+      _(setIsLoading(false))
+      throw e
     }
-    _(setIsLoading(false))
   })
 
 export default species.reducer;

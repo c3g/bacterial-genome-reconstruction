@@ -13,7 +13,7 @@ import * as Fasta from '../helpers/fasta'
 import Icon from './Icon'
 import Instructions from './Instructions'
 import Button from './Button'
-import Spinner from './Spinner'
+import TaskSpinner from './TaskSpinner'
 
 import './InputFiles.scss'
 
@@ -22,6 +22,7 @@ const ACCEPT_PATTERN = '.fasta,.faa,.fa,.fastq,.fq'
 const mapStateToProps = state => ({
   isLoading: state.request.isLoading,
   isLoaded: state.request.isLoaded,
+  message: state.request.message,
   r1: state.fastqInput.r1,
   r2: state.fastqInput.r2,
 })
@@ -67,14 +68,16 @@ class InputFiles extends React.Component {
   onClickIdentify = () => {
     const r1 = window.files.get(this.props.r1.file)
     this.props.createRequest(r1)
-    .then(() => {
-      this.props.nextStep()
-      this.props.identifyClosestSpecies()
+    .then(action => {
+      if (!action.error) {
+        this.props.nextStep()
+        this.props.identifyClosestSpecies()
+      }
     })
   }
 
   render() {
-    const { isLoading, r1, r2 } = this.props
+    const { isLoading, message, r1, r2 } = this.props
     const hasR1 = r1.file !== undefined && !r1.message
     const r1File = window.files.get(this.props.r1.file)
     const r2File = window.files.get(this.props.r2.file)
@@ -83,18 +86,8 @@ class InputFiles extends React.Component {
 
     return (
       <div className='InputFiles'>
-        <Spinner
-          block
-          size='5x'
-          message={
-            <div>
-              <b>Uploading files...</b><br/>
-              <small>&nbsp;</small><br/>
-              <br/>
-              <br/>
-              { /* ...to maintain the same dimension as TaskSpinner */ }
-            </div>
-          }
+        <TaskSpinner
+          message='Uploading files...'
           loading={isLoading}
         >
           <Instructions>
@@ -181,14 +174,19 @@ class InputFiles extends React.Component {
               </Button>
             }
             <div className='flex-fill' />
+            {message &&
+              <div className='text-error bold h-padded'>
+                <Icon name='exclamation-triangle' /> {message}
+              </div>
+            }
             <Button onClick={this.onClickIdentify} disabled={!hasR1}>
               Identify Genus <Icon name='arrow-right' marginLeft={5} />
             </Button>
           </div>
 
-        </Spinner>
+        </TaskSpinner>
       </div>
-    );
+    )
   }
 }
 

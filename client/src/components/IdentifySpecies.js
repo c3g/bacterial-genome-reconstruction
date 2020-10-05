@@ -6,6 +6,7 @@ import { setValue } from '../reducers/species'
 import { identifyClosestReferences } from '../reducers/references'
 import './IdentifySpecies.scss'
 
+import ErrorMessage from './ErrorMessage'
 import Instructions from './Instructions'
 import ResultsTable, { Row, Cell } from './ResultsTable'
 import TaskSpinner from './TaskSpinner'
@@ -14,6 +15,7 @@ import TaskSpinner from './TaskSpinner'
 const mapStateToProps = state => ({
   isLoading: state.species.isLoading,
   isLoaded: state.species.isLoaded,
+  message: state.species.message,
   status: state.species.status,
   order: state.species.order,
   value: state.species.value,
@@ -26,8 +28,8 @@ class IdentifySpecies extends React.Component {
 
   onSelectValue = (s) => {
     this.props.setValue(s)
-    this.props.identifyClosestReferences()
     this.props.nextStep()
+    this.props.identifyClosestReferences()
   }
 
   renderTable() {
@@ -52,7 +54,7 @@ class IdentifySpecies extends React.Component {
   }
 
   render() {
-    const { isLoading, status, order } = this.props
+    const { isLoading, message, status, order } = this.props
 
     return (
       <div className='IdentifySpecies'>
@@ -64,14 +66,23 @@ class IdentifySpecies extends React.Component {
           loading={isLoading}
         >
           <div className='IdentifySpecies__content'>
-            <Instructions>
-              Next, select which <b>genus</b> is more likely to be present.
-              Pick the top one if you don't know.<br />
-              This will narrow the search and the specific species will be
-              determined in the next step.
-            </Instructions>
+            {message ?
+              <ErrorMessage
+                message={message}
+                previousStep={this.props.previousStep}
+              />
+              :
+              <>
+                <Instructions>
+                  Next, select which <b>genus</b> is more likely to be present.
+                  Pick the top one if you don't know.<br />
+                  This will narrow the search and the specific species will be
+                  determined in the next step.
+                </Instructions>
 
-            {this.renderTable()}
+                {this.renderTable()}
+              </>
+            }
           </div>
         </TaskSpinner>
       </div>

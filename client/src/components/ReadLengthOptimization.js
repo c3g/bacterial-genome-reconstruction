@@ -5,6 +5,7 @@ import { Row, Cell } from 'react-sticky-table'
 import { setValue } from '../reducers/readLengths'
 import './ReadLengthOptimization.scss'
 
+import ErrorMessage from './ErrorMessage'
 import FinalResults from './FinalResults'
 import Instructions from './Instructions'
 import ResultsTable from './ResultsTable'
@@ -13,6 +14,7 @@ import TaskSpinner from './TaskSpinner'
 const mapStateToProps = state => ({
   isLoading: state.readLengths.isLoading,
   isLoaded: state.readLengths.isLoaded,
+  message: state.readLengths.message,
   status: state.readLengths.status,
   order: state.readLengths.order,
   value: state.readLengths.value,
@@ -51,7 +53,7 @@ class ReadLengthOptimization extends React.Component {
   }
 
   render() {
-    const { isLoading, status, order, value } = this.props
+    const { isLoading, message, status, order, value } = this.props
 
     // Hijack this step because I don't want to add another button
     if (value)
@@ -66,11 +68,20 @@ class ReadLengthOptimization extends React.Component {
           loading={isLoading}
         >
           <div className='ReadLengthOptimization__content'>
-            <Instructions>
-              Finally, select which read length you prefer. Higher score is better.
-            </Instructions>
+            {message ?
+              <ErrorMessage
+                message={message}
+                previousStep={this.props.previousStep}
+              />
+              :
+              <>
+                <Instructions>
+                  Finally, select which read length you prefer. Higher score is better.
+                </Instructions>
 
-            {this.renderTable()}
+                {this.renderTable()}
+              </>
+            }
           </div>
         </TaskSpinner>
       </div>
