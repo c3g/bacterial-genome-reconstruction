@@ -8,7 +8,7 @@ import Icon from './Icon'
 function Button(props) {
   const {
     className,
-    variantProp,
+    variant: variantProp,
     size,
     active,
     round,

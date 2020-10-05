@@ -173,7 +173,7 @@ class InputFiles extends React.Component {
 
           <div className='flex-row'>
             {process.env.NODE_ENV === 'development' &&
-              <Button onClick={window.clearStore}>
+              <Button variant='simple' onClick={window.clearStore}>
                 Clear
               </Button>
             }
