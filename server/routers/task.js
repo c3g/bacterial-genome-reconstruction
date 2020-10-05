@@ -28,16 +28,16 @@ const taskRunnerByName = {
 
 const taskDownloadsByName = {
   'identify-closest-species': (request) => {
-      const { summaryPath, readLengthPath } = request.results['identify-closest-species']
-      return [summaryPath, readLengthPath]
+    const { summaryPath, readLengthPath } = request.results['identify-closest-species'].results
+    return [summaryPath, readLengthPath]
   },
   'identify-closest-references': (request) => {
-      const { summaryPath, readLengthPath } = request.results['identify-closest-references']
-      return [summaryPath, readLengthPath]
+    const { summaryPath, readLengthPath } = request.results['identify-closest-references'].results
+    return [summaryPath, readLengthPath]
   },
   'read-length-optimization': (request) => {
-      const { summaryPath } = request.results['read-length-optimization']
-      return [summaryPath]
+    const { summaryPath } = request.results['read-length-optimization'].results
+    return [summaryPath]
   },
 }
 
@@ -54,7 +54,7 @@ router.use('/create/:id/:name', apiRoute(req => {
     .then(task => {
 
       task.didComplete.then(() => {
-        request.results[name] = task.results || task.error
+        Request.update(id, { results: { [name]: Task.serialize(task) } })
       })
 
       return Task.serialize(task)

@@ -5,6 +5,7 @@
 const fs = require('fs').promises
 const del = require('del')
 const cuid = require('cuid')
+const { KeyValueStore } = require('sqlite-objects')
 
 const Task = require('./task')
 const { rejectWith } = require('./promise')
@@ -14,6 +15,7 @@ const config = require('../config')
 module.exports = {
   create,
   get,
+  update,
   destroy,
 }
 
@@ -26,9 +28,11 @@ module.exports = {
  * @property {Object.<string, any>} results - Results of tasks
  */
 
-/** @type {Object.<string, Request>} */
-const requestsById = {}
-
+/** @type {KeyValueStore.<string, Request>} */
+const requestsById = new KeyValueStore(config.paths.requestsDB)
+requestsById.ready
+  .then(() => requestsById.list())
+  .then(requests => console.log(requests))
 
 // Exports
 
@@ -40,45 +44,42 @@ function create(filepath) {
     id,
     folder,
     inputPath,
+    lastUpdate: Date.now(),
     results: {},
   }
 
-  requestsById[id] = request
-
-  return fs.mkdir(folder)
+  return Promise.resolve()
+  .then(() => fs.mkdir(folder))
   .then(() => fs.rename(filepath, inputPath))
+  .then(() => requestsById.set(id, request))
   .then(() => request)
 }
 
 function get(id) {
-  const request = requestsById[id]
+  return requestsById.get(id)
+}
 
-  if (!request)
-    return rejectWith('No request found for id ' + id)
-
-  return Promise.resolve(request)
+function update(id, value) {
+  return requestsById.update(id, value)
 }
 
 function destroy(id) {
-  const request = requestsById[id]
+  return requestsById.get(id)
+  .then(request => {
 
-  if (!request)
-    return rejectWith('No request found for id ' + id)
+    if (request.deleting)
+      return rejectWith(`Request ${id} being deleted`)
 
-  if (request.deleting)
-    return rejectWith(`Request ${id} being deleted`)
+    request.deleting = true
 
-  request.deleting = true
+    // Spawn task destruction and complete request
+    // destruction later as running tasks cannot be
+    // stopped.
+    Task.destroy(id)
+    .then(() => del([request.folder]))
+    .then(() => requestsById.remove(id))
+    // XXX: Error not caught
 
-  // Spawn task destruction and complete request
-  // destruction later as running tasks cannot be
-  // stopped.
-  Task.destroy(id)
-  .then(() => del([request.folder]))
-  .then(() => {
-    delete requestsById[id]
+    return Promise.resolve()
   })
-  // XXX: Error not caught
-
-  return Promise.resolve()
 }

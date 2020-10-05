@@ -71,7 +71,7 @@ export const identifyClosestReferences = createAsyncThunk(
       }
 
       if (task.results)
-        _(setData(task.results))
+        _(setData(task.results.data))
       else
         _(setMessage(task.error))
 

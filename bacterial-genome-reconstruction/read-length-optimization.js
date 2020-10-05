@@ -41,14 +41,14 @@ async function readLengthOptimization(inputFolder, genus, accession) {
   const summaryPath = await generateReadLengthSummary(inputFolder, cutoffs)
 
   const summaryContent = (await fs.readFile(summaryPath)).toString()
-  const results = normalizeResults(parseCSV(summaryContent, { columns: true, skip_empty_lines: true }))
+  const data = normalizeResults(parseCSV(summaryContent, { columns: true, skip_empty_lines: true }))
 
   await del([
     `${inputFolder}/cutoffs`,
     `${inputFolder}/blast_results`,
   ])
 
-  return { summaryPath, results }
+  return { summaryPath, data }
 }
 
 function blastDBCommand(outputFolder, genus, accession) {
@@ -126,15 +126,15 @@ function generateReadLengthSummary(outputFolder, cutoffs) {
   return exec(command).then(() => outputPath)
 }
 
-function normalizeResults(results) {
-  results.forEach(r => {
+function normalizeResults(data) {
+  data.forEach(r => {
     delete r['']
     r.cutoff      = parseInt(r.cutoff, 10)
     r.perfectHits = parseInt(r.perfectHits, 10)
     r.product     = parseInt(r.product, 10)
   })
-  results.sort((a, b) => b.product - a.product)
-  return results
+  data.sort((a, b) => b.product - a.product)
+  return data
 }
 
 async function mkdirp(filepaths) {
