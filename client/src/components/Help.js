@@ -26,7 +26,7 @@ function Help(props) {
 
         <h4>I have a question or a problem</h4>
         <p className='Help__text'>
-          Contact us <a href='mailto:TODO'>by email</a>.
+          Contact us <a href='mailto:info@computationalgenomics.ca'>by email</a>.
         </p>
       </div>
     </div>
