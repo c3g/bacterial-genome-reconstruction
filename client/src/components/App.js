@@ -1,6 +1,9 @@
-import React from 'react';
+import React from 'react'
+import cx from 'classname'
 
 import Icon from './Icon'
+import Button from './Button'
+import Help from './Help'
 import Steps from './Steps'
 import InputFiles from './InputFiles'
 import IdentifySpecies from './IdentifySpecies'
@@ -9,10 +12,38 @@ import ReadLengthOptimization from './ReadLengthOptimization'
 
 import './App.scss'
 
+const tabs = [
+  {
+    title: 'Input files',
+    icon: <Icon name='file' />,
+    component: InputFiles,
+  },
+  {
+    title: 'Identify genus',
+    icon: <Icon name='filter' />,
+    component: IdentifySpecies,
+  },
+  {
+    title: 'Identify reference',
+    icon: <Icon name='bullseye' />,
+    component: IdentifyReferences,
+  },
+  {
+    title: 'Optimize read length',
+    icon: <Icon name='arrows-h' />,
+    component: ReadLengthOptimization,
+  },
+]
+
 class App extends React.Component {
   state = {
+    showHelp: false,
     activeStep:  localStorage.activeStep  ? +localStorage.activeStep  : 0,
     enabledStep: localStorage.enabledStep ? +localStorage.enabledStep : 0,
+  }
+
+  toggleHelp = () => {
+    this.setState({ showHelp: !this.state.showHelp })
   }
 
   setStep = (activeStep) => {
@@ -27,34 +58,19 @@ class App extends React.Component {
   }
 
   render() {
-    const { activeStep, enabledStep } = this.state
+    const { showHelp, activeStep, enabledStep } = this.state
     const { nextStep } = this
-
-    const tabs = [
-      {
-        title: 'Input files',
-        icon: <Icon name='file' />,
-        component: InputFiles,
-      },
-      {
-        title: 'Identify genus',
-        icon: <Icon name='filter' />,
-        component: IdentifySpecies,
-      },
-      {
-        title: 'Identify reference',
-        icon: <Icon name='bullseye' />,
-        component: IdentifyReferences,
-      },
-      {
-        title: 'Optimize read length',
-        icon: <Icon name='arrows-h' />,
-        component: ReadLengthOptimization,
-      },
-    ]
 
     return (
       <div className='App'>
+        <Button
+          className='App__helpButton'
+          flat
+          iconButton
+          icon={ showHelp ? 'times' : 'question-circle' }
+          onClick={this.toggleHelp}
+        />
+
         <div className='App__content'>
           <div className='App__wrapper'>
             <Steps
@@ -79,6 +95,10 @@ class App extends React.Component {
             Matthew D'Iorio & Ken Dewar
           </span>
         </footer>
+
+        <div className={cx('App__help', { visible: showHelp } )}>
+          <Help />
+        </div>
       </div>
     );
   }

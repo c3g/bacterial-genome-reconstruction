@@ -19,8 +19,6 @@
   border-radius: $border-radius;
 
   cursor: pointer;
-  color: $text-color-normal;
-  background: $accent-color;
   height: 36px;
 
   transition-property: color,background,border-color;
@@ -32,17 +30,21 @@
   min-width: 160px;
   overflow: hidden;
 }
-.Button:not([disabled]):hover,
-.Button:not([disabled]):focus
+.Button.--primary {
+  color: $text-color-normal;
+  background: $accent-color;
+}
+.Button.--primary:not([disabled]):hover,
+.Button.--primary:not([disabled]):focus
 {
   color:            darken($text-color-normal, 15%);
   background-color: rgba($accent-color, 0.8);
 }
-.Button:not([disabled]):active {
+.Button.--primary:not([disabled]):active {
   color: #fff;
   background-color: hsl(202.70000000000005,74%,40.2%);
 }
-.Button[disabled] {
+.Button.--primary[disabled] {
   pointer-events: none;
   background-color: #3a3c41;
   color: #787c7f;
@@ -50,5 +52,38 @@
   opacity: 0.65;
   filter: alpha(opacity=65);
   box-shadow: none;
+}
+
+
+.Button.--icon {
+  color: $color;
+  background-color: transparent;
+  border: 1px solid transparent;
+  min-width: 30px;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: none;
+}
+.Button.--icon:not([disabled]):hover {
+  color: $hover-color;
+  background-color: $hover-light-bg-color;
+}
+.Button.--icon:not([disabled]).active,
+.Button.--icon:not([disabled]):active,
+.Button.--icon:not([disabled]):focus {
+  outline: none;
+  box-shadow: 0 0 0 1px $focus-color;
+}
+.Button.--icon:not([disabled]).active,
+.Button.--icon:not([disabled]):active {
+  background-color: rgba(black, 0.1);
+  &:hover {
+    background-color: rgba(black, 0.1);
+  }
+}
+.Button.--icon .Button__icon {
+  margin: 0;
 }
 

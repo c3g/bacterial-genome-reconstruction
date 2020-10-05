@@ -8,7 +8,7 @@ import Icon from './Icon'
 function Button(props) {
   const {
     className,
-    type,
+    variantProp,
     size,
     active,
     round,
@@ -24,17 +24,21 @@ function Button(props) {
     ...rest
   } = props
 
+  const variant =
+    iconButton ? 'icon' :
+    variantProp ? variantProp :
+                 'primary'
+
   const buttonClassName = classname(
     'Button',
+    variant ? `--${variant}` : undefined,
     className,
-    type,
     size,
     {
       'active': active,
       'round': round,
-      'Button--icon': iconButton,
+      '--icon': iconButton,
       'center': center,
-      'has-icon': icon !== undefined,
     }
   )
 
@@ -45,7 +49,7 @@ function Button(props) {
       {...rest}
     >
       { icon !== undefined && ((iconButton && !loading) || !iconButton) &&
-          <Icon name={icon} marginRight={5} className='Button__icon' /> }
+          <Icon name={icon} marginRight={iconButton ? 0 : 5} className='Button__icon' /> }
       {
         children &&
           <span>{ children }</span>
