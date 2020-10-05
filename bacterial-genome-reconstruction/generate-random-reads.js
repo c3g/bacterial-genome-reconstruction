@@ -16,8 +16,10 @@ if (require.main === module) {
 
 async function generateRandomReads(inputFile, outputFile) {
   const content = (await fs.readFile(inputFile)).toString()
+  const format = getFormat(content, inputFile)
+  const blockLength = format === 'fastq' ? 4 : 2
   const lines = content.trim().split('\n')
-  const groups = groupBy(lines, 4)
+  const groups = groupBy(lines, blockLength)
 
   const reads =
     Array.from({ length: 1000 }, (_, i) => {
@@ -51,4 +53,12 @@ function groupBy(lines, n) {
 
 function random(min, max) {
   return min + Math.round(Math.random() * (max - min))
+}
+
+function getFormat(content, filename) {
+  if (content.charAt(0) === '@')
+    return 'fastq'
+  if (content.charAt(0) === '>')
+    return 'fasta'
+  throw new Error(`Couldn't recognize input format for file "${filename}"`)
 }
