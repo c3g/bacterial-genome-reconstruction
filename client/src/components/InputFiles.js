@@ -16,6 +16,8 @@ import Spinner from './Spinner'
 
 import './InputFiles.scss'
 
+const ACCEPT_PATTERN = '.fasta,.faa,.fa,.fastq,.fq'
+
 const mapStateToProps = state => ({
   isLoading: state.request.isLoading,
   isLoaded: state.request.isLoaded,
@@ -96,21 +98,21 @@ class InputFiles extends React.Component {
         >
           <Instructions>
             First, select the files you want to use.
-            They must be in the <code>.fastq</code> format.
+            They must be in the <code>.fasta</code> or <code>.fastq</code> format.
           </Instructions>
 
           <StyledDropZone
             multiple
             dontRead
             className='InputFiles__dropzone'
-            accept='.fastq,.fq'
+            accept={ACCEPT_PATTERN}
             onDrop={this.onSelectFiles}
           >
             <div className='container'>
               <StyledDropZone
                 dontRead
                 className='InputFiles__innerDropzone six columns'
-                accept='.fastq,.fq'
+                accept={ACCEPT_PATTERN}
                 title={r1.message || r1File?.name}
                 onDrop={this.onSelectR1}
               >
@@ -140,7 +142,7 @@ class InputFiles extends React.Component {
               <StyledDropZone
                 dontRead
                 className='InputFiles__innerDropzone six columns'
-                accept='.fastq,.fq'
+                accept={ACCEPT_PATTERN}
                 title={r2.message || r2File?.name}
                 onDrop={this.onSelectR2}
               >
