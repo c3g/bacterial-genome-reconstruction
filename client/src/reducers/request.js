@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import * as api from '../api'
+import * as LocationQuery from '../helpers/location-query'
 
 const initialState = {
   isLoading: false,
@@ -43,6 +44,8 @@ export const createRequest = createAsyncThunk(
       _(setData(data))
       _(setIsLoaded(true))
       _(setIsLoading(false))
+
+      LocationQuery.insert('id', data.id)
     } catch (e) {
       _(setMessage(e.message))
       _(setIsLoading(false))
