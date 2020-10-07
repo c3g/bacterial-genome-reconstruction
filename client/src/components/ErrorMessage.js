@@ -12,8 +12,7 @@ function ErrorMessage({ message, previousStep }) {
           Try again later or{' '}
           <a href='mailto:mailto:info@computationalgenomics.ca'>contact us</a>{' '}
           to report your issue.<br />
-          <br />
-          Message: <code>{message}</code>
+          Message: <code>{stringify(message)}</code>
         </p>
       </Alert>
       <div className='flex-row'>
@@ -23,6 +22,15 @@ function ErrorMessage({ message, previousStep }) {
       </div>
     </>
   )
+}
+
+function stringify(error) {
+  if (typeof error === 'string')
+    return error
+  if (error === null)
+    return '[Null error message :/]'
+  if (typeof error === 'object')
+    return JSON.stringify(error)
 }
 
 export default ErrorMessage

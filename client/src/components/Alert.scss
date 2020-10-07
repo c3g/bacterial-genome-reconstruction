@@ -9,6 +9,7 @@
   border: 1px solid currentColor;
   border-left: 5px solid currentColor;
   border-radius: $border-radius;
+  overflow: hidden;
 }
 .Alert__icon {
   display: flex;
@@ -17,10 +18,19 @@
   padding: 0 1em;
   border-radius: $border-radius;
 }
+.Alert__content {
+  flex: 1;
+  overflow: hidden;
+  padding-right: 0.5em;
+}
 .Alert__content > *:last-child {
   margin-bottom: 0;
 }
-
+.Alert__details, .Alert__content pre {
+  font-size: 0.8em;
+  padding: 0.5em;
+  background-color: rgba(#000, 0.05);
+}
 
 @each $level, $values in $colors {
   .Alert.--#{$level} {
