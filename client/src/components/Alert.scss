@@ -26,10 +26,15 @@
 .Alert__content > *:last-child {
   margin-bottom: 0;
 }
-.Alert__details, .Alert__content pre {
+.Alert__details,
+.Alert__content pre
+{
   font-size: 0.8em;
   padding: 0.5em;
   background-color: rgba(#000, 0.05);
+}
+.Alert__content p {
+  margin-bottom: 1em;
 }
 
 @each $level, $values in $colors {
