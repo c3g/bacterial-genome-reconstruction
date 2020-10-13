@@ -56,7 +56,11 @@ router.use('/create/:id/:name', apiRoute(req => {
     const runner = () =>
       taskRunnerByName[name](request, req.body)
 
-    return Task.create(id, name, runner)
+    const meta =
+      name === 'read-length-optimization' && request.inputPath.r2 ?
+        2 : 1
+
+    return Task.create(id, name, runner, meta)
     .then(task => {
 
       task.didComplete.then(() => {

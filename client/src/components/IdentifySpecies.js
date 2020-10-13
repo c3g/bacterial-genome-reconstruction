@@ -18,6 +18,7 @@ const mapStateToProps = state => ({
   message: state.species.message,
   status: state.species.status,
   order: state.species.order,
+  eta: state.species.eta,
   value: state.species.value,
   data: state.species.data,
 })
@@ -54,7 +55,7 @@ class IdentifySpecies extends React.Component {
   }
 
   render() {
-    const { isLoading, message, status, order } = this.props
+    const { isLoading, message, status, order, eta } = this.props
 
     return (
       <div className='IdentifySpecies'>
@@ -63,6 +64,7 @@ class IdentifySpecies extends React.Component {
           message='Identifying species...'
           status={status}
           order={order}
+          eta={eta}
           loading={isLoading}
         >
           <div className='IdentifySpecies__content'>

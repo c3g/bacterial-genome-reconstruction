@@ -16,6 +16,7 @@ const mapStateToProps = state => ({
   message: state.references.message,
   status: state.references.status,
   order: state.references.order,
+  eta: state.references.eta,
   value: state.references.value,
   data: state.references.data,
 })
@@ -52,7 +53,7 @@ class IdentifyReferences extends React.Component {
   }
 
   render() {
-    const { isLoading, message, status, order } = this.props
+    const { isLoading, message, status, order, eta } = this.props
 
     return (
       <div className='IdentifyReferences'>
@@ -60,6 +61,7 @@ class IdentifyReferences extends React.Component {
           message='Identifying references...'
           status={status}
           order={order}
+          eta={eta}
           loading={isLoading}
         >
           <div className='IdentifyReferences__content'>

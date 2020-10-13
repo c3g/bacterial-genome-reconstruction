@@ -17,6 +17,7 @@ const mapStateToProps = state => ({
   message: state.readLengths.message,
   status: state.readLengths.status,
   order: state.readLengths.order,
+  eta: state.readLengths.eta,
   value: state.readLengths.value,
   data: state.readLengths.data,
 })
@@ -53,7 +54,7 @@ class ReadLengthOptimization extends React.Component {
   }
 
   render() {
-    const { isLoading, message, status, order, data, value } = this.props
+    const { isLoading, message, status, order, eta, data, value } = this.props
 
     // Hijack this step because I don't want to add another button
     if (data.r1)
@@ -65,6 +66,7 @@ class ReadLengthOptimization extends React.Component {
           message='Optimizing read length...'
           status={status}
           order={order}
+          eta={eta}
           loading={isLoading}
         >
           <div className='ReadLengthOptimization__content'>

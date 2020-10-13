@@ -3,11 +3,12 @@
  */
 
 
+const TimeLog = require('./time-log')
 const getControllablePromise = require('./get-controllable-promise')
 
 const {
   rejectNotFound,
-  rejectAlreadyExists,
+  rejectAlreadyExists
 } = require('./promise')
 
 
@@ -42,6 +43,8 @@ module.exports = {
  * @typedef {Object} Task
  * @property {string} requestId - ID of the associated request
  * @property {string} name - Name of the task
+ * @property {number} meta - Details about the task
+ * @property {number} start - Time of start
  * @property {number} order - Approximate position in queue
  * @property {Status} status - Status of the task
  * @property {boolean} isDestroying - If the task is being destroyed
@@ -72,13 +75,15 @@ let running = false
 
 // Exports
 
-function create(requestId, name, run) {
+function create(requestId, name, run, meta) {
   if (tasks.some(t => t.requestId === requestId))
     return rejectAlreadyExists(`A task for request "${requestId}" already exists`)
 
   const task = {
     requestId,
     name,
+    meta,
+    start: -1,
     order: -1,
     status: Status.WAITING,
     didComplete: getControllablePromise(),
@@ -139,10 +144,26 @@ function destroy(requestId) {
   throw new Error('unreachable')
 }
 
-function serialize(t) {
+async function serialize(t) {
+  let eta = -1
+
+  if (t.status !== Status.COMPLETED) {
+    const firstTask = tasksById[tasks[0]]
+
+    if (firstTask && firstTask.status === Status.RUNNING) {
+      const estimate = await TimeLog.estimate(t.name)
+      const runningFor = Date.now() - firstTask.start
+      const runningTaskEta = Math.max(estimate - runningFor, 0) * t.meta
+
+      eta = t.order * estimate + runningTaskEta
+    }
+  }
+
   return {
     ok: t.results ? true : t.error ? false : undefined,
     name: t.name,
+    start: t.start,
+    eta: eta,
     order: t.order,
     status: t.status,
     results: t.results,
@@ -177,6 +198,7 @@ function runTasks() {
 
   const nextTaskId = tasks[0]
   const nextTask = tasksById[nextTaskId]
+  nextTask.start = Date.now()
   nextTask.status = Status.RUNNING
 
   console.log(`runTasks: tick (${nextTask.name})`)
@@ -184,6 +206,11 @@ function runTasks() {
   return nextTask.run()
   .then(results => {
     nextTask.results = results
+
+    TimeLog.add(nextTask.name, {
+      start: nextTask.start,
+      duration: (Date.now() - nextTask.start) / nextTask.meta,
+    })
   })
   .catch(error => {
     nextTask.error = error

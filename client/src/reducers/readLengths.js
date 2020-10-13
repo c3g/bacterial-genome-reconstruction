@@ -8,6 +8,7 @@ const initialState = {
   isLoaded: false,
   status: undefined,
   order: undefined,
+  eta: undefined,
   message: undefined,
   value: undefined,
   data: { r1: null, r2: null },
@@ -26,6 +27,7 @@ export const readLengths = createSlice({
     update: (state, action) => {
       state.status = action.payload.status
       state.order = action.payload.order
+      state.eta = action.payload.eta
     },
     setMessage: (state, action) => {
       state.message = action.payload

@@ -13,8 +13,8 @@ function ErrorMessage({ message, previousStep }) {
           <a href='mailto:mailto:info@computationalgenomics.ca'>contact us</a>{' '}
           to report your issue.<br />
           Message: <br />
-          <pre>{stringify(message)}</pre>
         </p>
+        <pre>{stringify(message)}</pre>
       </Alert>
       <div className='flex-row'>
         <Button variant='simple' onClick={previousStep}>

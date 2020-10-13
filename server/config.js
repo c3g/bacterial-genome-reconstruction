@@ -17,6 +17,7 @@ module.exports = {
   paths: {
     data:       path.join(__dirname, 'data'),
     tmp:        path.join(__dirname, 'data', 'tmp'),
+    timeLogsDB: path.join(__dirname, 'data', 'timeLogs.db'),
     requestsDB: path.join(__dirname, 'data', 'requests.db'),
     requests:   path.join(__dirname, 'data', 'requests'),
     database:   path.join(__dirname, 'data', 'db.sqlite'),

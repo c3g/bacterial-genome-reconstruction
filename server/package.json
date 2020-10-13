@@ -39,7 +39,8 @@
     "serve-favicon": "~2.4.2",
     "shelljs": "^0.8.4",
     "sqlite-objects": "^2.0.1",
-    "sqlite3": "^5.0.0"
+    "sqlite3": "^5.0.0",
+    "weighted-mean": "^1.0.2"
   },
   "devDependencies": {
     "eslint-config-prettier": "^3.0.1",

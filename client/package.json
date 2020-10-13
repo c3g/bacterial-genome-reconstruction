@@ -21,7 +21,8 @@
     "react-sticky-table": "^5.1.7",
     "recompose": "^0.30.0",
     "redux-logger": "^3.0.6",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "stoic-api": "^1.5.1"
   },
   "scripts": {
     "start": "react-scripts start",

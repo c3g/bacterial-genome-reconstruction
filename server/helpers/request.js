@@ -75,6 +75,9 @@ requestsById.ready
 // Exports
 
 function create(r1, r2) {
+  if (!r1 && !r2)
+    return rejectWith('Missing input files')
+
   const id = cuid()
   const folder = `${config.paths.requests}/${id}`
   const inputPath = {
