@@ -63,8 +63,10 @@ router.use('/create/:id/:name', apiRoute(req => {
     return Task.create(id, name, runner, meta)
     .then(task => {
 
-      task.didComplete.then(() => {
-        Request.update(id, { results: { [name]: Task.serialize(task) } })
+      task.didComplete
+      .then(() => Task.serialize(task))
+      .then(() => {
+        Request.update(id, { results: { [name]: results } })
       })
 
       return Task.serialize(task)
