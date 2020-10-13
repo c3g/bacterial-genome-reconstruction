@@ -6,6 +6,7 @@ const fs = require('fs').promises
 const del = require('del')
 const cuid = require('cuid')
 const { KeyValueStore } = require('sqlite-objects')
+const { generateRandomReads } = require('../../bacterial-genome-reconstruction')
 
 const Task = require('./task')
 const { rejectWith } = require('./promise')
@@ -36,23 +37,38 @@ requestsById.ready
 
 // Exports
 
-function create(filepath) {
+function create(r1, r2) {
   const id = cuid()
   const folder = `${config.paths.requests}/${id}`
-  const inputPath = `${folder}/input.fq`
+  const inputPath = {
+    r1: r1 ? `${folder}/input-1.fq` : undefined,
+    r2: r2 ? `${folder}/input-2.fq` : undefined,
+  }
+  const subsampledPath = {
+    r1: r1 ? `${folder}/input-1-subsampled.fa` : undefined,
+    r2: r2 ? `${folder}/input-2-subsampled.fa` : undefined,
+  }
   const request = {
     id,
     folder,
     inputPath,
+    subsampledPath,
     lastUpdate: Date.now(),
     results: {},
   }
 
   return Promise.resolve()
   .then(() => fs.mkdir(folder))
-  .then(() => fs.rename(filepath, inputPath))
+  .then(() => Promise.all([
+    r1 && fs.rename(r1, inputPath.r1),
+    r2 && fs.rename(r2, inputPath.r2),
+  ]))
+  .then(() => Promise.all([
+    r1 && generateRandomReads(inputPath.r1, subsampledPath.r1),
+    r2 && generateRandomReads(inputPath.r2, subsampledPath.r2),
+  ]))
   .then(() => requestsById.set(id, request))
-  .then(() => request)
+  .then(() => (console.log(request), request))
 }
 
 function get(id) {

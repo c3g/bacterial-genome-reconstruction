@@ -10,7 +10,10 @@ const { apiRoute } = require('../helpers/handlers.js')
 
 /* POST create */
 router.use('/create', apiRoute(req =>
-  Request.create(req.files.file.path)
+  Request.create(
+    req.files.r1 && req.files.r1.path,
+    req.files.r2 && req.files.r2.path
+  )
 ))
 
 /* GET retrieve request */

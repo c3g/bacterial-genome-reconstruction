@@ -19,11 +19,17 @@ const {
 
 const taskRunnerByName = {
   'identify-closest-species': (request, params) =>
-    identifyClosestSpecies(request.folder, request.inputPath),
+    identifyClosestSpecies(request.folder, request.subsampledPath.r1, request.inputPath.r1),
   'identify-closest-references': (request, params) =>
-    identifyClosestReferences(request.folder, params.genus),
+    identifyClosestReferences(request.folder, request.subsampledPath.r1, params.genus),
   'read-length-optimization': (request, params) =>
-    readLengthOptimization(request.folder, params.genus, params.accession),
+    readLengthOptimization(request.folder, request.subsampledPath.r1, params.genus, params.accession, 1)
+    .then(r1 =>
+      (request.subsampledPath.r2 ?
+        readLengthOptimization(request.folder, request.subsampledPath.r2, params.genus, params.accession, 2) :
+        Promise.resolve(null))
+      .then(r2 => ({ data: { r1, r2 } }))
+    )
 }
 
 const taskDownloadsByName = {
@@ -36,8 +42,8 @@ const taskDownloadsByName = {
     return [summaryPath, readLengthPath]
   },
   'read-length-optimization': (request) => {
-    const { summaryPath } = request.results['read-length-optimization'].results
-    return [summaryPath]
+    const { r1, r2 } = request.results['read-length-optimization'].results.data
+    return [r1 && r1.summaryPath, r2 && r2.summaryPath].filter(Boolean)
   },
 }
 
