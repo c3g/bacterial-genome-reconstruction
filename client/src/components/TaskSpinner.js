@@ -27,7 +27,7 @@ function TaskSpinner({ message, status, order, eta, loading, children }) {
             }
           </small><br/>
           <small>
-            {status && (eta !== -1) &&
+            {status && eta !== undefined && (eta !== -1) &&
               <>{renderDuration(eta)} remaining</>
             }
           </small><br/>
