@@ -17,12 +17,11 @@ const SUMMARY_SCRIPT_PATH = `${__dirname}/blast_summaries.R`
 
 module.exports = identifyClosestReferences
 
-async function identifyClosestReferences(inputFolder, genus) {
-  const statsPath = `${inputFolder}/stats.txt`
-  const subsampledFastaPath = `${inputFolder}/subsample.fasta`
-  const blastPath = await blast(inputFolder, subsampledFastaPath, genus)
+async function identifyClosestReferences(outputFolder, subsampledFastaPath, genus) {
+  const statsPath = `${outputFolder}/stats.txt`
+  const blastPath = await blast(outputFolder, subsampledFastaPath, genus)
   const [summaryPath, readLengthPath] = await generateSummary(
-    inputFolder,
+    outputFolder,
     statsPath,
     blastPath
   )

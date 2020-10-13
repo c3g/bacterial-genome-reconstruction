@@ -9,7 +9,6 @@ const util = require('util')
 const exec = util.promisify(cp.exec)
 const shellEscape = require('shell-escape')
 const parseCSV = require('csv-parse/lib/sync')
-const generateRandomReads = require('./generate-random-reads')
 
 const NUM_CPUS = os.cpus().length
 
@@ -18,10 +17,8 @@ const SUMMARY_SCRIPT_PATH = `${__dirname}/blast_summaries.R`
 
 module.exports = identifyClosestSpecies
 
-async function identifyClosestSpecies(outputFolder, inputFastqPath) {
+async function identifyClosestSpecies(outputFolder, subsampledFastaPath, inputFastqPath) {
   const statsPath = await generateStats(outputFolder, inputFastqPath)
-  const subsampledFastaPath = `${outputFolder}/subsample.fasta`
-  await generateRandomReads(inputFastqPath, subsampledFastaPath)
   const blastPath = await blast(outputFolder, subsampledFastaPath)
   const [summaryPath, readLengthPath] = await generateSummary(
     outputFolder,

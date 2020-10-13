@@ -20,7 +20,7 @@ const DB_BY_GENUS_PATH         = `${__dirname}/db/blast_db/by_genus`
 
 module.exports = readLengthOptimization
 
-async function readLengthOptimization(inputFolder, genus, accession) {
+async function readLengthOptimization(inputFolder, subsampledFastaPath, genus, accession, trackNumber = 1) {
   await mkdirp([
     `${inputFolder}/cutoffs`,
     `${inputFolder}/blast_results`,
@@ -30,7 +30,7 @@ async function readLengthOptimization(inputFolder, genus, accession) {
 
   const referenceResultPath = await blastDBCommand(inputFolder, genus, accession)
 
-  /* const readsetPaths = */ await generateReadsets(inputFolder, cutoffs)
+  /* const readsetPaths = */ await generateReadsets(inputFolder, subsampledFastaPath, cutoffs)
 
   for (cutoff of cutoffs) {
     const blastDBPath = await makeBlastDB(inputFolder, cutoff)
@@ -38,7 +38,7 @@ async function readLengthOptimization(inputFolder, genus, accession) {
     // console.log(blastDBPath, blastResultPath)
   }
 
-  const summaryPath = await generateReadLengthSummary(inputFolder, cutoffs)
+  const summaryPath = await generateReadLengthSummary(inputFolder, cutoffs, trackNumber)
 
   const summaryContent = (await fs.readFile(summaryPath)).toString()
   const data = normalizeResults(parseCSV(summaryContent, { columns: true, skip_empty_lines: true }))
@@ -52,7 +52,7 @@ async function readLengthOptimization(inputFolder, genus, accession) {
 }
 
 function blastDBCommand(outputFolder, genus, accession) {
-  const outputPath = `${outputFolder}/references_result.fasta`
+  const outputPath = `${outputFolder}/references_result.tmp.fasta`
 
   const command = shellEscape([
     'blastdbcmd',
@@ -65,9 +65,7 @@ function blastDBCommand(outputFolder, genus, accession) {
   return exec(command).then(() => outputPath)
 }
 
-function generateReadsets(outputFolder, cutoffs) {
-  const subsampledFastaPath = `${outputFolder}/subsample.fasta`
-
+function generateReadsets(outputFolder, subsampledFastaPath, cutoffs) {
   const command = shellEscape([
     'Rscript', OPTIMIZATION_SCRIPT_PATH,
         cutoffs.join(', '),
@@ -112,9 +110,9 @@ function blast(outputFolder, inputDBPath, inputFastaPath, cutoff) {
   return exec(command).then(() => outputPath)
 }
 
-function generateReadLengthSummary(outputFolder, cutoffs) {
+function generateReadLengthSummary(outputFolder, cutoffs, trackNumber) {
   const inputFolderPath = `${outputFolder}/blast_results`
-  const outputPath = `${outputFolder}/read_length_summary.csv`
+  const outputPath = `${outputFolder}/read_length_summary-${trackNumber}.csv`
 
   const command = shellEscape([
     'Rscript', SUMMARY_SCRIPT_PATH,
