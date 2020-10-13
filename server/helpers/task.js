@@ -152,10 +152,13 @@ async function serialize(t) {
 
     if (firstTask && firstTask.status === Status.RUNNING) {
       const estimate = await TimeLog.estimate(t.name)
-      const runningFor = Date.now() - firstTask.start
-      const runningTaskEta = Math.max(estimate - runningFor, 0) * t.meta
 
-      eta = t.order * estimate + runningTaskEta
+      if (estimate !== -1) {
+        const runningFor = Date.now() - firstTask.start
+        const runningTaskEta = Math.max(estimate - runningFor, 0) * t.meta
+
+        eta = t.order * estimate + runningTaskEta
+      }
     }
   }
 
