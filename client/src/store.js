@@ -2,7 +2,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import logger from 'redux-logger'
 import thunk from 'redux-thunk'
 
-import fastqInputReducer from './reducers/fastqInput.js'
+import inputFilesReducer from './reducers/inputFiles.js'
 import readLengthsReducer from './reducers/readLengths.js'
 import referencesReducer from './reducers/references.js'
 import requestReducer from './reducers/request.js'
@@ -15,7 +15,7 @@ const middleware = [thunk, logger]
 const store = configureStore({
   middleware,
   reducer: {
-    fastqInput: fastqInputReducer,
+    inputFiles: inputFilesReducer,
     readLengths: readLengthsReducer,
     references: referencesReducer,
     request: requestReducer,

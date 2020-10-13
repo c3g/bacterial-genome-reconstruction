@@ -4,7 +4,7 @@ import { StyledDropZone, readFileAsText } from 'react-drop-zone/dist/index'
 import {
   setFiles,
   setMessages,
-} from '../reducers/fastqInput'
+} from '../reducers/inputFiles'
 import { createRequest } from '../reducers/request'
 import { identifyClosestSpecies } from '../reducers/species'
 import * as Fastq from '../helpers/fastq'
@@ -23,8 +23,8 @@ const mapStateToProps = state => ({
   isLoading: state.request.isLoading,
   isLoaded: state.request.isLoaded,
   message: state.request.message,
-  r1: state.fastqInput.r1,
-  r2: state.fastqInput.r2,
+  r1: state.inputFiles.r1,
+  r2: state.inputFiles.r2,
 })
 
 const mapDispatchToProps = {
@@ -65,6 +65,18 @@ class InputFiles extends React.Component {
     })
   }
 
+  removeR1 = (ev) => {
+    ev.stopPropagation()
+    this.props.setFiles({ r1: null })
+    this.props.setMessages({ r1: null })
+  }
+
+  removeR2 = (ev) => {
+    ev.stopPropagation()
+    this.props.setFiles({ r2: null })
+    this.props.setMessages({ r2: null })
+  }
+
   onClickIdentify = () => {
     const r1 = window.files.get(this.props.r1.file)
     const r2 = window.files.get(this.props.r2.file)
@@ -80,6 +92,7 @@ class InputFiles extends React.Component {
   render() {
     const { isLoading, message, r1, r2 } = this.props
     const hasR1 = r1.file !== undefined && !r1.message
+    const disabled = !hasR1 || (r2?.message !== undefined)
     const r1File = window.files.get(this.props.r1.file)
     const r2File = window.files.get(this.props.r2.file)
 
@@ -114,20 +127,23 @@ class InputFiles extends React.Component {
                 {
                   r1File ?
                   <div className='InputFiles__filename'>
-                    {r1.message ?
-                      <>
-                        <div className='InputFiles__filename__content'>
-                          <Icon name='exclamation-triangle' marginRight='0.5em' /> {r1File.name}
-                        </div>
-                        <div className='InputFiles__filename__message'>
-                          {r1.message}
-                        </div>
-                      </> :
-                      <>
-                        <div className='InputFiles__filename__content'>
-                          <Icon name='file' marginRight='0.5em' /> {r1File.name}
-                        </div>
-                      </>
+                    <div className='InputFiles__filename__content'>
+                      {r1.message ?
+                        <Icon name='exclamation-triangle' marginRight='0.5em' /> :
+                        <Icon name='file' marginRight='0.5em' />
+                      }{' '}
+                      {r1File.name}{' '}
+                      <Button
+                        flat
+                        iconButton
+                        icon='times'
+                        onClick={this.removeR1}
+                      />
+                    </div>
+                    {r1.message &&
+                      <div className='InputFiles__filename__message'>
+                        {r1.message}
+                      </div>
                     }
                   </div>
                   :
@@ -144,20 +160,23 @@ class InputFiles extends React.Component {
                 {
                   r2File ?
                   <div className='InputFiles__filename'>
-                    {r2.message ?
-                      <>
-                        <div className='InputFiles__filename__content'>
-                          <Icon name='exclamation-triangle' marginRight='0.5em' /> {r2File.name}
-                        </div>
-                        <div className='InputFiles__filename__message'>
-                          {r2.message}
-                        </div>
-                      </> :
-                      <>
-                        <div className='InputFiles__filename__content'>
-                          <Icon name='file' marginRight='0.5em' /> {r2File.name}
-                        </div>
-                      </>
+                    <div className='InputFiles__filename__content'>
+                      {r2.message ?
+                        <Icon name='exclamation-triangle' marginRight='0.5em' /> :
+                        <Icon name='file' marginRight='0.5em' />
+                      }{' '}
+                      {r2File.name}{' '}
+                      <Button
+                        flat
+                        iconButton
+                        icon='times'
+                        onClick={this.removeR2}
+                      />
+                    </div>
+                    {r2.message &&
+                      <div className='InputFiles__filename__message'>
+                        {r2.message}
+                      </div>
                     }
                   </div>
                   :
@@ -180,7 +199,7 @@ class InputFiles extends React.Component {
                 <Icon name='exclamation-triangle' /> {message}
               </div>
             }
-            <Button onClick={this.onClickIdentify} disabled={!hasR1}>
+            <Button onClick={this.onClickIdentify} disabled={disabled}>
               Identify Genus <Icon name='arrow-right' marginLeft={5} />
             </Button>
           </div>

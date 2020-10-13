@@ -17,8 +17,8 @@ const initialState = {
  */
 window.files = new Map()
 
-export const fastqInput = createSlice({
-  name: 'fastqInput',
+export const inputFiles = createSlice({
+  name: 'inputFiles',
   initialState: initialState,
   reducers: {
     setFiles: (state, action) => {
@@ -50,7 +50,7 @@ export const fastqInput = createSlice({
   },
 });
 
-export const { setMessages, clear } = fastqInput.actions;
+export const { setMessages, clear } = inputFiles.actions;
 
 export const setFiles = (payload) => {
   let r1, r2
@@ -70,7 +70,7 @@ export const setFiles = (payload) => {
       window.files.set(payload.r2.name, payload.r2)
     }
   }
-  return fastqInput.actions.setFiles({ r1, r2 })
+  return inputFiles.actions.setFiles({ r1, r2 })
 }
 
-export default fastqInput.reducer;
+export default inputFiles.reducer;

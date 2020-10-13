@@ -56,7 +56,7 @@
 
 
 .Button.--icon {
-  color: $color;
+  color: $text-color-muted;
   background-color: transparent;
   border: 1px solid transparent;
   min-width: 30px;
@@ -67,7 +67,7 @@
   border: none;
 }
 .Button.--icon:not([disabled]):hover {
-  color: $hover-color;
+  // color: $hover-color;
   background-color: $hover-light-bg-color;
 }
 .Button.--icon:not([disabled]).active,
