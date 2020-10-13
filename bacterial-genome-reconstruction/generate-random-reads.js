@@ -14,8 +14,17 @@ if (require.main === module) {
 }
 
 
+/**
+ * @param {string|Buffer} inputFile - Input file path or input buffer
+ * @param {string} [outputFile] - Output file path
+ * @returns {string} - Reads if no `outputFile`, `outputFile` otherwise
+ */
 async function generateRandomReads(inputFile, outputFile) {
-  const content = (await fs.readFile(inputFile)).toString()
+  const content =
+    inputFile instanceof Buffer ?
+      inputFile.toString() :
+      (await fs.readFile(inputFile)).toString()
+
   const format = getFormat(content, inputFile)
   const blockLength = format === 'fastq' ? 4 : 2
   const lines = content.trim().split('\n')
@@ -23,11 +32,14 @@ async function generateRandomReads(inputFile, outputFile) {
 
   const reads =
     Array.from({ length: 1000 }, (_, i) => {
-      const index = random(0, groups.length)
+      const index = random(0, groups.length - 1)
       const lines = groups[index]
       return [`>${i + 1} (from line ${index * 4})`, lines[1]].join('\n')
     })
     .join('\n')
+
+  if (outputFile === undefined)
+    return reads
 
   await fs.writeFile(outputFile, reads)
 
