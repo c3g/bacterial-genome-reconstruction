@@ -65,7 +65,7 @@ router.use('/create/:id/:name', apiRoute(req => {
 
       task.didComplete
       .then(() => Task.serialize(task))
-      .then(() => {
+      .then(results => {
         Request.update(id, { results: { [name]: results } })
       })
 
