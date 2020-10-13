@@ -17,3 +17,6 @@ html, body, #root {
   height: 100%;
   overflow: hidden;
 }
+
+*::selection      { background: $selection-color; }
+*::-moz-selection { background: $selection-color; }
