@@ -61,6 +61,9 @@ blastdbcmd -db db/blast_db/all_seqs_db -outfmt "%t" -entry 'all' \
   | uniq \
   | tail +2 > db/genera.txt
 
+# Use NULL character separators instead of newlines
+tr '\n' '\0' < db/genera.txt 1<> db/genera.txt
+
 # Generate accessions for each genus
 cat db/genera.txt \
   | xargs -I{} Rscript ./scripts/setup/generate_genus_accessions.R "{}"
@@ -68,8 +71,9 @@ cat db/genera.txt \
 # the output will be in db/by_genus/salmonella/genus_accessions.txt
 # These accessions are used to query the full database, extract those sequences, and pipe them into their own blast database
 cat db/genera.txt \
-  | awk '{ print gensub(" ", "_", "g", $0) }' \
-  | xargs -I{} bash -c '
+  | awk 'BEGIN { RS = "\0" } { print gensub(" ", "_", "g", $0) }' \
+  | tr '\n' '\0' \
+  | xargs -0 -I{} bash -c '
     blastdbcmd \
       -db db/blast_db/all_seqs_db -outfmt "%f" \
       -entry_batch "db/by_genus/{}/genus_accessions.txt" \
