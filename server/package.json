@@ -3,11 +3,10 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "postinstall": "npm run setup",
+    "postinstall": "npm run setup && cd ../client && npm install && cd ../server && npm run build",
     "setup": "node ./scripts/setup.js",
     "start": "node ./bin/www",
     "watch": "NODE_ENV=development nodemon --ignore 'client/*' ./bin/www",
-    "start:client": "cd client && npm start",
     "build": "rm -rf ./public && mkdir public && cd ../client && npm run build && cp -r ./build/* ../server/public"
   },
   "dependencies": {
