@@ -9,7 +9,7 @@
 
 .App__helpButton {
   position: absolute;
-  z-index: 2;
+  z-index: 3;
   top:   1em;
   right: 1em;
   color: #787c7f !important;
@@ -22,6 +22,7 @@
 }
 .App__help {
   position: absolute;
+  z-index: 2;
   top: 0;
   left: 0;
   width: 100%;
