@@ -3,13 +3,14 @@
  */
 
 const _ = require('shelljs')
-const path = require('path')
+
+const config = require('../config')
 
 
 // Create require directories
 
-const dataPath = path.normalize(`${__dirname}/../data`)
-const tmpPath = `${dataPath}/tmp`
-const requestsPath = `${dataPath}/requests`
-
-_.mkdir('-p', [dataPath, tmpPath, requestsPath])
+_.mkdir('-p', [
+  config.paths.data,
+  config.paths.tmp,
+  config.paths.requests,
+])

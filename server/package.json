@@ -8,7 +8,7 @@
     "start": "node ./bin/www",
     "watch": "NODE_ENV=development nodemon --ignore 'client/*' ./bin/www",
     "start:client": "cd client && npm start",
-    "build": "rm -rf ./public && mkdir public && cd client && npm run build && cp -r ./build/* ../public"
+    "build": "rm -rf ./public && mkdir public && cd ../client && npm run build && cp -r ./build/* ../server/public"
   },
   "dependencies": {
     "adm-zip": "^0.4.16",
@@ -35,10 +35,11 @@
     "passport": "^0.4.0",
     "passport-google-oauth": "^1.0.0",
     "passport-local": "^1.0.0",
+    "rambda": "^6.2.0",
     "react-drop-zone": "^4.1.0",
     "serve-favicon": "~2.4.2",
     "shelljs": "^0.8.4",
-    "sqlite-objects": "^1.0.0",
+    "sqlite-objects": "^2.0.1",
     "sqlite3": "^5.0.0"
   },
   "devDependencies": {
