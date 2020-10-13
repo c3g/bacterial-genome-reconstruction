@@ -43,10 +43,10 @@ class InputFiles extends React.Component {
 
     this.props.setFiles({ r1: r1 || null, r2: r2 || null })
 
-    validate(r1).catch(err => {
+    r1 && validate(r1).catch(err => {
       this.props.setMessages({ r1: err.message })
     })
-    validate(r2).catch(err => {
+    r2 && validate(r2).catch(err => {
       this.props.setMessages({ r2: err.message })
     })
   }
