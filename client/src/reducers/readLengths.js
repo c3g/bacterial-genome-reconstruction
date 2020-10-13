@@ -10,7 +10,7 @@ const initialState = {
   order: undefined,
   message: undefined,
   value: undefined,
-  data: [],
+  data: { r1: null, r2: null },
 }
 
 export const readLengths = createSlice({

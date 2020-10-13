@@ -15,7 +15,7 @@ const BASE_ENDPOINT =
     'http://localhost:3001/api'
 
 export const request = {
-  create: file => POST(`/request/create`, form({ file })),
+  create: ({ r1, r2 }) => POST(`/request/create`, form({ r1, r2 })),
   get: id => GET(`/request/get/${id}`),
   destroy: id => POST(`/request/destroy/${id}`),
 }
@@ -89,7 +89,8 @@ function form(params) {
   const formData = new FormData()
   Object.keys(params).forEach(key => {
     const value = params[key]
-    formData.append(key, value)
+    if (value)
+      formData.append(key, value)
   })
   return formData
 }

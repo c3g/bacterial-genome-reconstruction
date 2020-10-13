@@ -13,7 +13,7 @@ import ResultsTable, { Row, Cell } from './ResultsTable'
 const mapStateToProps = state => ({
   requestId: state.request.data.id,
   reference: state.references.value,
-  readLength: state.readLengths.value,
+  readLengths: state.readLengths.data,
 })
 
 const mapDispatchToProps = {}
@@ -21,7 +21,7 @@ const mapDispatchToProps = {}
 class FinalResults extends React.Component {
 
   render() {
-    const { requestId, reference, readLength } = this.props
+    const { requestId, reference, readLengths } = this.props
 
     return (
       <div className='FinalResults'>
@@ -43,7 +43,12 @@ class FinalResults extends React.Component {
             </Row>
             <Row>
               <Cell className='ResultsTable__head'>Optimal read length</Cell>
-              <Cell>{readLength.cutoff}</Cell>
+              <Cell>
+                {readLengths.r1.data[0].cutoff} (R1)
+                {readLengths.r2 &&
+                  <> and {readLengths.r2.data[0].cutoff} (R2)</>
+                }
+              </Cell>
             </Row>
           </ResultsTable>
 
@@ -60,7 +65,7 @@ class FinalResults extends React.Component {
               References (2)
             </Button>
             <Button icon='download' onClick={() => downloadFromURL(api.urlFor.download.readLengthOptimization(requestId))}>
-              Optimization (1)
+              Optimization ({readLengths.r2 ? '2' : '1'})
             </Button>
           </div>
 

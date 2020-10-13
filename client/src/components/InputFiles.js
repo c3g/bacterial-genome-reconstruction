@@ -67,7 +67,8 @@ class InputFiles extends React.Component {
 
   onClickIdentify = () => {
     const r1 = window.files.get(this.props.r1.file)
-    this.props.createRequest(r1)
+    const r2 = window.files.get(this.props.r2.file)
+    this.props.createRequest({ r1, r2 })
     .then(action => {
       if (!action.error) {
         this.props.nextStep()

@@ -37,10 +37,10 @@ export const { setIsLoading, setIsLoaded, setMessage, setData, clear } = request
 
 export const createRequest = createAsyncThunk(
   'request/create',
-  async (file, { dispatch: _ }) => {
+  async ({ r1, r2 }, { dispatch: _ }) => {
     _(setIsLoading(true))
     try {
-      const data = await api.request.create(file)
+      const data = await api.request.create({ r1, r2 })
       _(setData(data))
       _(setIsLoaded(true))
       _(setIsLoading(false))

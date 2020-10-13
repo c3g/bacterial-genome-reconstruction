@@ -53,10 +53,10 @@ class ReadLengthOptimization extends React.Component {
   }
 
   render() {
-    const { isLoading, message, status, order, value } = this.props
+    const { isLoading, message, status, order, data, value } = this.props
 
     // Hijack this step because I don't want to add another button
-    if (value)
+    if (data.r1)
       return <FinalResults />
 
     return (
@@ -79,7 +79,7 @@ class ReadLengthOptimization extends React.Component {
                   Finally, select which read length you prefer. Higher score is better.
                 </Instructions>
 
-                {this.renderTable()}
+                {/* this.renderTable() */}
               </>
             }
           </div>

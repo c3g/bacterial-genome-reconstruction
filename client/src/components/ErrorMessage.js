@@ -12,7 +12,8 @@ function ErrorMessage({ message, previousStep }) {
           Try again later or{' '}
           <a href='mailto:mailto:info@computationalgenomics.ca'>contact us</a>{' '}
           to report your issue.<br />
-          Message: <code>{stringify(message)}</code>
+          Message: <br />
+          <pre>{stringify(message)}</pre>
         </p>
       </Alert>
       <div className='flex-row'>
