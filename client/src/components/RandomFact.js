@@ -1,16 +1,12 @@
 import React, { useState, useEffect } from 'react'
 
-const ENDPOINT = 'https://uselessfacts.jsph.pl/random.json?language=en'
+import getRandomFact from '../helpers/get-random-fact'
 
 function RandomFact() {
   const [fact, setFact] = useState(null)
 
   useEffect(() => {
-    fetch(ENDPOINT)
-    .then(res => res.json())
-    .then(response => {
-      setFact(response.text)
-    })
+    getRandomFact().then(setFact)
   }, [])
 
   return fact ? fact : <>&nbsp</>
