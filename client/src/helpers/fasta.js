@@ -2,10 +2,18 @@
  * fasta.js
  */
 
+module.exports = {
+  realignFasta,
+  reverseComplement,
+  fastaToString,
+  parse,
+  isAllowed,
+}
+
 /**
  * @typedef {Object} Fasta
  * @property {string} description
- * @property {string} genome
+ * @property {string} data
  * @property {boolean} [isReversed]
  */
 
@@ -16,19 +24,20 @@
  */
 
 
+
 /**
  * @param {Fasta} fasta
  * @param {string} sequence
  * @returns {ValidationResult<Fasta>}
  */
-export function realignFasta(fasta, sequence) {
-  let index = fasta.sequence.indexOf(sequence)
+function realignFasta(fasta, sequence) {
+  let index = fasta.data.indexOf(sequence)
   let isReversed = false
   let conversionsRef = { value: 0 }
 
   if (index === -1) {
     const reverseSequence = reverseComplement(sequence)
-    index = fasta.sequence.indexOf(reverseSequence)
+    index = fasta.data.indexOf(reverseSequence)
     isReversed = true
   }
 
@@ -36,17 +45,17 @@ export function realignFasta(fasta, sequence) {
     return { ok: false, result: undefined }
   }
 
-  const input = isReversed ? reverseComplement(fasta.sequence, conversionsRef) : fasta.sequence
+  const input = isReversed ? reverseComplement(fasta.data, conversionsRef) : fasta.data
 
   if (isReversed)
-    index = fasta.sequence.length - index - sequence.length
+    index = fasta.data.length - index - sequence.length
 
   const newSequence = input.slice(index) + input.slice(0, index)
 
-  return { ok: true, result: { ...fasta, sequence: newSequence, isReversed, conversions: conversionsRef.value } }
+  return { ok: true, result: { ...fasta, data: newSequence, isReversed, conversions: conversionsRef.value } }
 }
 
-export function reverseComplement(sequence, conversionsRef = null) {
+function reverseComplement(sequence, conversionsRef = null) {
   return Array.from(sequence.replace(/./g, (char) => {
     switch (char) {
       case 'A': return 'T'
@@ -65,39 +74,62 @@ export function reverseComplement(sequence, conversionsRef = null) {
  * @param {Fasta} fasta
  * @returns {string} fasta file string
  */
-export function fastaToString(fasta) {
+function fastaToString(fasta) {
   const LINE_LENGTH = 70
 
-  let result = fasta.description + '\n'
+  let result = '>' + fasta.description + '\n'
 
   let i;
-  for (i = 0; (i + LINE_LENGTH) < fasta.sequence.length; i += LINE_LENGTH) {
-    result += fasta.sequence.slice(i, i + LINE_LENGTH) + '\n'
+  for (i = 0; (i + LINE_LENGTH) < fasta.data.length; i += LINE_LENGTH) {
+    result += fasta.data.slice(i, i + LINE_LENGTH) + '\n'
   }
-  result += fasta.sequence.slice(i)
+  result += fasta.data.slice(i)
 
   return result
 }
 
-export function parse(text) {
-  let isFastaFile = false
-  let result = undefined
-
+function parse(text) {
   const lines = text.split('\n')
-  const lastLines = lines.slice(1)
 
-  if (lines[0].startsWith('>') && lastLines.every(isAllowedOrEmpty)) {
-    isFastaFile = true
-    result = {
-      description: lines[0],
-      sequence: lastLines.map(l => l.toUpperCase()).join(''),
+  if (!lines[0] || !lines[0].startsWith('>'))
+    return failWith('file does not start with ">"')
+
+  const sequences = []
+  let sequence = undefined
+
+  for (const i in lines) {
+    const line = lines[i]
+
+    if (line.startsWith('>')) {
+      if (sequence)
+        sequences.push(sequence)
+      sequence = { description: line.slice(1), data: '' }
+    }
+    else if (isAllowedOrEmpty(line)) {
+      if (!sequence)
+        return failWith(`data with no sequence identifier at line ${i}`)
+      sequence.data += line.toUpperCase()
+    }
+    else {
+      return failWith(`invalid input at line ${i}`)
     }
   }
 
-  return { ok: isFastaFile, result }
+  if (sequence)
+    sequences.push(sequence)
+
+  return { ok: true, error: undefined, result: sequences }
 }
 
-export function isAllowed(text) {
+function failWith(message) {
+  return {
+    ok: false,
+    error: new Error('Invalid fasta file: ' + message),
+    result: undefined,
+  }
+}
+
+function isAllowed(text) {
   for (let i = 0; i < text.length; i++) {
     if (!isAllowedCode(text.charCodeAt(i)))
       return false

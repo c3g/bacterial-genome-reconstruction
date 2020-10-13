@@ -3,7 +3,13 @@
  */
 /* global describe, test, expect */
 
-import { fastaToString, isAllowed, parse, realignFasta, reverseComplement } from './fasta.js'
+const {
+  fastaToString,
+  isAllowed,
+  parse,
+  realignFasta,
+  reverseComplement,
+} = require('./fasta.js')
 
 const file1 =
 `>NZ_CP022077.1 Campylobacter jejuni subsp. jejuni strain FDAARGOS_263 chromosome, complete genome
@@ -57,20 +63,24 @@ describe('parse()', () => {
 
   test('works with fasta files', () => {
     const validation = parse(file1)
-    expect(validation).toEqual({ success: true, result: {
-      description: '>NZ_CP022077.1 Campylobacter jejuni subsp. jejuni strain FDAARGOS_263 chromosome, complete genome',
-      sequence: 'TTTTTCATCTACCAAAGAGTAAGCTCCGATTAAATCCCCAATTTCTATTGCTTCATATTTAGGAGTTTTTAAACCTTTTAAAAGAGTATTTTCAAGTTCATTTCTACCTATGATCATTTTAGCTCCATTGGGTAATCTTAAATGACGACCATATTTTAAAAGTTGTGCGTCATTAACCTGCATATCTTTGTCAAATTCTATGAAATCTCGATAGGAATTTCTTACATCTATCATTTCAAAATCTGCACCTA'
-    }})
+    expect(validation).toEqual({ ok: true, error: undefined, result: [{
+      description: 'NZ_CP022077.1 Campylobacter jejuni subsp. jejuni strain FDAARGOS_263 chromosome, complete genome',
+      data: 'TTTTTCATCTACCAAAGAGTAAGCTCCGATTAAATCCCCAATTTCTATTGCTTCATATTTAGGAGTTTTTAAACCTTTTAAAAGAGTATTTTCAAGTTCATTTCTACCTATGATCATTTTAGCTCCATTGGGTAATCTTAAATGACGACCATATTTTAAAAGTTGTGCGTCATTAACCTGCATATCTTTGTCAAATTCTATGAAATCTCGATAGGAATTTCTTACATCTATCATTTCAAAATCTGCACCTA'
+    }]})
   })
 
   test('works with bad fasta files', () => {
     const validation = parse(badFastaFile)
-    expect(validation).toEqual({ success: false, result: undefined})
+    expect(validation.ok).toBe(false)
+    expect(validation.result).toBe(undefined)
+    expect(validation.error).toBeInstanceOf(Error)
   })
 
   test('works with bad files', () => {
     const validation = parse(badFile)
-    expect(validation).toEqual({ success: false, result: undefined})
+    expect(validation.ok).toBe(false)
+    expect(validation.result).toBe(undefined)
+    expect(validation.error).toBeInstanceOf(Error)
   })
 })
 
@@ -83,14 +93,14 @@ describe('reverseComplement()', () => {
 describe('realignFasta()', () => {
 
   test('works with original sequence', () => {
-    const { result: fasta } = parse(file2)
+    const { result: [fasta] } = parse(file2)
 
     const newFasta = realignFasta(fasta, startSequence)
     expect(newFasta).toEqual({
-      success: true,
+      ok: true,
       result: {
         description: fasta.description,
-        sequence: 'CGTAAAAXXXAAAAAAAAAC',
+        data: 'CGTAAAAXXXAAAAAAAAAC',
         isReversed: false,
         conversions: 0,
       }
@@ -98,14 +108,14 @@ describe('realignFasta()', () => {
   })
 
   test('works with reversed sequence', () => {
-    const { result: fasta } = parse(file2)
+    const { result: [fasta] } = parse(file2)
 
     const newFasta = realignFasta(fasta, startSequenceRev)
     expect(newFasta).toEqual({
-      success: true,
+      ok: true,
       result: {
         description: fasta.description,
-        sequence: 'ACGGTTTTTTTTTNNNTTTT',
+        data: 'ACGGTTTTTTTTTNNNTTTT',
         isReversed: true,
         conversions: 3,
       }
@@ -115,7 +125,7 @@ describe('realignFasta()', () => {
 
 describe('fastaToString()', () => {
   test('works', () => {
-    const { result: fasta } = parse(file1)
+    const { result: [fasta] } = parse(file1)
     const string = fastaToString(fasta)
     expect(string).toBe(file1)
   })
