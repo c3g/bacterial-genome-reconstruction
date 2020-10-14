@@ -15,7 +15,9 @@ function Help(props) {
         <h4>What is this tool?</h4>
         <p className='Help__text'>
           The Bacterial Genome Reconstruction tool. It identifies the bacteria reference for
-          the input files you feed it.
+          the input files you feed it, and provides you with the optimal read-length. Note that
+          only R1 is used for identification purposes, but R1 and R2 are used for read-length
+          optimization.
         </p>
 
         <h4>How does it work?</h4>
