@@ -29,7 +29,7 @@ app.use(formData.parse({ uploadDir: config.paths.tmp, autoClean: true }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 
-if (process.env.NODE_ENV === 'development')
+if (process.env.NODE_ENV !== 'production')
   app.use(cors())
 
 
