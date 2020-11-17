@@ -3,11 +3,7 @@
  */
 
 
-module.exports = {
-  parse,
-}
-
-function parse(text) {
+export function parse(text) {
   const lines = text.trim().split('\n')
 
   if (lines.length % 4 !== 0)

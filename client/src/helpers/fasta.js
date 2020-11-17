@@ -2,13 +2,6 @@
  * fasta.js
  */
 
-module.exports = {
-  realignFasta,
-  reverseComplement,
-  fastaToString,
-  parse,
-  isAllowed,
-}
 
 /**
  * @typedef {Object} Fasta
@@ -30,7 +23,7 @@ module.exports = {
  * @param {string} sequence
  * @returns {ValidationResult<Fasta>}
  */
-function realignFasta(fasta, sequence) {
+export function realignFasta(fasta, sequence) {
   let index = fasta.data.indexOf(sequence)
   let isReversed = false
   let conversionsRef = { value: 0 }
@@ -55,7 +48,7 @@ function realignFasta(fasta, sequence) {
   return { ok: true, result: { ...fasta, data: newSequence, isReversed, conversions: conversionsRef.value } }
 }
 
-function reverseComplement(sequence, conversionsRef = null) {
+export function reverseComplement(sequence, conversionsRef = null) {
   return Array.from(sequence.replace(/./g, (char) => {
     switch (char) {
       case 'A': return 'T'
@@ -74,7 +67,7 @@ function reverseComplement(sequence, conversionsRef = null) {
  * @param {Fasta} fasta
  * @returns {string} fasta file string
  */
-function fastaToString(fasta) {
+export function fastaToString(fasta) {
   const LINE_LENGTH = 70
 
   let result = '>' + fasta.description + '\n'
@@ -88,7 +81,7 @@ function fastaToString(fasta) {
   return result
 }
 
-function parse(text) {
+export function parse(text) {
   const lines = text.split('\n')
 
   if (!lines[0] || !lines[0].startsWith('>'))
@@ -129,7 +122,7 @@ function failWith(message) {
   }
 }
 
-function isAllowed(text) {
+export function isAllowed(text) {
   for (let i = 0; i < text.length; i++) {
     if (!isAllowedCode(text.charCodeAt(i)))
       return false
