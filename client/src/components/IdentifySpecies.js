@@ -6,6 +6,7 @@ import { setValue } from '../reducers/species'
 import { identifyClosestReferences } from '../reducers/references'
 import './IdentifySpecies.scss'
 
+import EmptyMessage from './EmptyMessage'
 import ErrorMessage from './ErrorMessage'
 import Instructions from './Instructions'
 import ResultsTable, { Row, Cell } from './ResultsTable'
@@ -55,7 +56,7 @@ class IdentifySpecies extends React.Component {
   }
 
   render() {
-    const { isLoading, message, status, order, eta } = this.props
+    const { isLoading, message, status, order, eta, data } = this.props
 
     return (
       <div className='IdentifySpecies'>
@@ -71,6 +72,11 @@ class IdentifySpecies extends React.Component {
             {message ?
               <ErrorMessage
                 message={message}
+                previousStep={this.props.previousStep}
+              />
+              :
+             data.length === 0 ?
+              <EmptyMessage
                 previousStep={this.props.previousStep}
               />
               :

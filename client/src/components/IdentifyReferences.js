@@ -5,6 +5,7 @@ import { setValue } from '../reducers/references'
 import { readLengthOptimization } from '../reducers/readLengths'
 import './IdentifyReferences.scss'
 
+import EmptyMessage from './EmptyMessage'
 import ErrorMessage from './ErrorMessage'
 import Instructions from './Instructions'
 import ResultsTable, { Row, Cell } from './ResultsTable'
@@ -53,7 +54,7 @@ class IdentifyReferences extends React.Component {
   }
 
   render() {
-    const { isLoading, message, status, order, eta } = this.props
+    const { isLoading, message, status, order, eta, data } = this.props
 
     return (
       <div className='IdentifyReferences'>
@@ -68,6 +69,11 @@ class IdentifyReferences extends React.Component {
             {message ?
               <ErrorMessage
                 message={message}
+                previousStep={this.props.previousStep}
+              />
+              :
+             data.length === 0 ?
+              <EmptyMessage
                 previousStep={this.props.previousStep}
               />
               :
