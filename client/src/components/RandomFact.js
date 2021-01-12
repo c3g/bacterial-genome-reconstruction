@@ -9,7 +9,7 @@ function RandomFact() {
     getRandomFact().then(setFact)
   }, [])
 
-  return fact ? fact : <>&nbsp</>
+  return fact ? fact : <><span>&nbsp</span></>
 }
 
 export default RandomFact
