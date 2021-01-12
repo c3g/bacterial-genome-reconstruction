@@ -7,3 +7,8 @@ It is divided as such:
  - `/bacterial-genome-reconstruction`: CLI scripts exposed as nodejs functions in a neat package
  - `/server`: the back-end (nodejs+express)
  - `/client`: the front-end (react)
+
+
+## Install
+### Dependencies
+ - https://jgi.doe.gov/data-and-tools/bbtools/
