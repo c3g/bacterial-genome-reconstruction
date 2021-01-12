@@ -5,6 +5,7 @@ import renderDuration from '../helpers/render-duration'
 import RandomFact from './RandomFact'
 import Spinner from './Spinner'
 
+const Nbsp = () => '\u00A0'
 
 function TaskSpinner({ message, status, order, eta, loading, children }) {
 
@@ -23,7 +24,7 @@ function TaskSpinner({ message, status, order, eta, loading, children }) {
               <>
                 Task is {status} in position {order + 1}
               </> :
-              <>&nbsp;</>
+              <><span><Nbsp /></span></>
             }
           </small><br/>
           <small>
