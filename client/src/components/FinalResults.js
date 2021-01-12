@@ -59,7 +59,7 @@ class FinalResults extends React.Component {
 
           <div className='FinalResults__downloadButtons'>
             <Button icon='download' onClick={() => downloadFromURL(api.urlFor.download.identifyClosestSpecies(requestId))}>
-              Genus (2)
+              Genus (1)
             </Button>
             <Button icon='download' onClick={() => downloadFromURL(api.urlFor.download.identifyClosestReferences(requestId))}>
               References (2)

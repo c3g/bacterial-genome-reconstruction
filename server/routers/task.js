@@ -34,8 +34,8 @@ const taskRunnerByName = {
 
 const taskDownloadsByName = {
   'identify-closest-species': (request) => {
-    const { summaryPath, readLengthPath } = request.results['identify-closest-species'].results
-    return [summaryPath, readLengthPath]
+    const { summaryPath } = request.results['identify-closest-species'].results
+    return [summaryPath]
   },
   'identify-closest-references': (request) => {
     const { summaryPath, readLengthPath } = request.results['identify-closest-references'].results

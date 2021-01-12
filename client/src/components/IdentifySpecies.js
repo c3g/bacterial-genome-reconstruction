@@ -1,7 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { matchSpeciesName } from '../helpers/extract-genus'
 import { setValue } from '../reducers/species'
 import { identifyClosestReferences } from '../reducers/references'
 import './IdentifySpecies.scss'
@@ -39,15 +38,24 @@ class IdentifySpecies extends React.Component {
 
     return (
       <div className='IdentifySpecies__results'>
-        <ResultsTable columns={['Name', 'Bitscore']}>
+        <ResultsTable
+          columns={[
+            'Name',
+            'Count',
+            'Bitscore',
+            '% Aligned'
+          ]}
+        >
           {data.map(s =>
             <Row
               key={s.accession}
               role='button'
               onClick={() => this.onSelectValue(s)}
             >
-              <Cell>{renderSpeciesName(s.name)}</Cell>
-              <Cell>{s.total_bitscore}</Cell>
+              <Cell>{renderGenusName(s.name)}</Cell>
+              <Cell>{s.unique_count}</Cell>
+              <Cell>{s.unique_bitscore}</Cell>
+              <Cell>{s.percent_aligned}</Cell>
             </Row>
           )}
         </ResultsTable>
@@ -98,15 +106,9 @@ class IdentifySpecies extends React.Component {
   }
 }
 
-function renderSpeciesName(value) {
-  const { genus, species, complete } = matchSpeciesName(value)
-
+function renderGenusName(value) {
   return (
-    <>
-      <span className='bold'>{genus}</span>{' '}
-      <span className='text-normal'>{species}</span>{' '}
-      <span className='text-muted'>{complete}</span>
-    </>
+    <span className='bold'>{value}</span>
   )
 }
 

@@ -11,14 +11,14 @@ const exec = require('./src/exec')
 const NUM_CPUS = os.cpus().length
 
 const BLAST_DB_PATH = `${__dirname}/db/blast_db/representative/db`
-const SUMMARY_SCRIPT_PATH = `${__dirname}/blast_summaries.R`
+const SUMMARY_SCRIPT_PATH = `${__dirname}/blast_summaries_module_1.R`
 
 module.exports = identifyClosestSpecies
 
 async function identifyClosestSpecies(outputFolder, subsampledFastaPath, inputFastqPath) {
   const statsPath = await generateStats(outputFolder, inputFastqPath)
   const blastPath = await blast(outputFolder, subsampledFastaPath)
-  const [summaryPath, readLengthPath] = await generateSummary(
+  const summaryPath = await generateSummary(
     outputFolder,
     statsPath,
     blastPath
@@ -27,7 +27,7 @@ async function identifyClosestSpecies(outputFolder, subsampledFastaPath, inputFa
   const summaryContent = (await fs.readFile(summaryPath)).toString()
   const data = parseCSV(summaryContent, { columns: true, skip_empty_lines: true })
 
-  return { statsPath, summaryPath, readLengthPath, blastPath, data }
+  return { statsPath, summaryPath, blastPath, data }
 }
 
 function generateStats(outputFolder, inputFastqPath) {
@@ -65,17 +65,15 @@ function blast(outputFolder, inputFastaPath) {
 
 function generateSummary(outputFolder, statsPath, blastPath) {
   const summaryPath    = `${outputFolder}/species_summary.csv`
-  const readLengthPath = `${outputFolder}/species_read_length.csv`
 
   const command = shellEscape([
     'Rscript', SUMMARY_SCRIPT_PATH,
         statsPath,
         blastPath,
         summaryPath,
-        readLengthPath,
   ])
 
-  return exec(command).then(() => [summaryPath, readLengthPath])
+  return exec(command).then(() => summaryPath)
 }
 
 
