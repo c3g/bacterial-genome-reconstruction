@@ -4,11 +4,9 @@
 
 const os = require('os')
 const fs = require('fs').promises
-const cp = require('child_process')
-const util = require('util')
-const exec = util.promisify(cp.exec)
 const shellEscape = require('shell-escape')
 const parseCSV = require('csv-parse/lib/sync')
+const exec = require('./src/exec')
 
 const NUM_CPUS = os.cpus().length
 

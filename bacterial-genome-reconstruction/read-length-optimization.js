@@ -4,13 +4,11 @@
 
 const os = require('os')
 const fs = require('fs').promises
-const cp = require('child_process')
-const util = require('util')
-const exec = util.promisify(cp.exec)
 const shellEscape = require('shell-escape')
 const parseCSV = require('csv-parse/lib/sync')
 const del = require('del')
 const { range } = require('rambda')
+const exec = require('./src/exec')
 
 const NUM_CPUS = os.cpus().length
 
@@ -21,6 +19,10 @@ const DB_BY_GENUS_PATH         = `${__dirname}/db/blast_db/by_genus`
 module.exports = readLengthOptimization
 
 async function readLengthOptimization(inputFolder, subsampledFastaPath, genus, accession, trackNumber = 1) {
+  await del([
+    `${inputFolder}/cutoffs`,
+    `${inputFolder}/blast_results`,
+  ])
   await mkdirp([
     `${inputFolder}/cutoffs`,
     `${inputFolder}/blast_results`,
@@ -42,11 +44,6 @@ async function readLengthOptimization(inputFolder, subsampledFastaPath, genus, a
 
   const summaryContent = (await fs.readFile(summaryPath)).toString()
   const data = normalizeResults(parseCSV(summaryContent, { columns: true, skip_empty_lines: true }))
-
-  await del([
-    `${inputFolder}/cutoffs`,
-    `${inputFolder}/blast_results`,
-  ])
 
   return { summaryPath, data }
 }
