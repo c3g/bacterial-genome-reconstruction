@@ -19,19 +19,24 @@ output_path <- as.character(args[3])
 rl_cutoffs <-
     as.numeric(unlist(strsplit(cutoffs, split = ",")))
 
-
 perfect_alignments <-
     lapply(
         rl_cutoffs,
-        function(cutoff_number){
+        function(cutoff_number) {
+            lines <- fread(
+                sprintf(
+                    "%s/cutoff_%i.csv",
+                    cutoff_path,
+                    cutoff_number
+                )
+            )
+
+            if (nrow(lines) == 0) {
+                return(0)
+            }
+
             blast_table_m3 <-
-                fread(
-                    sprintf(
-                        "%s/cutoff_%i.csv",
-                        cutoff_path,
-                        cutoff_number
-                    )
-                ) %>%
+                lines %>%
                 `colnames<-`(c(
                     "qseqid", "sseqid", "length",
                     "pident", "mismatch",
@@ -39,6 +44,7 @@ perfect_alignments <-
                 mutate(npid = round((length*0.01*pident*100)/slen)) %>%
                 filter(npid == 100) %>%
                 nrow
+            blast_table_m3
         }
     ) %>% unlist
 
