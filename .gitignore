@@ -1,6 +1,6 @@
 node_modules
 
 /data
-/bacterial-genome-reconstruction/data
-/bacterial-genome-reconstruction/db
-/bacterial-genome-reconstruction/output
+/tool/data
+/tool/db
+/tool/output

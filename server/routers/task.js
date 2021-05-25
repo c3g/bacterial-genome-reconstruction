@@ -14,7 +14,7 @@ const {
   identifyClosestSpecies,
   identifyClosestReferences,
   readLengthOptimization,
-} = require('../../bacterial-genome-reconstruction')
+} = require('../../tool')
 
 
 const taskRunnerByName = {
@@ -119,7 +119,7 @@ function streamZippedFiles(filepaths, name, res) {
   zipStream.end(zip.toBuffer())
 
   res.set('content-disposition', `attachment; filename=${name}`);
-  res.set('content-type', 'application/zip');
+  res.set('content-type',        'application/zip');
 
   zipStream.pipe(res)
 }

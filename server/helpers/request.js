@@ -31,7 +31,7 @@ const _ = require('rambda')
 const del = require('del')
 const cuid = require('cuid')
 const { KeyValueStore } = require('sqlite-objects')
-const { generateRandomReads } = require('../../bacterial-genome-reconstruction')
+const { generateRandomReads } = require('../../tool')
 
 const Task = require('./task')
 const { rejectWith } = require('./promise')
